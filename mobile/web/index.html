@@ -21,7 +21,7 @@
     <meta name="description" content="Kanca app" />
 
     <!-- iOS meta tags & icons -->
-    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
     <meta name="apple-mobile-web-app-title" content="Kanca" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
@@ -31,12 +31,6 @@
 
     <title>Kanca</title>
     <link rel="manifest" href="manifest.json" />
-
-    <meta
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-      name="viewport"
-    />
-
     <style id="splash-screen-style">
       html {
         height: 100%;
@@ -111,6 +105,10 @@
         document.body.style.background = "transparent";
       }
     </script>
+    <meta
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+      name="viewport"
+    />
   </head>
   <body>
     <picture id="splash">
@@ -139,13 +137,6 @@
         alt=""
       />
     </picture>
-
-    <script>
-      {
-        {
-          flutter_bootstrap_js;
-        }
-      }
-    </script>
+    <script src="flutter_bootstrap.js" async=""></script>
   </body>
 </html>
