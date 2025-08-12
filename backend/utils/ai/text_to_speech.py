@@ -15,88 +15,75 @@ folder_name = "voices"
 AVAILABLE_VOICES = {
     "en-US-JennyMultilingualNeural": {
         "name": "Jenny 🌈",
-        "description": "Suara manis multi-bahasa seperti guru favorit yang selalu sabar"
+        "description": {
+            "english": "Sweet multilingual voice like a favorite teacher who is always patient",
+            "indonesian": "Suara manis multi-bahasa seperti guru favorit yang selalu sabar"
+        }
     },
     "en-US-AvaMultilingualNeural": {
         "name": "Ava 🎀",
-        "description": "Suara modern ala Amerika yang cocok untuk cerita fantasi"
+        "description": {
+            "english": "Modern American-style voice perfect for fantasy stories",
+            "indonesian": "Suara modern ala Amerika yang cocok untuk cerita fantasi"
+        }
     },
     "en-US-AlloyTurboMultilingualNeural": {
         "name": "Alloy Turbo 🚀",
-        "description": "Suara super cepat penuh energi seperti roket!"
+        "description": {
+            "english": "Super fast, high-energy voice like a rocket!",
+            "indonesian": "Suara super cepat penuh energi seperti roket!"
+        }
     },
     "en-US-NovaTurboMultilingualNeural": {
         "name": "Nova Turbo ✨",
-        "description": "Suara ceria yang membuat hari-harimu berkilau"
+        "description": {
+            "english": "Cheerful voice that brightens your day",
+            "indonesian": "Suara ceria yang membuat hari-harimu berkilau"
+        }
     },
     "en-US-CoraMultilingualNeural": {
         "name": "Cora 🍭",
-        "description": "Suara hangat seperti kakak perempuan yang baik hati"
+        "description": {
+            "english": "Warm voice like a kind-hearted older sister",
+            "indonesian": "Suara hangat seperti kakak perempuan yang baik hati"
+        }
     },
-    # "en-US-ChristopherMultilingualNeural": {
-    #     "name": "Christopher 🏆",
-    #     "description": "Suara tegas dan heroik untuk cerita petualangan"
-    # },
-    # "en-US-BrandonMultilingualNeural": {
-    #     "name": "Brandon 🎸",
-    #     "description": "Suara santai ala anak muda yang asyik diajak ngobrol"
-    # },
-    # "en-US-SteffanMultilingualNeural": {
-    #     "name": "Steffan 🎮",
-    #     "description": "Suara seru untuk narasi game dan petualangan digital"
-    # },
-    # "en-US-AdamMultilingualNeural": {
-    #     "name": "Adam 🏡",
-    #     "description": "Suara hangat seperti ayah yang pandai bercerita"
-    # },
-    # "en-US-AmandaMultilingualNeural": {
-    #     "name": "Amanda 🌸",
-    #     "description": "Suara lembut yang cocok untuk dongeng pengantar tidur"
-    # },
-    # "en-US-DerekMultilingualNeural": {
-    #     "name": "Derek 🎭",
-    #     "description": "Suara ekspresif untuk membawakan karakter yang hidup"
-    # },
-    # "en-US-DustinMultilingualNeural": {
-    #     "name": "Dustin 🏄‍♂️",
-    #     "description": "Suara santai seperti teman bermain di pantai"
-    # },
-    # "en-US-LewisMultilingualNeural": {
-    #     "name": "Lewis 🎩",
-    #     "description": "Suara elegan untuk kisah misteri dan detektif"
-    # },
-    # "en-GB-AdaMultilingualNeural": {
-    #     "name": "Ada 🍵",
-    #     "description": "Suara klasik ala Inggris dengan logat British yang elegan"
-    # },
-    # "en-GB-OllieMultilingualNeural": {
-    #     "name": "Ollie ⚽",
-    #     "description": "Suara energik khas anak Inggris yang suka petualangan"
-    # },
     "zh-CN-XiaoxiaoMultilingualNeural": {
         "name": "Xiaoxiao 🏮",
-        "description": "Suara manis yang cocok untuk bercerita"
+        "description": {
+            "english": "Sweet voice perfect for storytelling",
+            "indonesian": "Suara manis yang cocok untuk bercerita"
+        }
     }
 }
 
-CLIENT_TIMEOUT = 3000
-SERVICE_TIMEOUT_THRESHOLD = 3000
+LANGUAGE_CODE = {
+    "english": "en-US",
+    "indonesian": "id-ID"
+}
+
+CLIENT_TIMEOUT = 3000000
+SERVICE_TIMEOUT_THRESHOLD = 3000000
+TEXT_CONTENT_THRESHOLD = 1500
 
 def _synthesize_speech(request) -> str:
     scene_id = request.get("scene_id")
     text_content = request.get("prompt")
     voice_name_code = request.get("voice_name_code")
+    language = request.get("language")
 
-    if len(text_content) > 1000:
+    language_code = LANGUAGE_CODE.get(language)
+
+    if len(text_content) > TEXT_CONTENT_THRESHOLD:
         raise HTTPException(
             status_code=400,
-            detail="Text too long. Please limit to 1000 characters per request."
+            detail=f"Text too long. Please limit to {TEXT_CONTENT_THRESHOLD} characters per request."
         )
 
     ssml = f"""
-    <speak version='1.0' xml:lang='id-ID'>
+    <speak version='1.0' xml:lang='{language_code}'>
         <voice name='{voice_name_code}'>
-            <lang xml:lang='id-ID'>{text_content}</lang>
+            <lang xml:lang='{language_code}'>{text_content}</lang>
         </voice>
     </speak>
     """
