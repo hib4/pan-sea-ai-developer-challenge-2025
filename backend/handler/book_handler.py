@@ -19,21 +19,23 @@ async def create_book(body: book_schema.create_book_schema, current_user):
     query = body.query
     age = body.age
     voice_name_code = body.voice_name_code
+    language = body.language
 
     if not voice_name_code in AVAILABLE_VOICES.keys():
         raise HTTPException(status_code= 400, detail= f"invalid language_code")
 
     # fetch to book_stort_generation_url
-    book = await post(
-        url= f"{book_stort_generation_url}/generate-story",
-        body= {
-            "query": query,
-            "user_id": current_user.get("id"),
-            "age": age
-        }
-    )
+    # book = await post(
+    #     url= f"{book_stort_generation_url}/generate-story",
+    #     body= {
+    #         "query": query,
+    #         "user_id": current_user.get("id"),
+    #         "age": age,
+    #         "language": language
+    #     }
+    # )
 
-    # book = dummy_scene_json
+    book = dummy_scene_json
 
     scenes = book.get("scene")
     extracted_scenes = [
@@ -73,6 +75,7 @@ async def create_book(body: book_schema.create_book_schema, current_user):
             "scene_id": extracted_scene.get("scene_id"),
             "type": "voice",
             "voice_name_code": voice_name_code,
+            "language": language,
             "prompt": extracted_scene.get("content")
         })
 
