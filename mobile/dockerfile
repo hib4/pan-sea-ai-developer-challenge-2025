@@ -1,0 +1,23 @@
+# Stage 1: Build environment with Flutter
+FROM debian:stable-slim AS build
+
+RUN apt-get update && apt-get install -y \
+    curl unzip xz-utils git libglu1-mesa && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install Flutter
+RUN git clone https://github.com/flutter/flutter.git /usr/local/flutter \
+    && /usr/local/flutter/bin/flutter upgrade
+ENV PATH="/usr/local/flutter/bin:/usr/local/flutter/bin/cache/dart-sdk/bin:${PATH}"
+
+RUN flutter config --enable-web
+
+# Copy project
+WORKDIR /app
+COPY . .
+
+# Install dependencies
+RUN flutter pub get
+
+EXPOSE 8080
+CMD ["flutter", "run", "--flavor", "production", "--target", "lib/main_production.dart", "-d", "web-server", "--web-port=8080", "--web-hostname=0.0.0.0"]
