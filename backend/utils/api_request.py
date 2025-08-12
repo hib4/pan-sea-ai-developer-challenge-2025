@@ -3,7 +3,7 @@ from fastapi.responses import StreamingResponse
 import httpx
 from typing import Optional, Dict, Any
 
-request_timeout = 60.0  # 60 sec
+request_timeout = 600.0  # 600 sec
 
 
 async def get(url: str, body: Optional[Dict[str, Any]] = None):
