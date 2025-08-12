@@ -1,3 +1,4 @@
+import 'package:device_frame/device_frame.dart';
 import 'package:flutter/material.dart';
 import 'package:kanca/core/theme/app_theme.dart';
 import 'package:kanca/features/onboarding/onboarding.dart';
@@ -18,6 +19,12 @@ class App extends StatelessWidget {
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         debugShowCheckedModeBanner: false,
+        builder: (context, child) {
+          return DeviceFrame(
+            device: Devices.ios.iPhone15ProMax,
+            screen: child ?? const SizedBox.shrink(),
+          );
+        },
         home: const OnboardingPage(),
       ),
     );
