@@ -2,7 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:kanca/core/core.dart';
 import 'package:kanca/features/auth/auth.dart';
-import 'package:kanca/features/story/story.dart';
+import 'package:kanca/features/dashboard/dashboard.dart';
 import 'package:kanca/gen/assets.gen.dart';
 import 'package:kanca/utils/extensions/extensions.dart';
 import 'package:kanca/widgets/widgets.dart';
@@ -66,7 +66,10 @@ class _LoginPageState extends State<LoginPage> {
     //   );
     // }
 
-    await context.push(const StoryPage());
+    await context.pushAndRemoveUntil(
+      const DashboardPage(),
+      (route) => false,
+    );
 
     setState(() => _isLoading = false);
   }
