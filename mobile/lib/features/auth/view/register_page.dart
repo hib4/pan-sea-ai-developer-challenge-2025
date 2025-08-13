@@ -1,13 +1,7 @@
-import 'dart:convert';
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:http/http.dart' as http;
 import 'package:kanca/core/core.dart';
-import 'package:kanca/features/auth/view/login_page.dart';
-import 'package:kanca/features/story/story.dart';
-import 'package:kanca/features/test_page.dart';
+import 'package:kanca/features/dashboard/dashboard.dart';
 import 'package:kanca/gen/assets.gen.dart';
 import 'package:kanca/utils/extensions/extensions.dart';
 import 'package:kanca/widgets/widgets.dart';
@@ -81,7 +75,10 @@ class _RegisterPageState extends State<RegisterPage> {
     //   );
     // }
 
-    await context.push(const StoryPage());
+    await context.pushAndRemoveUntil(
+      const DashboardPage(),
+      (route) => false,
+    );
 
     setState(() => _isLoading = false);
   }
