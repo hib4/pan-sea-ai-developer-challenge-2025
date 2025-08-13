@@ -67,8 +67,8 @@ class StoryResponse(BaseModel):
 
 # Create FastAPI instance
 app = FastAPI(
-    title="Indonesian Financial Literacy Storytelling API",
-    description="Generate interactive stories for children's financial education",
+    title="Indonesian Storytelling API",
+    description="Generate interactive stories for children's education",
     version="1.0.0"
 )
 
