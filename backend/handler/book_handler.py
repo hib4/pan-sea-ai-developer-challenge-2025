@@ -25,17 +25,17 @@ async def create_book(body: book_schema.create_book_schema, current_user):
         raise HTTPException(status_code= 400, detail= f"invalid language_code")
 
     # fetch to book_stort_generation_url
-    # book = await post(
-    #     url= f"{book_stort_generation_url}/generate-story",
-    #     body= {
-    #         "query": query,
-    #         "user_id": current_user.get("id"),
-    #         "age": age,
-    #         "language": language
-    #     }
-    # )
+    book = await post(
+        url= f"{book_stort_generation_url}/generate-story",
+        body= {
+            "query": query,
+            "user_id": current_user.get("id"),
+            "age": age,
+            "language": language
+        }
+    )
 
-    book = dummy_scene_json
+    # book = dummy_scene_json
 
     scenes = book.get("scene")
     extracted_scenes = [
