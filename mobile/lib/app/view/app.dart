@@ -1,6 +1,7 @@
 import 'package:device_frame/device_frame.dart';
 import 'package:flutter/material.dart';
 import 'package:kanca/core/theme/app_theme.dart';
+import 'package:kanca/features/dashboard/dashboard.dart';
 import 'package:kanca/features/onboarding/onboarding.dart';
 import 'package:kanca/l10n/l10n.dart';
 
@@ -25,7 +26,7 @@ class App extends StatelessWidget {
             screen: child ?? const SizedBox.shrink(),
           );
         },
-        home: const OnboardingPage(),
+        home: const DashboardPage(),
       ),
     );
   }
