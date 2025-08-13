@@ -2,11 +2,11 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from typing import Optional, List
 import uvicorn
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, SecretStr
 from typing import Optional, List, Dict, Any
 from fastapi import FastAPI, HTTPException, BackgroundTasks
 import json
-from rag import FinancialLiteracyRAG
+from rag import IndonesianStoryRAG
 from langchain_openai import ChatOpenAI
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
@@ -16,9 +16,10 @@ load_dotenv()
 
 # Request models
 class StoryRequest(BaseModel):
-    query: str = Field(..., description="Story request in Indonesian", example="Cerita tentang menabung")
-    user_id: str = Field(..., example="user123")
-    age: int = Field(..., example=7, description="Age of the child")
+    query: str = Field(description="Story request in Indonesian", examples=["Cerita tentang menabung"])
+    user_id: str = Field(examples=["user123"], description="Unique identifier for the user")
+    age: int = Field(description="Age of the child")
+    language: str = Field(default="indonesian", description="Language of the story", examples=["indonesian", "english"])
 
 # Response models
 class Character(BaseModel):
@@ -81,16 +82,17 @@ app.add_middleware(
 )
 
 # Initialize your RAG system
-rag = FinancialLiteracyRAG(
+rag = IndonesianStoryRAG(
     data_dir='./knowledge_base',
     persist_directory='./chroma_db'
 )
 rag.initialize_rag(rebuild=True)
 
 chat_model = ChatOpenAI(
-    model="gpt-4o", 
+    model="aisingapore/Llama-SEA-LION-v3.5-8B-R",
     temperature=0.7,
-    openai_api_key=os.getenv("OPENAI_API_KEY"),
+    api_key=SecretStr(os.getenv("SEALION_API_KEY", "")),
+    base_url="https://api.sea-lion.ai/v1"
 )
 
 def convert_age_to_range(age: int) -> str:
@@ -127,7 +129,7 @@ def validate_story_content(story_data: dict, user_id: str, age: int):
         "scene": [],
         "cover_img_url": None,
         "cover_img_description": "",
-        "description": "A story about financial literacy for children.",
+        "description": "A story about moral value for children.",
         "estimated_reading_time": 3600
     }
     
@@ -287,13 +289,22 @@ async def generate_story(request: StoryRequest):
             query=request.query,
             user_id=request.user_id,
             age=request.age,
+            language=request.language
         )
         
         # Get response from LLM
         response = chat_model.invoke(prompt)
         
         # Clean and parse JSON
-        story_json = clean_json_response(response.content)
+        if response:
+            # Ensure content is a string before passing to clean_json_response
+            content = response.content
+            if isinstance(content, list):
+                # If content is a list, join it or take the first string element
+                content = ' '.join(str(item) for item in content if isinstance(item, (str, dict)))
+            elif not isinstance(content, str):
+                content = str(content)
+            story_json = clean_json_response(content)
         
         # Validate and standardize the story content
         story_json = validate_story_content(story_json, request.user_id, request.age)
@@ -310,7 +321,7 @@ def clean_json_response(content: str) -> dict:
     
     # Remove markdown formatting
     if "```json" in content:
-        content = re.search(r'```json\n(.*?)\n```', content, re.DOTALL).group(1)
+        content = re.search(r'```json\n(.*?)\n```', content, re.DOTALL).group(1) # type: ignore
     
     try:
         return json.loads(content)
@@ -320,7 +331,7 @@ def clean_json_response(content: str) -> dict:
 # Health check endpoint
 @app.get("/")
 async def root():
-    return {"message": "Indonesian Financial Literacy API is running!"}
+    return {"message": "Indonesian Moral Value Story API is running!"}
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8001)
