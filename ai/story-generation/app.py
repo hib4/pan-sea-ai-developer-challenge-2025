@@ -89,7 +89,7 @@ rag = IndonesianStoryRAG(
 rag.initialize_rag(rebuild=True)
 
 chat_model = ChatOpenAI(
-    model="aisingapore/Llama-SEA-LION-v3.5-8B-R",
+    model="aisingapore/Llama-SEA-LION-v3.5-70B-R",
     temperature=0.7,
     api_key=SecretStr(os.getenv("SEALION_API_KEY", "")),
     base_url="https://api.sea-lion.ai/v1"
