@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:kanca/gen/assets.gen.dart';
 
 class AppTheme extends InheritedWidget {
   const AppTheme({
@@ -375,9 +376,12 @@ class AppThemeData {
       progressIndicatorTheme: const ProgressIndicatorThemeData(
         color: Colors.white,
       ),
-      // actionIconTheme: ActionIconThemeData(
-      //   backButtonIconBuilder: (context) => Assets.icons.arrowLeft.svg(),
-      // ),
+      actionIconTheme: ActionIconThemeData(
+        backButtonIconBuilder: (context) => Assets.icons.back.image(
+          width: 56,
+          height: 56,
+        ),
+      ),
       appBarTheme: AppBarTheme(
         backgroundColor: Colors.white,
         surfaceTintColor: appColors.neutral[100],
@@ -389,10 +393,10 @@ class AppThemeData {
           color: Colors.white,
         ),
         iconTheme: const IconThemeData(
-          color: Colors.white,
+          color: Colors.black,
         ),
         actionsIconTheme: const IconThemeData(
-          color: Colors.white,
+          color: Colors.black,
         ),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
