@@ -294,18 +294,12 @@ async def generate_story(request: StoryRequest):
         
         # Get response from LLM
         response = chat_model.invoke(prompt)
-        
         # Clean and parse JSON
         if response:
-            # Ensure content is a string before passing to clean_json_response
-            content = response.content
-            if isinstance(content, list):
-                # If content is a list, join it or take the first string element
-                content = ' '.join(str(item) for item in content if isinstance(item, (str, dict)))
-            elif not isinstance(content, str):
-                content = str(content)
+            content = str(response.content)
             story_json = clean_json_response(content)
         
+        print('Validating story content...')
         # Validate and standardize the story content
         story_json = validate_story_content(story_json, request.user_id, request.age)
         
