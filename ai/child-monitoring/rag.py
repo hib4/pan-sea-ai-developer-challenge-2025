@@ -186,7 +186,7 @@ class ChildMonitoringRAG:
         Returns a dictionary mapping API type to its JSON response string.
         """
 
-        results = []
+        results = {}
         for api_detail in api_details:
             url = self.backend_api_base_url
             api_type = api_detail.get("api_type")
@@ -235,7 +235,7 @@ class ChildMonitoringRAG:
                 url=url,
                 headers=header,
             )
-            results.append(response.content)
+            results[api_type] = response.content.decode('utf-8')
         
         return results
         

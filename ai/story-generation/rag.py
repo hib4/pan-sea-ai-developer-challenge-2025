@@ -7,10 +7,11 @@ from langchain_openai import OpenAIEmbeddings
 from langchain.prompts import ChatPromptTemplate
 import json
 from dotenv import load_dotenv
+
 load_dotenv()  # Load environment variables from .env file
 
 
-class FinancialLiteracyRAG:
+class IndonesianStoryRAG:
     def __init__(
         self,
         data_dir: str,
@@ -19,63 +20,28 @@ class FinancialLiteracyRAG:
     ):
         self.data_dir = data_dir
         self.persist_directory = persist_directory
-        self.model = model
-
-        # Initialize components
-        self.embeddings = OpenAIEmbeddings(
-            model=model,
-            openai_api_key=os.getenv("OPENAI_API_KEY", "your_openai_api_key_here"),
-        )
+        self.embeddings = OpenAIEmbeddings(model=model)
         self.vectorstore = None
         self.retriever = None
-
-    def add_metadata(self, documents):
-        for doc in documents:
-            # Extract metadata from file path
-            file_path = doc.metadata.get("source", "")
-
-            # Age range detection based on file name
-            if "4_7.md" in file_path:
-                doc.metadata["age_range"] = "4-7"
-                doc.metadata["min_age"] = 4
-                doc.metadata["max_age"] = 7
-            elif "8_10.md" in file_path:
-                doc.metadata["age_range"] = "8-10"
-                doc.metadata["min_age"] = 8
-                doc.metadata["max_age"] = 10
-            elif "11_12.md" in file_path:
-                doc.metadata["age_range"] = "11-12"
-                doc.metadata["min_age"] = 11
-                doc.metadata["max_age"] = 12
-
-            # Content type detection
-            if "cultural_elements" in file_path:
-                doc.metadata["content_type"] = "cultural"
-            elif "financial_concepts" in file_path:
-                doc.metadata["content_type"] = "financial"
-            elif "stories" in file_path:
-                doc.metadata["content_type"] = "story"
 
     def setup_vector_store(self, documents, top_k: int = 10, chunk_size: int = 600):
         """
         Create vector store and set up retriever
         """
-        # Add metadata to documents
-        self.add_metadata(documents)
-
         # Split documents into chunks
         text_splitter = RecursiveCharacterTextSplitter(
             chunk_size=chunk_size,
             chunk_overlap=100,
             separators=["\n\n", "\n", "### ", "## ", "- ", ".", "!", "?", ",", " "],
-            length_function=len,
         )
 
         splits = text_splitter.split_documents(documents)
 
         # Create vector store
         self.vector_store = Chroma.from_documents(
-            documents=splits, embedding=self.embeddings, persist_directory="./chroma_db"
+            documents=splits,
+            embedding=self.embeddings,
+            persist_directory=self.persist_directory,
         )
 
         # Set up retriever
@@ -90,21 +56,24 @@ class FinancialLiteracyRAG:
         Build the output format template for the story
         """
         print("Building output format template...")
-        print(f"User ID: {user_id}, Age Group: {age_group}")
         return json.dumps(
             {
                 "user_id": user_id,
                 "title": "<judul cerita akan diisi oleh LLM>",
                 "theme": [
                     """
-                    Menabung, Berbagi, Kebutuhan vs Keinginan, Instrumen Keuangan, Kejujuran, 
-                    Kerja Keras, Tanggung Jawab, Perencanaan Keuangan, Nilai Uang, Konsep Dasar Uang,
-                    Donasi, Berbelanja dengan Bijak, Kewirausahaan, Gotong Royong, Amanah, Investasi,
+                    Kejujuran, Tanggung Jawab, Disiplin, Empati, Rasa Hormat, Toleransi, Kerja Sama, 
+                    Kepedulian, Keadilan, Keberanian, Kerendahan Hati, Ketekunan, Pantang Menyerah, 
+                    Amanah, Gotong Royong, Sopan Santun, Sportivitas, Syukur, 
+                    Komunikasi, Pemecahan Masalah, Pengambilan Keputusan, Manajemen Waktu, Pengendalian Diri, 
+                    Manajemen Emosi, Resolusi Konflik, Kerja Tim, Berpikir Kritis, Kreativitas, Literasi Digital, 
+                    Keamanan Daring, Etika Bermedia Sosial, Kebersihan Diri, Kesehatan Dasar, Kesadaran Diri, 
+                    Perencanaan Tujuan
                     """
                     "<pilih 1 - 3 tema yang sesuai dari pilihan tersebut, pastikan sama dan konsisten dengan pilihan tersebut, kembalikan dalam bentuk list>"
                 ],
                 "language": "indonesian",
-                "status": "in_progress",
+                "status": "not_started",
                 "age_group": age_group,
                 "current_scene": 1,
                 "created_at": None,
@@ -218,7 +187,6 @@ class FinancialLiteracyRAG:
             print("RAG system initialized successfully!")
             return True
 
-
     @staticmethod
     def build_story_structure_rules(age_group: int) -> str:
         if 4 <= age_group <= 5:
@@ -246,84 +214,16 @@ class FinancialLiteracyRAG:
         else:
             return "Gunakan struktur 10 scene default."
 
-    def filter_retrieved_docs(self, docs, age, k=6):
-        """
-        Filter and prioritize documents, prioritizing matching age group and financial concepts before cultural elements and stories.
-        """
-        # Priority 1: Exact age match
-        age_exact = [
-            doc
-            for doc in docs
-            if doc.metadata.get("min_age", 0) <= age <= doc.metadata.get("max_age", 12)
-            and doc.metadata.get("content_type") == "financial"
-        ]
-
-        # Priority 2: Financial core concepts
-        financial_concepts = [
-            doc
-            for doc in docs
-            if doc.metadata.get("content_type") == "financial"
-            and "core_concepts" in doc.metadata.get("source")
-        ]
-
-        # Priority 3: Cultural elements and stories (universal content)
-        cultural_story = [
-            doc
-            for doc in docs
-            if doc.metadata.get("content_type") in ["cultural", "story"]
-            and doc not in age_exact
-        ]
-
-        # Priority 4: Everything else
-        other_content = [
-            doc
-            for doc in docs
-            if doc not in age_exact
-            and doc not in financial_concepts
-            and doc not in cultural_story
-        ]
-
-        # Combine with limits to ensure balance
-        prioritized_docs = (
-            age_exact[:3]  # Max 3 from exact age
-            + financial_concepts[:2]  # Max 2 from financial core concepts
-            + cultural_story[:2]  # Max 2 cultural/story
-            + other_content  # Fill remaining
-        )[:k]
-
-        print(f"Filtering for age {age}:")
-        print(f"  Age-appropriate: {len(age_exact)}")
-        print(
-            f" Age-appropriate documents: {[doc.metadata.get('source', 'Unknown') for doc in age_exact]}"
-        )
-
-        print(f"  Adjacent financial: {len(financial_concepts)}")
-        print(
-            f"  Financial concepts documents: {[doc.metadata.get('source', 'Unknown') for doc in financial_concepts]}"
-        )
-
-        print(f"  Cultural/Story: {len(cultural_story)}")
-        print(
-            f"  Cultural/Story documents: {[doc.metadata.get('source', 'Unknown') for doc in cultural_story]}"
-        )
-
-        print(f"  Universal content: {len(other_content)}")
-        print(f"  Other documents: {[doc.metadata.get('source', 'Unknown') for doc in other_content]}")
-        
-        print(f"  Final selection: {len(prioritized_docs)} documents")
-        print(f"  Selected documents: {[doc.metadata.get('source', 'Unknown') for doc in prioritized_docs]}")
-        return prioritized_docs
-
-    def create_prompt(self, query, user_id, age: int):  # Change parameter to int
+    def create_prompt(self, language, query, user_id, age: int):  # Change parameter to int
         PROMPT_TEMPLATE = """
-        You are an expert Indonesian storyteller specializing in teaching financial literacy to children.
+        You are an expert Indonesian storyteller specializing in teaching **general moral values** 
+        and **basic life skills** to children.
 
-        Generate a JSON-formatted interactive story in **Bahasa Indonesia** for children aged {age}, with:
-        - Indonesian character names and culturally relevant settings (e.g., warung, pasar)
-        - Age-appropriate financial literacy lessons (saving, budgeting, honesty, etc.)
+        Generate a JSON-formatted interactive story in {language} for children aged {age}. with:
+        - Indonesian character names and culturally relevant settings
         - Two decision points (unless otherwise noted), each with two choices, that affect the story ending
 
-        You can use the following context to inform your story, but you are not limited to it. Feel free to create engaging and educational content based on the query provided.
+        You can use the following Indonesian story contexts and examples as inspiration for your story, but you are not limited to it. Feel free to create engaging and educational content based on the query provided.
         ### Context:
         {context}
         
@@ -340,7 +240,6 @@ class FinancialLiteracyRAG:
         4. Provide at least two different endings with different moral outcomes
         5. Do not include markdown or explanations—just clean JSON
         6. For higher age groups (11 - 12), the decision points can be more like a quiz to test their understanding for the said concept.
-        For example: "Apa itu pegadaian ?"
 
         ### Format:
         {output_format}
@@ -353,11 +252,8 @@ class FinancialLiteracyRAG:
                 context_docs = self.retriever.invoke(query)
                 print(f"Retrieved {len(context_docs)} relevant documents")
 
-                # Filter and prioritize documents based on age (now int)
-                prioritized_docs = self.filter_retrieved_docs(context_docs, age)
-
                 # Extract content from documents
-                context = [doc.page_content for doc in prioritized_docs]
+                context = [doc.page_content for doc in context_docs]
             except Exception as e:
                 print(f"Error retrieving documents: {e}")
                 context = ["Tidak ada konteks yang relevan ditemukan."]
@@ -383,6 +279,26 @@ class FinancialLiteracyRAG:
             age=age,
             output_format=output_format,
             structure_rules=structure_rules,
+            language=language,
         )
 
         return formatted_prompt
+
+# Create test instance
+if __name__ == "__main__":
+    rag_system = IndonesianStoryRAG(
+        data_dir="knowledge_base",
+        persist_directory="chroma_db",
+        model="text-embedding-3-small",
+    )
+    rag_system.initialize_rag(rebuild=True)
+    print("RAG system initialized and ready to use.")
+    
+    # Example usage
+    prompt = rag_system.create_prompt(
+        language="indonesian",
+        query="Ceritakan tentang pentingnya mmemiliki rasa mempati kepada sesama dengan karakter binatang - binatang di hutan",
+        user_id="user123",
+        age=7
+    )
+    print(prompt.to_messages())

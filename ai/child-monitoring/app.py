@@ -73,9 +73,9 @@ main_llm = ChatOpenAI(
 
 # Pydantic models for request/response
 class ChatRequest(BaseModel):
-    message: str = Field(..., description="User's message/question"),
-    child_age: int = Field(..., ge=3, le=18, description="Child's age in years"),
-    token: str = Field(None, description="Authentication token for internal use")
+    message: str = Field(..., description="User's message/question")
+    child_age: int = Field(..., ge=3, le=18, description="Child's age in years")
+    token: str = Field(..., description="Authentication token for internal use")
 
 class ChatResponse(BaseModel):
     response: str
@@ -149,11 +149,6 @@ async def chat_stream(request: ChatRequest):
         raise HTTPException(status_code=500, detail="RAG system not initialized")
     
     try:
-        # Generate the prompt using your RAG system
-        print(f"Processing query: {request.message}")
-        print(f"Child age: {request.child_age}")
-        print(f"Token: {request.token}")
-        
         # Create the prompt using your RAG system
         prompt_value = rag_system.create_prompt(
             token=request.token,
@@ -194,7 +189,8 @@ async def chat(request: ChatRequest):
         # Create the prompt using your RAG system
         prompt_value = rag_system.create_prompt(
             query=request.message,
-            child_age=request.child_age
+            child_age=request.child_age,
+            token=request.token,  # Optional token for internal use
         )
         
         # Get response from LLM (non-streaming)
