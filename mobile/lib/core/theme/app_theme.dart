@@ -408,7 +408,7 @@ class AppThemeData {
             borderRadius: BorderRadius.circular(24),
           ),
           textStyle: GoogleFonts.lexend(
-            fontSize: 14,
+            fontSize: 16,
             fontWeight: FontWeight.w600,
           ),
         ),

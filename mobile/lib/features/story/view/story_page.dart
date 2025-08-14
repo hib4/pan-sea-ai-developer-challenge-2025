@@ -1,46 +1,123 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:kanca/core/core.dart';
+import 'package:kanca/features/dashboard/dashboard.dart';
+import 'package:kanca/features/story/story.dart';
+import 'package:kanca/gen/assets.gen.dart';
+import 'package:kanca/utils/utils.dart';
 
 class Story {
   Story({
     required this.title,
     required this.description,
-    required this.coverImgUrl,
     required this.themes,
     required this.scenes,
     required this.currentScene,
     required this.totalScenes,
+    this.id,
+    this.userId,
+    this.language,
+    this.status,
+    this.ageGroup,
+    this.createdAt,
+    this.finishedAt,
+    this.maximumPoint,
+    this.storyFlow,
+    this.characters,
+    this.userStory,
+    this.coverImgUrl,
+    this.estimatedReadingTime,
   });
 
+  final String? id;
+  final String? userId;
   final String title;
   final String description;
-  final String coverImgUrl;
+  final String? coverImgUrl;
   final List<String> themes;
+  final String? language;
+  final String? status;
+  final int? ageGroup;
+  final String? createdAt;
+  final String? finishedAt;
+  final int? maximumPoint;
+  final StoryFlow? storyFlow;
+  final List<Character>? characters;
+  final UserStory? userStory;
   final List<Scene> scenes;
   final int currentScene;
   final int totalScenes;
+  final int? estimatedReadingTime;
+}
+
+class StoryFlow {
+  StoryFlow({
+    required this.totalScene,
+    required this.decisionPoint,
+    required this.ending,
+  });
+
+  final int totalScene;
+  final List<int> decisionPoint;
+  final List<int> ending;
+}
+
+class Character {
+  Character({
+    required this.name,
+    required this.description,
+  });
+
+  final String name;
+  final String description;
+}
+
+class UserStory {
+  UserStory({
+    required this.visitedScene,
+    required this.choices,
+    required this.totalPoint,
+    required this.finishedTime,
+  });
+
+  final List<int> visitedScene;
+  final List<String> choices;
+  final int totalPoint;
+  final int finishedTime;
 }
 
 class Scene {
   Scene({
     required this.sceneId,
     required this.type,
-    required this.imgUrl,
     required this.imgDescription,
     required this.content,
+    this.imgUrl,
     this.voiceUrl,
     this.branch,
     this.lessonLearned,
+    this.nextScene,
+    this.selectedChoice,
+    this.endingType,
+    this.moralValue,
+    this.meaning,
+    this.example,
   });
 
   final int sceneId;
   final String type; // 'narrative', 'decision_point', 'ending'
-  final String imgUrl;
+  final String? imgUrl;
   final String imgDescription;
   final String? voiceUrl;
   final String content;
+  final int? nextScene;
   final List<SceneChoice>? branch;
   final String? lessonLearned;
+  final String? selectedChoice;
+  final String? endingType;
+  final String? moralValue;
+  final String? meaning;
+  final String? example;
 }
 
 class SceneChoice {
@@ -80,6 +157,14 @@ class _StoryPageState extends State<StoryPage> {
     super.initState();
     story = _demoStory();
     currentSceneIndex = story.currentScene - 1;
+
+    // Debug: Print image URLs
+    debugPrint('=== Image URL Debug ===');
+    debugPrint('Cover image URL: ${story.coverImgUrl}');
+    for (final scene in story.scenes) {
+      debugPrint('Scene ${scene.sceneId} image URL: ${scene.imgUrl}');
+    }
+    debugPrint('=== End Debug ===');
   }
 
   void _goToScene(int sceneId) {
@@ -133,27 +218,31 @@ class _StoryPageState extends State<StoryPage> {
     // Initial: Only show Story Header and Start button
     if (!started) {
       return Scaffold(
-        backgroundColor: colors.neutral[100],
-        appBar: AppBar(
-          backgroundColor: colors.primary[500],
-          elevation: 0,
-          title: Text(
-            story.title,
-            style: textTheme.body.copyWith(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          centerTitle: true,
-        ),
         body: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.only(
+              left: 24,
+              right: 24,
+              bottom: 24,
+            ),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: InkWell(
+                    onTap: () {
+                      context.pop();
+                    },
+                    borderRadius: BorderRadius.circular(28),
+                    child: Assets.icons.back.image(
+                      width: 56,
+                      height: 56,
+                    ),
+                  ),
+                ),
+                32.vertical,
                 _StoryHeader(story: story),
-                const SizedBox(height: 32),
+                32.vertical,
                 Center(
                   child: ElevatedButton(
                     onPressed: _startStory,
@@ -167,10 +256,7 @@ class _StoryPageState extends State<StoryPage> {
                         vertical: 16,
                       ),
                     ),
-                    child: Text(
-                      'Mulai Cerita',
-                      style: textTheme.body.copyWith(color: Colors.white),
-                    ),
+                    child: const Text('Mulai Cerita'),
                   ),
                 ),
               ],
@@ -183,33 +269,12 @@ class _StoryPageState extends State<StoryPage> {
     // After start: Show Scene Card and Progress
     if (isEnding) {
       return Scaffold(
-        backgroundColor: colors.neutral[100],
-        appBar: AppBar(
-          backgroundColor: colors.primary[500],
-          elevation: 0,
-          title: Text(
-            story.title,
-            style: textTheme.body.copyWith(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          centerTitle: true,
-          // actions: [
-          //   Padding(
-          //     padding: const EdgeInsets.symmetric(horizontal: 16),
-          //     child: Center(
-          //       child: Text(
-          //         '${currentSceneIndex + 1}/${story.totalScenes}',
-          //         style: textTheme.caption.copyWith(color: Colors.white),
-          //       ),
-          //     ),
-          //   ),
-          // ],
-        ),
         body: Center(
           child: _EndingCard(
-            lesson: scene.lessonLearned ?? '',
+            endingType: scene.endingType == 'good',
+            coreValue: scene.moralValue ?? '',
+            meaning: scene.meaning ?? '',
+            realLifeExample: scene.example ?? '',
             onRestart: _restart,
             textTheme: textTheme,
             colors: colors,
@@ -217,31 +282,8 @@ class _StoryPageState extends State<StoryPage> {
         ),
       );
     }
+
     return Scaffold(
-      backgroundColor: colors.neutral[100],
-      appBar: AppBar(
-        backgroundColor: colors.primary[500],
-        elevation: 0,
-        title: Text(
-          story.title,
-          style: textTheme.body.copyWith(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        centerTitle: true,
-        // actions: [
-        //   Padding(
-        //     padding: const EdgeInsets.symmetric(horizontal: 16),
-        //     child: Center(
-        //       child: Text(
-        //         '${currentSceneIndex + 1}/${story.totalScenes}',
-        //         style: textTheme.caption.copyWith(color: Colors.white),
-        //       ),
-        //     ),
-        //   ),
-        // ],
-      ),
       body: _SceneCard(
         scene: scene,
         onChoice: isDecision ? _choose : null,
@@ -271,12 +313,72 @@ class _StoryHeader extends StatelessWidget {
       children: [
         ClipRRect(
           borderRadius: BorderRadius.circular(20),
-          child: Image.network(
-            story.coverImgUrl,
-            height: 180,
-            width: double.infinity,
-            fit: BoxFit.cover,
-          ),
+          child: story.coverImgUrl != null
+              ? Image.network(
+                  story.coverImgUrl!,
+                  height: 180,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                  webHtmlElementStrategy: WebHtmlElementStrategy.prefer,
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return Container(
+                      height: 180,
+                      width: double.infinity,
+                      color: colors.primary[100],
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          value: loadingProgress.expectedTotalBytes != null
+                              ? loadingProgress.cumulativeBytesLoaded /
+                                    loadingProgress.expectedTotalBytes!
+                              : null,
+                          color: colors.primary[500],
+                        ),
+                      ),
+                    );
+                  },
+                  errorBuilder: (c, e, s) {
+                    debugPrint('Cover image load error: $e');
+                    debugPrint('Cover image URL: ${story.coverImgUrl}');
+                    return Container(
+                      height: 180,
+                      width: double.infinity,
+                      color: colors.neutral[200],
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.broken_image,
+                              color: colors.grey[400],
+                              size: 32,
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              'Image failed to load',
+                              style: TextStyle(
+                                color: colors.grey[600],
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                )
+              : Container(
+                  height: 180,
+                  width: double.infinity,
+                  color: colors.primary[100],
+                  child: Center(
+                    child: Icon(
+                      Icons.auto_stories,
+                      size: 64,
+                      color: colors.primary[400],
+                    ),
+                  ),
+                ),
         ),
         const SizedBox(height: 16),
         Text(story.title, style: textTheme.h4),
@@ -338,18 +440,67 @@ class _SceneCard extends StatelessWidget {
       children: [
         // Full background image
         Positioned.fill(
-          child: Image.network(
-            scene.imgUrl,
-            fit: BoxFit.cover,
-            width: double.infinity,
-            height: double.infinity,
-            errorBuilder: (c, e, s) => Container(
-              color: colors.neutral[200],
-              child: Center(
-                child: Icon(Icons.broken_image, color: colors.grey[400]),
-              ),
-            ),
-          ),
+          child: scene.imgUrl != null
+              ? Image.network(
+                  scene.imgUrl!,
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                  height: double.infinity,
+                  webHtmlElementStrategy: WebHtmlElementStrategy.prefer,
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return Container(
+                      color: colors.primary[50],
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          value: loadingProgress.expectedTotalBytes != null
+                              ? loadingProgress.cumulativeBytesLoaded /
+                                    loadingProgress.expectedTotalBytes!
+                              : null,
+                          color: colors.primary[500],
+                        ),
+                      ),
+                    );
+                  },
+                  errorBuilder: (c, e, s) {
+                    debugPrint('Scene image load error: $e');
+                    debugPrint('Scene image URL: ${scene.imgUrl}');
+                    debugPrint('Scene ID: ${scene.sceneId}');
+                    return Container(
+                      color: colors.neutral[200],
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.broken_image,
+                              color: colors.grey[400],
+                              size: 48,
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              'Scene image failed to load',
+                              style: TextStyle(
+                                color: colors.grey[600],
+                                fontSize: 14,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                )
+              : Container(
+                  color: colors.primary[50],
+                  child: Center(
+                    child: Icon(
+                      Icons.nature,
+                      size: 100,
+                      color: colors.primary[200],
+                    ),
+                  ),
+                ),
         ),
         // Full gradient overlay
         Positioned.fill(
@@ -360,7 +511,7 @@ class _SceneCard extends StatelessWidget {
                 end: Alignment.bottomCenter,
                 colors: [
                   Colors.black.withOpacity(0.08),
-                  Colors.white.withOpacity(0.85),
+                  Colors.white.withOpacity(0.3),
                 ],
               ),
             ),
@@ -429,27 +580,9 @@ class _SceneCard extends StatelessWidget {
                             borderRadius: BorderRadius.circular(16),
                           ),
                         ),
-                        child: Text(
-                          'Lanjut',
-                          style: textTheme.body.copyWith(color: Colors.white),
-                        ),
+                        child: const Text('Lanjut'),
                       ),
                     ),
-                  // Align(
-                  //   alignment: Alignment.bottomLeft,
-                  //   child: Padding(
-                  //     padding: const EdgeInsets.only(bottom: 8),
-                  //     child: CircleAvatar(
-                  //       radius: 32,
-                  //       backgroundColor: colors.primary[100],
-                  //       child: Icon(
-                  //         Icons.pets,
-                  //         size: 40,
-                  //         color: colors.primary[700],
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
                   const SizedBox(height: 8),
                 ],
               ),
@@ -479,34 +612,70 @@ class _SpeechBubble extends StatelessWidget {
     return Stack(
       children: [
         Container(
-          margin: const EdgeInsets.only(left: 32, top: 16),
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          margin: const EdgeInsets.only(left: 16, right: 40),
+          padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Colors.transparent,
             borderRadius: BorderRadius.circular(24),
-            boxShadow: [
-              BoxShadow(
-                color: colors.primary[100]!.withOpacity(0.25),
-                blurRadius: 12,
-                offset: const Offset(0, 4),
-              ),
-            ],
           ),
           child: Text(
             content,
-            style: textTheme.body.copyWith(
-              color: colors.primary[700],
-              fontWeight: FontWeight.w600,
+            style: GoogleFonts.fredoka(
+              color: Colors.black,
+              fontSize: 20,
+              fontWeight: FontWeight.w500,
+              height: 1.2,
+              shadows: [
+                const Shadow(
+                  blurRadius: 8,
+                  color: Colors.white,
+                ),
+                const Shadow(
+                  blurRadius: 8,
+                  color: Colors.white,
+                ),
+                const Shadow(
+                  blurRadius: 8,
+                  color: Colors.white,
+                ),
+                const Shadow(
+                  blurRadius: 8,
+                  color: Colors.white,
+                ),
+                const Shadow(
+                  blurRadius: 8,
+                  color: Colors.white,
+                ),
+                const Shadow(
+                  blurRadius: 8,
+                  color: Colors.white,
+                ),
+                const Shadow(
+                  blurRadius: 8,
+                  color: Colors.white,
+                ),
+                const Shadow(
+                  blurRadius: 8,
+                  color: Colors.white,
+                ),
+                const Shadow(
+                  blurRadius: 8,
+                  color: Colors.white,
+                ),
+                const Shadow(
+                  blurRadius: 8,
+                  color: Colors.white,
+                ),
+                const Shadow(
+                  blurRadius: 8,
+                  color: Colors.white,
+                ),
+                const Shadow(
+                  blurRadius: 8,
+                  color: Colors.white,
+                ),
+              ],
             ),
-          ),
-        ),
-        Positioned(
-          left: 0,
-          top: 0,
-          child: CircleAvatar(
-            radius: 28,
-            backgroundColor: colors.primary[50],
-            child: Icon(icon, color: colors.primary[700], size: 32),
           ),
         ),
       ],
@@ -547,47 +716,152 @@ class _StoryProgressBar extends StatelessWidget {
 
 class _EndingCard extends StatelessWidget {
   const _EndingCard({
-    required this.lesson,
+    required this.endingType,
+    required this.coreValue,
+    required this.meaning,
+    required this.realLifeExample,
     required this.onRestart,
     required this.textTheme,
     required this.colors,
   });
 
-  final String lesson;
+  final bool endingType;
+  final String coreValue;
+  final String meaning;
+  final String realLifeExample;
   final VoidCallback onRestart;
   final AppTextStyles textTheme;
   final AppColors colors;
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: colors.primary[50],
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+    return SafeArea(
       child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        padding: const EdgeInsets.all(24),
+        child: Stack(
           children: [
-            Text(
-              'Pelajaran yang Didapat',
-              style: textTheme.h5.copyWith(color: colors.primary[700]),
-            ),
-            const SizedBox(height: 12),
-            Text(lesson, style: textTheme.body),
-            const SizedBox(height: 20),
             Center(
-              child: ElevatedButton(
-                onPressed: onRestart,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: colors.primary[500],
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Assets.mascots.hooray.image(
+                    width: 150,
+                    height: 150,
                   ),
-                ),
-                child: Text(
-                  'Ulangi Cerita',
-                  style: textTheme.body.copyWith(color: Colors.white),
-                ),
+                  16.vertical,
+                  Text(
+                    'Core Value',
+                    style: textTheme.h5.copyWith(
+                      color: colors.secondary[900],
+                    ),
+                  ),
+                  Text(
+                    coreValue,
+                    style: textTheme.h4.copyWith(
+                      color: colors.primary[500],
+                    ),
+                  ),
+                  24.vertical,
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 2,
+                    ),
+                    decoration: BoxDecoration(
+                      color: colors.secondary[900],
+                      borderRadius: BorderRadius.circular(24),
+                    ),
+                    child: Text(
+                      'Meaning',
+                      style: GoogleFonts.fredoka(
+                        color: colors.primary[50],
+                        fontSize: 21,
+                        fontWeight: FontWeight.w500,
+                        height: 1.2,
+                      ),
+                    ),
+                  ),
+                  12.vertical,
+                  Text(
+                    meaning,
+                    style: textTheme.lexendBody.copyWith(
+                      color: colors.secondary[900],
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  24.vertical,
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 2,
+                    ),
+                    decoration: BoxDecoration(
+                      color: colors.secondary[900],
+                      borderRadius: BorderRadius.circular(24),
+                    ),
+                    child: Text(
+                      'Real-life Example',
+                      style: GoogleFonts.fredoka(
+                        color: colors.primary[50],
+                        fontSize: 21,
+                        fontWeight: FontWeight.w500,
+                        height: 1.2,
+                      ),
+                    ),
+                  ),
+                  12.vertical,
+                  Text(
+                    realLifeExample,
+                    style: textTheme.lexendBody.copyWith(
+                      color: colors.secondary[900],
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  60.vertical,
+                ],
+              ),
+            ),
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        context.pushAndRemoveUntil(
+                          const DashboardPage(),
+                          (route) => false,
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: colors.neutral[500],
+                        side: BorderSide(
+                          color: colors.primary[500]!,
+                          width: 2,
+                        ),
+                      ),
+                      child: Text(
+                        'Home',
+                        style: GoogleFonts.lexend(
+                          color: colors.primary[500],
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+                  12.horizontal,
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        context.pushReplacement(const GenerateStoryPage());
+                      },
+                      child: const Text('New Story'),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
@@ -600,212 +874,229 @@ class _EndingCard extends StatelessWidget {
 // Demo data for preview
 Story _demoStory() {
   return Story(
-    title: 'Petualangan Investasi Dini di Desa Warna',
+    id: '689dedaccc3eb2600d547ede',
+    userId: '689ddfa87511fa82112bcbce',
+    title: 'The Magic Paintbrush Team',
     description:
-        'Cerita ini mengikuti petualangan Siti dan Budi dalam belajar tentang investasi dan menabung di Desa Warna. Mereka belajar pentingnya perencanaan keuangan dan kewirausahaan sejak dini.',
+        'Three friends must learn to work together to win the school art contest. Will they create something magical together or let their differences tear them apart?',
     coverImgUrl:
-        'https://bihackathon.blob.core.windows.net/storage/images/18f1ee52-d729-403d-b5c9-0ccf9ed37aee.png',
-    themes: ['Investasi', 'Menabung', 'Kewirausahaan'],
+        'https://bihackathon.blob.core.windows.net/storage/images/0964ce18-2665-4e25-b92d-a7f6f1dcb27e.png',
+    themes: ['Teamwork', 'Cooperation', 'Problem Solving'],
+    language: 'English',
+    status: 'not_started',
+    ageGroup: 8,
+    createdAt: '2025-08-14T14:07:40.873000',
+    maximumPoint: 10,
     currentScene: 1,
     totalScenes: 10,
+    estimatedReadingTime: 120,
+    storyFlow: StoryFlow(
+      totalScene: 10,
+      decisionPoint: [2, 4, 6],
+      ending: [7, 8, 9, 10],
+    ),
+    characters: [
+      Character(
+        name: 'Lina',
+        description:
+            'A kind and organized leader with curly brown hair. She loves planning and making sure everyone is happy.',
+      ),
+      Character(
+        name: 'Ben',
+        description:
+            "A shy but talented artist with glasses. He's quiet but has amazing ideas when he speaks up.",
+      ),
+      Character(
+        name: 'Mia',
+        description:
+            "A confident and creative girl with a big smile. She sometimes forgets to listen to others' ideas.",
+      ),
+      Character(
+        name: 'Mrs. Green',
+        description:
+            'A warm and encouraging teacher with green earrings. She believes in the power of teamwork.',
+      ),
+    ],
+    userStory: UserStory(
+      visitedScene: [],
+      choices: [],
+      totalPoint: 0,
+      finishedTime: 0,
+    ),
     scenes: [
       Scene(
         sceneId: 1,
         type: 'narrative',
         imgUrl:
-            'https://bihackathon.blob.core.windows.net/storage/images/a1dda1cd-872d-4a89-b86b-605cf2bc4a16.png',
+            'https://bihackathon.blob.core.windows.net/storage/images/8de026ca-f55f-4a20-b1f5-5fcf851d34f8.png',
         imgDescription:
-            'Siti and Budi in the village square discussing their dreams.',
-        voiceUrl:
-            'https://bihackathon.blob.core.windows.net/storage/voices/9376b163-bb73-42ef-956f-d7d3427f820a.wav',
+            'A classroom filled with colorful posters. Mrs. Green stands at the front, holding a paintbrush.',
         content:
-            'Di Desa Warna, Siti dan Budi memulai petualangan baru. Mereka baru saja mendengar dari Pak Ulet tentang pentingnya menabung dan bagaimana investasi dapat membantu mereka mencapai mimpi. Siti bermimpi memiliki perpustakaan sendiri, sedangkan Budi ingin membuka warung es krim. Namun, mereka tahu bahwa mereka harus mulai menabung sejak dini.',
-        branch: null,
-        lessonLearned: null,
+            "The big school art contest was coming up! Mrs. Green announced that each class needed to create one special project. 'This year, we're making a mural!' she said. 'Who has ideas?'\n\nLina jumped up. 'We could paint a magical forest!' Ben whispered, 'Maybe add a rainbow?' Mia shouted, 'I want to paint a unicorn!' The class buzzed with excitement. But how would they decide what to make?",
+        nextScene: 2,
       ),
       Scene(
         sceneId: 2,
         type: 'decision_point',
         imgUrl:
-            'https://bihackathon.blob.core.windows.net/storage/images/ade24c01-db15-4df8-b381-aef74e4862be.png',
-        imgDescription:
-            'Siti and Budi holding piggy banks, deciding their next financial step.',
-        voiceUrl:
-            'https://bihackathon.blob.core.windows.net/storage/voices/d9fc28bb-21f3-4e67-baca-2fed4791303a.wav',
+            'https://bihackathon.blob.core.windows.net/storage/images/ba090920-cfea-49ae-8e6a-cf10f1085401.png',
+        imgDescription: 'The class voting on ideas, with hands raised.',
         content:
-            'Siti dan Budi berjalan-jalan di pasar desa. Mereka melihat banyak barang menarik di sana. Siti ingin membeli buku baru, sementara Budi tergoda dengan mainan robot. Namun, mereka tahu uang mereka terbatas. Apa yang harus mereka lakukan?',
+            "The class voted on ideas. Lina said, 'Let's make a magical forest with everyone's ideas!' Mia said, 'I want to paint my own unicorn!' Ben whispered, 'Maybe we can combine both ideas...'\n\nWhat should they do?",
         branch: [
           SceneChoice(
-            choice: 'baik',
-            content: 'Menyimpan uang di celengan untuk investasi masa depan.',
-            moralValue:
-                'Belajar menabung dan menahan godaan untuk kebutuhan masa depan.',
-            point: 50,
+            choice: 'good',
+            content: "Combine everyone's ideas into one big mural!",
+            moralValue: 'Teamwork',
+            point: 3,
             nextScene: 3,
           ),
           SceneChoice(
-            choice: 'buruk',
-            content:
-                'Menghabiskan uang untuk membeli barang-barang yang diinginkan.',
-            moralValue:
-                'Belajar bahwa menghabiskan uang untuk keinginan bisa menghambat tujuan masa depan.',
-            point: -20,
+            choice: 'bad',
+            content: 'Let each student paint their own small picture.',
+            moralValue: 'Individualism',
+            point: -2,
             nextScene: 5,
           ),
         ],
-        lessonLearned: null,
       ),
       Scene(
         sceneId: 3,
         type: 'narrative',
         imgUrl:
-            'https://bihackathon.blob.core.windows.net/storage/images/5dab4a61-fdfc-4d07-88a4-4e6c3c7bd443.png',
+            'https://bihackathon.blob.core.windows.net/storage/images/a4605fb5-8e87-41f7-b228-f5959502522f.png',
         imgDescription:
-            'Siti and Budi happily putting money into their piggy banks.',
-        voiceUrl:
-            'https://bihackathon.blob.core.windows.net/storage/voices/62860e73-cfb8-4190-bd58-7686f2d4dc5e.wav',
+            'The class sketching a mural with a forest, rainbow, and unicorn.',
         content:
-            'Siti dan Budi memutuskan untuk menyimpan uang mereka di celengan. Mereka merasa bangga karena bisa menahan godaan dan fokus pada tujuan mereka. Pak Ulet pun memuji keputusan mereka dan memberikan hadiah berupa buku tentang investasi sederhana.',
-        branch: null,
-        lessonLearned: null,
+            "They decided to make one big mural! Lina organized the sections. Ben drew a beautiful rainbow. Mia painted a sparkly unicorn. But Mia started adding too many unicorns, making the forest look crowded.\n\n'Wait, Mia,' Lina said gently. 'We need space for the trees too.' Should Mia listen or keep adding unicorns?",
+        nextScene: 4,
       ),
       Scene(
         sceneId: 4,
         type: 'decision_point',
         imgUrl:
-            'https://bihackathon.blob.core.windows.net/storage/images/cba3a113-3d32-4462-a5f0-d244efe186e0.png',
-        imgDescription:
-            'Siti and Budi discussing a new investment opportunity.',
-        voiceUrl:
-            'https://bihackathon.blob.core.windows.net/storage/voices/30d92873-1957-4a5a-a7e2-6c0f15f155ff.wav',
+            'https://bihackathon.blob.core.windows.net/storage/images/4a8ea64a-2ccc-40f8-a1d4-0ab9e6eb1fbd.png',
+        imgDescription: 'Mia holding a paintbrush, looking unsure.',
         content:
-            'Dengan buku di tangan, Siti dan Budi belajar tentang investasi sederhana seperti membeli bibit tanaman untuk dijual kembali. Mereka berpikir untuk menggunakan sebagian dari tabungan mereka. Apa yang harus mereka lakukan?',
+            "Mia frowned. 'But I love unicorns!' Ben suggested, 'What if we make one big unicorn with a rainbow mane?' Mia thought... Should she share her idea or keep it to herself?",
         branch: [
           SceneChoice(
-            choice: 'baik',
-            content:
-                'Menggunakan sebagian uang tabungan untuk membeli bibit dan memulai usaha kecil.',
-            moralValue:
-                'Belajar memulai usaha dengan modal kecil dan berani mengambil risiko yang terukur.',
-            point: 30,
+            choice: 'good',
+            content: 'Share her unicorn idea with Ben and Lina.',
+            moralValue: 'Cooperation',
+            point: 3,
             nextScene: 7,
           ),
           SceneChoice(
-            choice: 'buruk',
-            content: 'Tetap menabung dan menunda usaha untuk sementara.',
-            moralValue:
-                'Belajar bahwa kadang-kadang menunda bisa membuat peluang hilang.',
-            point: -10,
+            choice: 'bad',
+            content: 'Keep painting unicorns without asking.',
+            moralValue: 'Selfishness',
+            point: -2,
             nextScene: 8,
           ),
         ],
-        lessonLearned: null,
       ),
       Scene(
         sceneId: 5,
         type: 'narrative',
         imgUrl:
-            'https://bihackathon.blob.core.windows.net/storage/images/35de3b7e-3e20-4b61-a903-a7db5fbc9e54.png',
-        imgDescription:
-            'Siti and Budi feeling a bit regretful after spending their money.',
-        voiceUrl:
-            'https://bihackathon.blob.core.windows.net/storage/voices/15f8a4ca-1202-4783-b68f-5fb88bdfc76d.wav',
+            'https://bihackathon.blob.core.windows.net/storage/images/759b8acb-3119-4538-b109-fb835f082efd.png',
+        imgDescription: 'Students working alone on separate paintings.',
         content:
-            'Siti dan Budi menghabiskan uang mereka untuk barang-barang yang mereka inginkan. Setelah itu, mereka merasa sedikit menyesal karena tidak bisa menabung untuk tujuan mereka. Pak Ulet menasihati mereka tentang pentingnya mengelola keuangan dengan bijak.',
-        branch: null,
-        lessonLearned: null,
+            "Each student painted their own small picture. Lina made a forest, Ben painted a rainbow, and Mia drew a unicorn. But when they tried to hang them together, they looked messy and didn't match.\n\nMrs. Green said, 'Maybe if you combine them...'\n\nShould they try to fix it together or give up?",
+        nextScene: 6,
       ),
       Scene(
         sceneId: 6,
         type: 'decision_point',
         imgUrl:
-            'https://bihackathon.blob.core.windows.net/storage/images/27fd25d1-17ce-4653-90f2-b6c2101e31bd.png',
-        imgDescription:
-            'Siti and Budi considering how to recover their savings.',
-        voiceUrl:
-            'https://bihackathon.blob.core.windows.net/storage/voices/8e76e88a-60d1-4f60-a44a-50eb29e93341.wav',
+            'https://bihackathon.blob.core.windows.net/storage/images/0c5bdcb8-051d-4943-8d29-506cd64ee54c.png',
+        imgDescription: 'Students looking at their mismatched paintings.',
         content:
-            'Menyesal telah menghabiskan uang, Siti dan Budi berpikir untuk mulai mengumpulkan uang lagi. Mereka bisa mencari cara untuk mendapatkan uang tambahan. Apa yang harus mereka lakukan?',
+            "Lina said, 'Let's try!' Ben said, 'But it's too late!' Mia said, 'I don't want to change my unicorn!' Should they try to fix it together or keep their own work?",
         branch: [
           SceneChoice(
-            choice: 'baik',
-            content:
-                'Mencari cara mendapatkan uang dengan membantu di warung Pak Ulet.',
-            moralValue:
-                'Belajar bahwa kerja keras bisa membantu mencapai tujuan finansial.',
-            point: 20,
+            choice: 'good',
+            content: 'Work together to combine the paintings.',
+            moralValue: 'Problem Solving',
+            point: 3,
             nextScene: 9,
           ),
           SceneChoice(
-            choice: 'buruk',
-            content: 'Membiarkan saja dan berharap ada rezeki lain datang.',
-            moralValue:
-                'Belajar bahwa menunggu tanpa usaha bisa membuat tujuan semakin jauh.',
-            point: -30,
+            choice: 'bad',
+            content: 'Keep the paintings separate and hope for the best.',
+            moralValue: 'Laziness',
+            point: -2,
             nextScene: 10,
           ),
         ],
-        lessonLearned: null,
       ),
       Scene(
         sceneId: 7,
         type: 'ending',
         imgUrl:
-            'https://bihackathon.blob.core.windows.net/storage/images/6cdb06f8-9d5a-44fd-a3d4-389505065720.png',
+            'https://bihackathon.blob.core.windows.net/storage/images/f6d6e83a-0e87-47e4-b37a-1ea14114f1a1.png',
         imgDescription:
-            'Siti and Budi happily selling plants in the village market.',
-        voiceUrl:
-            'https://bihackathon.blob.core.windows.net/storage/voices/60092330-fe6c-4b72-8173-7a71b33e2569.wav',
+            'The class holding a first-place ribbon in front of their beautiful mural.',
         content:
-            'Siti dan Budi memulai usaha kecil mereka dengan menjual tanaman di pasar desa. Usaha mereka sukses dan mereka belajar banyak tentang investasi dan kewirausahaan. Mereka senang bisa belajar memanfaatkan uang dengan bijak.',
-        branch: null,
-        lessonLearned:
-            'Memulai usaha dan berinvestasi sejak dini bisa membantu mencapai tujuan besar.',
+            "They created a magical forest with a rainbow, a unicorn, and space for everyone's ideas! The judges loved it. 'First place!' they cheered. Mrs. Green smiled, 'See? When we work together, anything is possible!'\n\n**Lesson:** Teamwork makes dreams come true.",
+        lessonLearned: 'Teamwork and sharing ideas create something amazing.',
+        endingType: 'good',
+        moralValue: 'Teamwork',
+        meaning:
+            'Teamwork means working together to achieve something greater than you could alone.',
+        example:
+            "Like when you and your friends build a fort together – it's stronger and more fun!",
       ),
       Scene(
         sceneId: 8,
         type: 'ending',
         imgUrl:
-            'https://bihackathon.blob.core.windows.net/storage/images/2a49e83c-7f12-4307-a8a4-e3d054302529.png',
+            'https://bihackathon.blob.core.windows.net/storage/images/83995eef-03fa-40ae-9d8e-916806f5903b.png',
         imgDescription:
-            'Siti and Budi looking at their piggy banks with a thoughtful expression.',
-        voiceUrl:
-            'https://bihackathon.blob.core.windows.net/storage/voices/38e9052d-ca42-4a0a-9fcd-e05056934d7c.wav',
+            'The class standing in front of a messy mural with arguing students.',
         content:
-            'Siti dan Budi memutuskan untuk tetap menabung dan menunda usaha. Mereka belajar bahwa peluang bisa hilang jika tidak berani mengambil langkah. Namun, mereka tetap bertekad untuk mencapai mimpi mereka di masa depan.',
-        branch: null,
-        lessonLearned:
-            'Menunda keputusan bisa membuat kita kehilangan peluang, tetapi belajar dari pengalaman tetap penting.',
+            "They argued about the mural, and it ended up looking messy. The judges said, 'Great effort, but it needs teamwork.' They didn't win, but Mrs. Green said, 'Let's try again next time, together!'\n\n**Lesson:** Teamwork is better than working alone, but it takes practice.",
+        lessonLearned: "Even when teamwork is hard, it's worth trying.",
+        endingType: 'bad',
+        moralValue: 'Cooperation',
+        meaning:
+            "Cooperation means working together even when it's challenging.",
+        example:
+            "Like when you and your sibling clean your room together – it's faster and less messy.",
       ),
       Scene(
         sceneId: 9,
         type: 'ending',
         imgUrl:
-            'https://bihackathon.blob.core.windows.net/storage/images/18e54e6a-c3c6-47cf-b739-b91099908c60.png',
+            'https://bihackathon.blob.core.windows.net/storage/images/62c4079c-32b8-4be5-b531-8b44055dc6e0.png',
         imgDescription:
-            'Siti and Budi helping at Pak Ulet\'s warung, earning some money.',
-        voiceUrl:
-            'https://bihackathon.blob.core.windows.net/storage/voices/808a50b2-e267-46db-a2a0-701a041e2950.wav',
+            'The class holding a second-place ribbon in front of mismatched paintings.',
         content:
-            'Siti dan Budi mulai bekerja di warung Pak Ulet. Mereka belajar menghargai kerja keras dan pelan-pelan mengumpulkan uang kembali. Pengalaman ini mengajarkan mereka tentang tanggung jawab dan kerja keras.',
-        branch: null,
-        lessonLearned:
-            'Kerja keras dan tekad bisa membantu kita bangkit dari kesalahan finansial.',
+            "They tried to combine their paintings, but it looked patchy. They got second place. Mrs. Green said, 'Good job trying! Next time, let's plan together first.'\n\n**Lesson:** Teamwork is better than working alone, but planning helps.",
+        lessonLearned: 'Planning and teamwork lead to better results.',
+        endingType: 'bad',
+        moralValue: 'Problem Solving',
+        meaning: 'Problem Solving means finding creative ways to fix mistakes.',
+        example:
+            'Like when you spill glue – you clean it up instead of giving up.',
       ),
       Scene(
         sceneId: 10,
         type: 'ending',
         imgUrl:
-            'https://bihackathon.blob.core.windows.net/storage/images/28c3adbd-b2a2-4ed4-babd-31cdabd199e3.png',
+            'https://bihackathon.blob.core.windows.net/storage/images/ab622f8a-7b65-4abd-aef3-2ec42afbc27b.png',
         imgDescription:
-            'Siti and Budi sitting under a tree, pondering their financial choices.',
-        voiceUrl:
-            'https://bihackathon.blob.core.windows.net/storage/voices/86b1cec3-49b7-42ae-b222-c915f8b0599d.wav',
+            'The class looking disappointed in front of separate paintings.',
         content:
-            'Siti dan Budi membiarkan kesempatan untuk menambah tabungan lewat begitu saja. Mereka menyadari bahwa tanpa usaha, mimpi mereka akan sulit tercapai. Namun, mereka berjanji untuk lebih bijak di masa depan.',
-        branch: null,
-        lessonLearned:
-            'Menunggu tanpa usaha membuat tujuan semakin jauh, tetapi kegagalan bisa menjadi pelajaran berharga.',
+            "They kept their paintings separate and didn't win anything. Mrs. Green said, 'Remember, teamwork makes everything better. Let's try again next time!'\n\n**Lesson:** Teamwork is essential for success.",
+        lessonLearned: 'Teamwork is necessary to achieve great things.',
+        endingType: 'bad',
+        moralValue: 'Teamwork',
+        meaning:
+            'Teamwork means everyone working together toward a common goal.',
+        example:
+            'Like a soccer team – each player has a role, and together they win the game.',
       ),
     ],
   );
