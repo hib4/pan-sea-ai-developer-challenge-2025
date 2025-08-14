@@ -15,6 +15,11 @@ with open("./handler/scene_sample.json", "r", encoding="utf-8") as f:
 
 book_stort_generation_url = settings.BOOK_STORY_GENERATION_URL
 
+LANGUAGE_NORMALIZATION = {
+    "english": "en",
+    "indonesian": "id"
+}
+
 async def create_book(body: book_schema.create_book_schema, current_user):
     query = body.query
     age = body.age
@@ -24,6 +29,8 @@ async def create_book(body: book_schema.create_book_schema, current_user):
     if not voice_name_code in AVAILABLE_VOICES.keys():
         raise HTTPException(status_code= 400, detail= f"invalid language_code")
 
+    language_normalization = LANGUAGE_NORMALIZATION.get(language)
+
     # fetch to book_stort_generation_url
     book = await post(
         url= f"{book_stort_generation_url}/generate-story",
@@ -31,7 +38,7 @@ async def create_book(body: book_schema.create_book_schema, current_user):
             "query": query,
             "user_id": current_user.get("id"),
             "age": age,
-            "language": language
+            "language": language_normalization
         }
     )
 
