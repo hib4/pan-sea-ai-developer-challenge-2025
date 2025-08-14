@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:kanca/core/theme/app_theme.dart';
 import 'package:kanca/features/dashboard/dashboard.dart';
 import 'package:kanca/features/onboarding/onboarding.dart';
+import 'package:kanca/features/story/view/story_page.dart';
+import 'package:kanca/features/test_page.dart';
 import 'package:kanca/l10n/l10n.dart';
 
 class App extends StatelessWidget {
