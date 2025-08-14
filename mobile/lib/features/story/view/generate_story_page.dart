@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kanca/core/core.dart';
+import 'package:kanca/features/story/story.dart';
 import 'package:kanca/gen/assets.gen.dart';
 import 'package:kanca/utils/extensions/extensions.dart';
 
@@ -12,13 +13,26 @@ class GenerateStoryPage extends StatefulWidget {
 }
 
 class _GenerateStoryPageState extends State<GenerateStoryPage> {
-  int _selectedStory = 0;
-  int _selectedMoral = 0;
+  final _textController = TextEditingController();
+  int _selectedStory = -1;
+  int _selectedMoral = -1;
+
+  @override
+  void dispose() {
+    _textController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
     final textTheme = context.textTheme;
+
+    // Check if user has provided valid input
+    final hasTextInput = _textController.text.trim().isNotEmpty;
+    final hasStoryAndMoral = _selectedStory != -1 && _selectedMoral != -1;
+    final isButtonEnabled = hasTextInput || hasStoryAndMoral;
+
     return Scaffold(
       body: SingleChildScrollView(
         padding: EdgeInsets.only(
@@ -69,7 +83,13 @@ class _GenerateStoryPageState extends State<GenerateStoryPage> {
             24.vertical,
             GenerateStoryTextField(
               label: 'Ketik ide cerita kamu di sini...',
-              controller: TextEditingController(),
+              controller: _textController,
+              onChanged: (value) {
+                setState(() {
+                  // Trigger rebuild when text changes
+                });
+                return null;
+              },
             ),
             16.vertical,
             Align(
@@ -85,135 +105,183 @@ class _GenerateStoryPageState extends State<GenerateStoryPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Container(
-                  width: 88,
-                  height: 88,
-                  padding: const EdgeInsets.only(bottom: 4),
-                  decoration: BoxDecoration(
-                    color: colors.primary[500],
+                Material(
+                  color: colors.primary[500],
+                  borderRadius: BorderRadius.circular(12),
+                  child: InkWell(
+                    onTap: () {
+                      setState(() {
+                        _selectedStory = _selectedStory == 0 ? -1 : 0;
+                      });
+                    },
                     borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: colors.primary[100],
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Assets.icons.school.image(
-                          width: 40,
-                          height: 40,
+                    splashColor: Colors.black.withOpacity(0.2),
+                    highlightColor: Colors.black.withOpacity(0.1),
+                    child: Container(
+                      width: 88,
+                      height: 88,
+                      padding: const EdgeInsets.only(bottom: 4),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: _selectedStory == 0
+                              ? colors.primary[50]
+                              : colors.primary[100],
+                          borderRadius: BorderRadius.circular(12),
                         ),
-                        6.vertical,
-                        Text(
-                          'Sekolah',
-                          style: textTheme.lexendBody.copyWith(
-                            color: colors.primary[800],
-                            fontWeight: FontWeight.w400,
-                            height: 1.2,
-                          ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Assets.icons.school.image(
+                              width: 40,
+                              height: 40,
+                            ),
+                            6.vertical,
+                            Text(
+                              'Sekolah',
+                              style: textTheme.lexendBody.copyWith(
+                                color: colors.primary[800],
+                                fontWeight: FontWeight.w400,
+                                height: 1.2,
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
                   ),
                 ),
-                Container(
-                  width: 88,
-                  height: 88,
-                  padding: const EdgeInsets.only(bottom: 4),
-                  decoration: BoxDecoration(
-                    color: colors.secondary[500],
+                Material(
+                  color: colors.secondary[500],
+                  borderRadius: BorderRadius.circular(12),
+                  child: InkWell(
+                    onTap: () {
+                      setState(() {
+                        _selectedStory = _selectedStory == 1 ? -1 : 1;
+                      });
+                    },
                     borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: colors.secondary[100],
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Assets.icons.fantasy.image(
-                          width: 40,
-                          height: 40,
+                    splashColor: Colors.black.withOpacity(0.2),
+                    highlightColor: Colors.black.withOpacity(0.1),
+                    child: Container(
+                      width: 88,
+                      height: 88,
+                      padding: const EdgeInsets.only(bottom: 4),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: _selectedStory == 1
+                              ? colors.secondary[50]
+                              : colors.secondary[100],
+                          borderRadius: BorderRadius.circular(12),
                         ),
-                        6.vertical,
-                        Text(
-                          'Fantasi',
-                          style: textTheme.lexendBody.copyWith(
-                            color: colors.secondary[800],
-                            fontWeight: FontWeight.w400,
-                            height: 1.2,
-                          ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Assets.icons.fantasy.image(
+                              width: 40,
+                              height: 40,
+                            ),
+                            6.vertical,
+                            Text(
+                              'Fantasi',
+                              style: textTheme.lexendBody.copyWith(
+                                color: colors.secondary[800],
+                                fontWeight: FontWeight.w400,
+                                height: 1.2,
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
                   ),
                 ),
-                Container(
-                  width: 88,
-                  height: 88,
-                  padding: const EdgeInsets.only(bottom: 4),
-                  decoration: BoxDecoration(
-                    color: colors.darkAccent[500],
+                Material(
+                  color: colors.darkAccent[500],
+                  borderRadius: BorderRadius.circular(12),
+                  child: InkWell(
+                    onTap: () {
+                      setState(() {
+                        _selectedStory = _selectedStory == 2 ? -1 : 2;
+                      });
+                    },
                     borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: colors.darkAccent[50],
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Assets.icons.shopping.image(
-                          width: 40,
-                          height: 40,
+                    splashColor: Colors.black.withOpacity(0.2),
+                    highlightColor: Colors.black.withOpacity(0.1),
+                    child: Container(
+                      width: 88,
+                      height: 88,
+                      padding: const EdgeInsets.only(bottom: 4),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: _selectedStory == 2
+                              ? const Color(0xFFF8F7FB)
+                              : const Color(0xFFEBEAEF),
+                          borderRadius: BorderRadius.circular(12),
                         ),
-                        6.vertical,
-                        Text(
-                          'Belanja',
-                          style: textTheme.lexendBody.copyWith(
-                            color: colors.darkAccent[800],
-                            fontWeight: FontWeight.w400,
-                            height: 1.2,
-                          ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Assets.icons.shopping.image(
+                              width: 40,
+                              height: 40,
+                            ),
+                            6.vertical,
+                            Text(
+                              'Belanja',
+                              style: textTheme.lexendBody.copyWith(
+                                color: colors.darkAccent[800],
+                                fontWeight: FontWeight.w400,
+                                height: 1.2,
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
                   ),
                 ),
-                Container(
-                  width: 88,
-                  height: 88,
-                  padding: const EdgeInsets.only(bottom: 4),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF52BC00),
+                Material(
+                  color: const Color(0xFF52BC00),
+                  borderRadius: BorderRadius.circular(12),
+                  child: InkWell(
+                    onTap: () {
+                      setState(() {
+                        _selectedStory = _selectedStory == 3 ? -1 : 3;
+                      });
+                    },
                     borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: const Color(0XFFDFF1D1),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Assets.icons.explore.image(
-                          width: 40,
-                          height: 40,
+                    splashColor: Colors.black.withOpacity(0.2),
+                    highlightColor: Colors.black.withOpacity(0.1),
+                    child: Container(
+                      width: 88,
+                      height: 88,
+                      padding: const EdgeInsets.only(bottom: 4),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: _selectedStory == 3
+                              ? const Color(0xFFF0F8E8)
+                              : const Color(0XFFDFF1D1),
+                          borderRadius: BorderRadius.circular(12),
                         ),
-                        6.vertical,
-                        Text(
-                          'Jelajah',
-                          style: textTheme.lexendBody.copyWith(
-                            color: const Color(0XFF2F6C00),
-                            fontWeight: FontWeight.w400,
-                            height: 1.2,
-                          ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Assets.icons.explore.image(
+                              width: 40,
+                              height: 40,
+                            ),
+                            6.vertical,
+                            Text(
+                              'Jelajah',
+                              style: textTheme.lexendBody.copyWith(
+                                color: const Color(0XFF2F6C00),
+                                fontWeight: FontWeight.w400,
+                                height: 1.2,
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
                   ),
                 ),
@@ -235,152 +303,215 @@ class _GenerateStoryPageState extends State<GenerateStoryPage> {
               children: [
                 Column(
                   children: [
-                    Container(
-                      height: 48,
-                      constraints: const BoxConstraints(
-                        minWidth: 186,
-                      ),
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      decoration: BoxDecoration(
-                        color: colors.primary[100],
-                        border: Border.all(
-                          color: colors.primary[500]!,
-                          width: 2,
-                        ),
+                    Material(
+                      color: _selectedMoral == 0
+                          ? colors.primary[50]
+                          : colors.primary[100],
+                      borderRadius: BorderRadius.circular(12),
+                      child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            _selectedMoral = _selectedMoral == 0 ? -1 : 0;
+                          });
+                        },
                         borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Assets.icons.saving.image(
-                            width: 24,
-                            height: 24,
+                        splashColor: Colors.grey.withOpacity(0.2),
+                        highlightColor: Colors.grey.withOpacity(0.1),
+                        child: Container(
+                          height: 48,
+                          constraints: const BoxConstraints(
+                            minWidth: 186,
                           ),
-                          10.horizontal,
-                          Text(
-                            'Menabung',
-                            style: GoogleFonts.fredoka(
-                              color: colors.primary[800],
-                              fontSize: 21,
-                              fontWeight: FontWeight.w500, // SemiBold
-                              height: 1.5,
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: colors.primary[500]!,
+                              width: 2,
                             ),
+                            borderRadius: BorderRadius.circular(12),
                           ),
-                        ],
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Assets.icons.saving.image(
+                                width: 24,
+                                height: 24,
+                              ),
+                              10.horizontal,
+                              Text(
+                                'Menabung',
+                                style: GoogleFonts.fredoka(
+                                  color: colors.primary[800],
+                                  fontSize: 21,
+                                  fontWeight: FontWeight.w500, // SemiBold
+                                  height: 1.5,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     ),
                     10.vertical,
-                    Container(
-                      height: 48,
-                      constraints: const BoxConstraints(
-                        minWidth: 186,
-                      ),
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      decoration: BoxDecoration(
-                        color: colors.secondary[100],
-                        border: Border.all(
-                          color: colors.secondary[500]!,
-                          width: 2,
-                        ),
+                    Material(
+                      color: _selectedMoral == 1
+                          ? colors.secondary[50]
+                          : colors.secondary[100],
+                      borderRadius: BorderRadius.circular(12),
+                      child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            _selectedMoral = _selectedMoral == 1 ? -1 : 1;
+                          });
+                        },
                         borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Assets.icons.honesty.image(
-                            width: 24,
-                            height: 24,
+                        splashColor: Colors.grey.withOpacity(0.2),
+                        highlightColor: Colors.grey.withOpacity(0.1),
+                        child: Container(
+                          height: 48,
+                          constraints: const BoxConstraints(
+                            minWidth: 186,
                           ),
-                          10.horizontal,
-                          Text(
-                            'Kejujuran',
-                            style: GoogleFonts.fredoka(
-                              color: colors.secondary[800],
-                              fontSize: 21,
-                              fontWeight: FontWeight.w500, // SemiBold
-                              height: 1.5,
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: colors.secondary[500]!,
+                              width: 2,
                             ),
+                            borderRadius: BorderRadius.circular(12),
                           ),
-                        ],
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Assets.icons.honesty.image(
+                                width: 24,
+                                height: 24,
+                              ),
+                              10.horizontal,
+                              Text(
+                                'Kejujuran',
+                                style: GoogleFonts.fredoka(
+                                  color: colors.secondary[800],
+                                  fontSize: 21,
+                                  fontWeight: FontWeight.w500, // SemiBold
+                                  height: 1.5,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     ),
                   ],
                 ),
-                Container(
-                  constraints: const BoxConstraints(
-                    minWidth: 86,
-                    minHeight: 106,
-                  ),
-                  padding: const EdgeInsets.symmetric(horizontal: 6),
-                  decoration: BoxDecoration(
-                    color: colors.darkAccent[50],
-                    border: Border.all(
-                      color: colors.darkAccent[400]!,
-                      width: 2,
-                    ),
+                Material(
+                  color: _selectedMoral == 2
+                      ? const Color(0xFFF8F7FB)
+                      : const Color(0xFFEBEAEF),
+                  borderRadius: BorderRadius.circular(12),
+                  child: InkWell(
+                    onTap: () {
+                      setState(() {
+                        _selectedMoral = _selectedMoral == 2 ? -1 : 2;
+                      });
+                    },
                     borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Assets.icons.wise.image(
-                        width: 32,
-                        height: 32,
+                    splashColor: Colors.grey.withOpacity(0.2),
+                    highlightColor: Colors.grey.withOpacity(0.1),
+                    child: Container(
+                      constraints: const BoxConstraints(
+                        minWidth: 86,
+                        minHeight: 106,
                       ),
-                      10.vertical,
-                      Text(
-                        'Bijak',
-                        style: GoogleFonts.fredoka(
-                          color: colors.darkAccent[800],
-                          fontSize: 21,
-                          fontWeight: FontWeight.w500, // SemiBold
-                          height: 1.5,
+                      padding: const EdgeInsets.symmetric(horizontal: 6),
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: colors.darkAccent[400]!,
+                          width: 2,
                         ),
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                    ],
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Assets.icons.wise.image(
+                            width: 32,
+                            height: 32,
+                          ),
+                          10.vertical,
+                          Text(
+                            'Bijak',
+                            style: GoogleFonts.fredoka(
+                              color: colors.darkAccent[800],
+                              fontSize: 21,
+                              fontWeight: FontWeight.w500, // SemiBold
+                              height: 1.5,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
-                Container(
-                  constraints: const BoxConstraints(
-                    minWidth: 86,
-                    minHeight: 106,
-                  ),
-                  padding: const EdgeInsets.symmetric(horizontal: 6),
-                  decoration: BoxDecoration(
-                    color: colors.support[100],
-                    border: Border.all(
-                      color: colors.support[700]!,
-                      width: 2,
-                    ),
+                Material(
+                  color: _selectedMoral == 3
+                      ? colors.support[50]
+                      : colors.support[100],
+                  borderRadius: BorderRadius.circular(12),
+                  child: InkWell(
+                    onTap: () {
+                      setState(() {
+                        _selectedMoral = _selectedMoral == 3 ? -1 : 3;
+                      });
+                    },
                     borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Assets.icons.sharing.image(
-                        width: 32,
-                        height: 32,
+                    splashColor: Colors.grey.withOpacity(0.2),
+                    highlightColor: Colors.grey.withOpacity(0.1),
+                    child: Container(
+                      constraints: const BoxConstraints(
+                        minWidth: 86,
+                        minHeight: 106,
                       ),
-                      10.vertical,
-                      Text(
-                        'Berbagi',
-                        style: GoogleFonts.fredoka(
-                          color: colors.support[800],
-                          fontSize: 21,
-                          fontWeight: FontWeight.w500, // SemiBold
-                          height: 1.5,
+                      padding: const EdgeInsets.symmetric(horizontal: 6),
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: colors.support[700]!,
+                          width: 2,
                         ),
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                    ],
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Assets.icons.sharing.image(
+                            width: 32,
+                            height: 32,
+                          ),
+                          10.vertical,
+                          Text(
+                            'Berbagi',
+                            style: GoogleFonts.fredoka(
+                              color: colors.support[800],
+                              fontSize: 21,
+                              fontWeight: FontWeight.w500, // SemiBold
+                              height: 1.5,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
               ],
             ),
             40.vertical,
             ElevatedButton(
-              onPressed: () {},
+              onPressed: isButtonEnabled
+                  ? () {
+                      context.push(const GenerateStoryLoadingPage());
+                    }
+                  : null,
               style: ElevatedButton.styleFrom(
-                backgroundColor: colors.primary[500],
                 minimumSize: const Size(
                   140,
                   56,

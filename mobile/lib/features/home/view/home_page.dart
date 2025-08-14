@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:kanca/core/core.dart';
 import 'package:kanca/features/story/story.dart';
 import 'package:kanca/gen/assets.gen.dart';
