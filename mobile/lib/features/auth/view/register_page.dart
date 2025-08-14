@@ -41,40 +41,6 @@ class _RegisterPageState extends State<RegisterPage> {
     final email = _emailController.text.trim();
     final password = _passwordController.text;
 
-    // try {
-    //   final response = await http.post(
-    //     Uri.parse(
-    //       '${Env.apiBaseUrl}/register',
-    //     ), // Replace with your actual API endpoint
-    //     headers: {'Content-Type': 'application/json'},
-    //     body: '{"name": "$name", "email": "$email", "password": "$password"}',
-    //   );
-
-    //   final data = jsonDecode(response.body);
-
-    //   if (response.statusCode == 200) {
-    //     final token = data['token'] as String?;
-    //     if (token != null) {
-    //       // Save token to secure storage or state management
-    //       await SecureStorageService().write('token', token);
-    //       // Navigate to home page or dashboard
-    //       if (mounted) {
-    //         await context.push(const TestPage());
-    //       }
-    //     }
-    //   } else {
-    //     // Handle error
-    //     final error = data['detail'] as String? ?? 'Unknown error';
-    //     ScaffoldMessenger.of(context).showSnackBar(
-    //       SnackBar(content: Text('Login failed: $error')),
-    //     );
-    //   }
-    // } catch (e) {
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     SnackBar(content: Text('An error occurred: $e')),
-    //   );
-    // }
-
     await context.pushAndRemoveUntil(
       const DashboardPage(),
       (route) => false,
@@ -103,10 +69,10 @@ class _RegisterPageState extends State<RegisterPage> {
                 Expanded(
                   child: Center(
                     child: Text(
-                      'DAFTAR',
+                      'REGISTER',
                       style: textTheme.h1.copyWith(
                         color: Colors.white,
-                        fontSize: 105,
+                        fontSize: 90,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
@@ -137,7 +103,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         KancaTextField(
                           controller: _emailController,
                           textInputType: TextInputType.emailAddress,
-                          label: 'Email',
+                          label: 'example@mail.com',
                         ),
                         16.vertical,
                         Text(
@@ -148,27 +114,26 @@ class _RegisterPageState extends State<RegisterPage> {
                         KancaTextField(
                           controller: _passwordController,
                           textInputType: TextInputType.visiblePassword,
-                          label: 'Password',
+                          label: 'Enter your password',
                           isPassword: true,
                         ),
                         16.vertical,
                         Text(
-                          'Konfirmasi Password',
+                          'Confirm your password',
                           style: textTheme.caption,
                         ),
                         4.vertical,
                         KancaTextField(
                           controller: _confirmPasswordController,
                           textInputType: TextInputType.visiblePassword,
-                          label: 'Konfirmasi Password',
+                          label: 'Confirm Password',
                           isPassword: true,
                         ),
                         32.vertical,
                         ElevatedButton(
                           onPressed: _register,
-                          child: const Text('Mulai Sekarang'),
+                          child: const Text('Start Now'),
                         ),
-                        // Or
                         16.vertical,
                         Row(
                           children: [
@@ -183,7 +148,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 horizontal: 16,
                               ),
                               child: Text(
-                                'Atau',
+                                'Or',
                                 style: textTheme.caption,
                               ),
                             ),
@@ -210,7 +175,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 height: 24,
                               ),
                               10.horizontal,
-                              const Text('Lanjutkan dengan Google'),
+                              const Text('Continue with Google'),
                             ],
                           ),
                         ),
@@ -219,7 +184,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              'Sudah punya akun?',
+                              'Already have an account?',
                               style: textTheme.lexendCaption.copyWith(
                                 fontSize: 14,
                               ),
@@ -228,7 +193,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             InkWell(
                               onTap: _goToLogin,
                               child: Text(
-                                'Masuk!',
+                                'Login!',
                                 style: textTheme.lexendCaption.copyWith(
                                   color: colors.primary[500],
                                   fontSize: 14,
@@ -252,11 +217,10 @@ class _RegisterPageState extends State<RegisterPage> {
                                 ),
                                 children: [
                                   const TextSpan(
-                                    text:
-                                        'Dengan menggunakan Kanca, Anda setuju pada ',
+                                    text: 'By using Kanca, you agree to our ',
                                   ),
                                   TextSpan(
-                                    text: 'Ketentuan Layanan',
+                                    text: 'Terms of Service',
                                     style: textTheme.lexendCaption.copyWith(
                                       fontWeight: FontWeight.w700,
                                       decoration: TextDecoration.underline,
@@ -268,10 +232,10 @@ class _RegisterPageState extends State<RegisterPage> {
                                       },
                                   ),
                                   const TextSpan(
-                                    text: ' dan ',
+                                    text: ' and ',
                                   ),
                                   TextSpan(
-                                    text: 'Kebijakan Privasi',
+                                    text: 'Privacy Policy',
                                     style: textTheme.lexendCaption.copyWith(
                                       fontWeight: FontWeight.w700,
                                       decoration: TextDecoration.underline,
@@ -283,7 +247,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                       },
                                   ),
                                   const TextSpan(
-                                    text: ' kami.',
+                                    text: '.',
                                   ),
                                 ],
                               ),

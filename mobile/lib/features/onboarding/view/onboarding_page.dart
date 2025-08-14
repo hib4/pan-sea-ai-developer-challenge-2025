@@ -27,9 +27,9 @@ class _OnboardingPageState extends State<OnboardingPage> {
             color: const Color(0XFF373737),
           ),
           children: const [
-            TextSpan(text: 'Yuk, Mulai Petualangan '),
+            TextSpan(text: 'Let’s Start Your '),
             TextSpan(
-              text: 'Ceritamu!',
+              text: 'Story!',
               style: TextStyle(
                 color: Color(
                   0XFFFF9F00,
@@ -40,7 +40,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
         ),
       ),
       subtitle: const Text(
-        'Di Kanca, kamu bisa buat cerita seru sendiri, belajar nilai baik & jadi jago atur uang, semuanya sambil main!',
+        'In Kanca, you can create your own exciting stories, learn good values, and practice kindness—all while playing!',
         style: TextStyle(
           fontSize: 16,
           color: Colors.black,
@@ -58,21 +58,21 @@ class _OnboardingPageState extends State<OnboardingPage> {
             color: const Color(0XFF373737),
           ),
           children: const [
-            TextSpan(text: 'Pilih '),
+            TextSpan(text: 'Choose '),
             TextSpan(
-              text: 'Jalan Ceritamu, ',
+              text: 'Your Story Path, ',
               style: TextStyle(
                 color: Color(
                   0XFFFF9F00,
                 ), // Use the same color as in the original code
               ),
             ),
-            TextSpan(text: 'Petik Pelajarannya!'),
+            TextSpan(text: 'Learn the Lesson!'),
           ],
         ),
       ),
       subtitle: const Text(
-        'Akhir cerita tergantung pilihanmu! Belajar menabung, jujur, dan bijak dengan cara yang seru & interaktif.',
+        'The ending depends on your choices! Learn honesty, responsibility, and empathy in a fun & interactive way.',
         style: TextStyle(
           fontSize: 16,
           color: Colors.black,
@@ -90,9 +90,9 @@ class _OnboardingPageState extends State<OnboardingPage> {
             color: const Color(0XFF373737),
           ),
           children: const [
-            TextSpan(text: 'Ciptakan Momen, '),
+            TextSpan(text: 'Create Moments, '),
             TextSpan(
-              text: 'Bangun Nilai',
+              text: 'Build Character',
               style: TextStyle(
                 color: Color(
                   0XFFFF9F00,
@@ -103,7 +103,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
         ),
       ),
       subtitle: const Text(
-        'Bersama Kanca, belajar menjadi perjalanan berharga untuk masa depan anak yang bijak.',
+        'With Kanca, learning becomes a meaningful journey toward a wise, caring, and respectful future.',
         style: TextStyle(
           fontSize: 16,
           color: Colors.black,
@@ -242,8 +242,8 @@ class _OnboardingPageState extends State<OnboardingPage> {
                     onPressed: _onNext,
                     child: Text(
                       _currentIndex == _onboardingSections.length - 1
-                          ? 'Yuk Mulai!'
-                          : 'Lanjut',
+                          ? 'Let’s Start!'
+                          : 'Next',
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
@@ -300,19 +300,19 @@ class __OnBoardingLoadingState extends State<_OnBoardingLoading> {
           RichText(
             text: TextSpan(
               style: textTheme.lexendLargeBody,
-              text: 'Kamu tahu nggak? Kalau... ',
+              text: 'Did you know? That... ',
               children: [
                 TextSpan(
-                  text: 'pilihanmu bisa bikin cerita jadi luar biasa. ',
+                  text: 'your choices can make the story extraordinary. ',
                   style: textTheme.lexendLargeBody.copyWith(
                     color: colors.primary[500],
                     fontWeight: FontWeight.w600,
                   ),
                 ),
                 const TextSpan(
-                  text: 'Yuk, kita mulai petualangan seru ini!',
+                  text: 'Come on, let’s start this exciting adventure!',
                 ),
-              ]
+              ],
             ),
             textAlign: TextAlign.center,
           ).withPadding(left: 24, right: 24),
