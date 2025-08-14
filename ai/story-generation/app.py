@@ -44,6 +44,10 @@ class Scene(BaseModel):
     branch: Optional[List[Choice]] = None
     lesson_learned: Optional[str] = None
     selected_choice: Optional[str] = None  # For decision_point scenes
+    ending_type: Optional[str] = None  # For ending scenes, can be "good" or "bad"
+    moral_value: Optional[str] = None  # For ending scenes
+    meaning: Optional[str] = None  # For ending scenes
+    example: Optional[str] = None  # For ending scenes
 
 class StoryResponse(BaseModel):
     user_id: str
@@ -245,8 +249,21 @@ def validate_story_content(story_data: dict, user_id: str, age: int):
                 del scene["selected_choice"]
             
             if "lesson_learned" not in scene:
-                scene["lesson_learned"] = "Pelajaran penting tentang keuangan."
+                scene["lesson_learned"] = "Pelajaran penting tentang moral."
             
+            if "moral_value" not in scene:
+                scene["moral_value"] = "Nilai moral yang relevan."
+            if "meaning" not in scene:
+                scene["meaning"] = "Penjelasan singkat tentang nilai moral."
+            if "example" not in scene:
+                scene["example"] = "Contoh nyata dari nilai moral dalam kehidupan sehari-hari."
+                
+            if "bad" in scene['ending_type'].lower():
+                scene["ending_type"] = "bad"
+            elif "good" in scene['ending_type'].lower():
+                scene["ending_type"] = "good"
+            else:
+                raise HTTPException(status_code=500, detail=f"Invalid ending type in scene {scene['scene_id']}, must be 'good' or 'bad'")
             # Add to endings list
             endings.append(scene["scene_id"])
         
@@ -292,6 +309,7 @@ async def generate_story(request: StoryRequest):
         )
         
         # Get response from LLM
+        print(f"Generating story for user {request.user_id} with age {request.age}...")
         response = chat_model.invoke(prompt)
         # Clean and parse JSON
         if response:

@@ -38,7 +38,7 @@ async def create_book(body: book_schema.create_book_schema, current_user):
             "query": query,
             "user_id": current_user.get("id"),
             "age": age,
-            "language": language_normalization
+            "lang_code": language_normalization
         }
     )
 

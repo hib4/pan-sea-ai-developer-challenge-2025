@@ -1,0 +1,225 @@
+{
+  "user_id": "user123",
+  "title": "Ruby's Jungle Journey: A Tale of Empathy and Friendship",
+  "theme": [
+    "Empathy",
+    "Caring",
+    "Cooperation"
+  ],
+  "language": "English",
+  "status": "not_started",
+  "age_group": 8,
+  "current_scene": 1,
+  "created_at": null,
+  "finished_at": null,
+  "maximum_point": 10,
+  "story_flow": {
+    "total_scene": 10,
+    "decision_point": [
+      2,
+      4,
+      6
+    ],
+    "ending": [
+      7,
+      8,
+      9,
+      10
+    ]
+  },
+  "characters": [
+    {
+      "name": "Ruby",
+      "description": "A gentle, curious young rabbit with soft white fur and bright green eyes. She loves exploring the jungle and helping her friends."
+    },
+    {
+      "name": "Blue",
+      "description": "A blue jay with a wounded wing. He is brave but needs help to recover. He often rewards kindness with small gifts like shiny stones."
+    },
+    {
+      "name": "Mango",
+      "description": "A playful monkey who loves climbing trees and eating juicy mangoes. He is Ruby's best friend and often joins her adventures."
+    },
+    {
+      "name": "Professor Hootenanny",
+      "description": "A wise old owl who lives in a hollow tree. He is known for his deep understanding of the jungle and its creatures."
+    }
+  ],
+  "scene": [
+    {
+      "scene_id": 1,
+      "type": "narrative",
+      "img_url": null,
+      "img_description": "Ruby hopping through a sunny jungle path, looking around curiously.",
+      "voice_url": null,
+      "content": "In the heart of the jungle, Ruby the rabbit loved to explore. One sunny morning, while hopping along a winding path, she heard a faint chirping sound. 'Who could that be?' she wondered. She followed the sound and found a blue jay named Blue lying under a bush, his wing looking hurt.",
+      "next_scene": 2,
+      "branch": null,
+      "lesson_learned": null,
+      "selected_choice": null
+    },
+    {
+      "scene_id": 2,
+      "type": "decision_point",
+      "img_url": null,
+      "img_description": "Ruby looking at Blue with concern, a leaf and a berry nearby.",
+      "voice_url": null,
+      "content": "Blue explained he hurt his wing while flying. Ruby saw a leaf nearby and a berry. What should she do?",
+      "next_scene": null,
+      "branch": [
+        {
+          "choice": "good",
+          "content": "Use the leaf to make a bandage and give Blue the berry to eat.",
+          "moral_value": "Empathy and Caring",
+          "point": 3,
+          "next_scene": 3
+        },
+        {
+          "choice": "bad",
+          "content": "Ignore Blue and continue exploring.",
+          "moral_value": "Selfishness",
+          "point": -2,
+          "next_scene": 5
+        }
+      ],
+      "lesson_learned": null,
+      "selected_choice": null
+    },
+    {
+      "scene_id": 3,
+      "type": "narrative",
+      "img_url": null,
+      "img_description": "Ruby carefully wrapping Blue's wing with a leaf while Blue looks grateful.",
+      "voice_url": null,
+      "content": "Ruby gently wrapped the leaf around Blue's wing and shared the berry. Blue smiled weakly. 'Thank you, Ruby! You're so kind. Here, take this shiny stone as a thank you!' he said, offering a sparkling pebble. Ruby blushed happily and continued to help Blue sit up.",
+      "next_scene": 4,
+      "branch": null,
+      "lesson_learned": null,
+      "selected_choice": null
+    },
+    {
+      "scene_id": 4,
+      "type": "decision_point",
+      "img_url": null,
+      "img_description": "Ruby and Blue near a river, with a vine bridge and a muddy path visible.",
+      "voice_url": null,
+      "content": "They needed to get Blue to Professor Hootenanny's tree for proper care. Ruby saw a vine bridge and a muddy path. What should they do?",
+      "next_scene": null,
+      "branch": [
+        {
+          "choice": "good",
+          "content": "Cross the vine bridge carefully to stay safe and dry.",
+          "moral_value": "Cooperation",
+          "point": 4,
+          "next_scene": 7
+        },
+        {
+          "choice": "bad",
+          "content": "Take the muddy path alone to show off strength.",
+          "moral_value": "Stubbornness",
+          "point": -1,
+          "next_scene": 8
+        }
+      ],
+      "lesson_learned": null,
+      "selected_choice": null
+    },
+    {
+      "scene_id": 5,
+      "type": "narrative",
+      "img_url": null,
+      "img_description": "Ruby looking back guiltily at Blue, who appears sad.",
+      "voice_url": null,
+      "content": "Ruby ignored Blue and kept exploring. But she couldn't shake off the feeling that she had done something wrong. Later, she heard Blue's faint cry again. This time, she decided to return and help.",
+      "next_scene": 6,
+      "branch": null,
+      "lesson_learned": null,
+      "selected_choice": null
+    },
+    {
+      "scene_id": 6,
+      "type": "decision_point",
+      "img_url": null,
+      "img_description": "Ruby returning to Blue, who is now near a thorn bush.",
+      "voice_url": null,
+      "content": "When Ruby returned, she found Blue stuck near a thorn bush. What should she do?",
+      "next_scene": null,
+      "branch": [
+        {
+          "choice": "good",
+          "content": "Gently move the thorns to free Blue.",
+          "moral_value": "Responsibility",
+          "point": 2,
+          "next_scene": 9
+        },
+        {
+          "choice": "bad",
+          "content": "Leave Blue again and go find Mango for help.",
+          "moral_value": "Procrastination",
+          "point": -3,
+          "next_scene": 10
+        }
+      ],
+      "lesson_learned": null,
+      "selected_choice": null
+    },
+    {
+      "scene_id": 7,
+      "type": "ending",
+      "img_url": null,
+      "img_description": "Ruby and Blue safely crossing the vine bridge, with Mango helping from above.",
+      "voice_url": null,
+      "content": "Ruby and Blue crossed the vine bridge safely, with Mango swinging down to help. Professor Hootenanny healed Blue's wing, and the whole jungle celebrated their teamwork. Ruby learned that helping others brings joy and friendship.",
+      "next_scene": null,
+      "branch": null,
+      "lesson_learned": "Empathy, caring, and cooperation lead to the best outcomes.",
+      "selected_choice": null
+    },
+    {
+      "scene_id": 8,
+      "type": "ending",
+      "img_url": null,
+      "img_description": "Ruby struggling to carry Blue through the muddy path, getting dirty but succeeding.",
+      "voice_url": null,
+      "content": "Ruby carried Blue alone through the muddy path. Though they arrived dirty, Professor Hootenanny healed Blue. Ruby realized that while she succeeded, asking for help would have made it easier. She still felt happy for helping her friend.",
+      "next_scene": null,
+      "branch": null,
+      "lesson_learned": "Caring for others is important, but teamwork can make tasks easier.",
+      "selected_choice": null
+    },
+    {
+      "scene_id": 9,
+      "type": "ending",
+      "img_url": null,
+      "img_description": "Ruby freeing Blue from the thorn bush, both looking relieved.",
+      "voice_url": null,
+      "content": "Ruby freed Blue from the thorns and brought him to Professor Hootenanny. Though late, Blue recovered well. Ruby learned that it's never too late to make things right and show kindness.",
+      "next_scene": null,
+      "branch": null,
+      "lesson_learned": "Better late than never when it comes to helping others.",
+      "selected_choice": null
+    },
+    {
+      "scene_id": 10,
+      "type": "ending",
+      "img_url": null,
+      "img_description": "Ruby standing alone, looking sad as Blue flies away in the distance.",
+      "voice_url": null,
+      "content": "Ruby left Blue again, and by the time she returned with Mango, Blue had flown away on his own. Ruby felt sad and regretful, wishing she had helped sooner. She vowed to always prioritize kindness in the future.",
+      "next_scene": null,
+      "branch": null,
+      "lesson_learned": "Neglecting others can lead to regret and missed opportunities for friendship.",
+      "selected_choice": null
+    }
+  ],
+  "user_story": {
+    "visited_scene": [],
+    "choices": [],
+    "total_point": 0,
+    "finished_time": 0
+  },
+  "cover_img_url": null,
+  "cover_img_description": "A vibrant jungle scene with Ruby the rabbit and Blue the bird. Ruby is holding a leaf as a makeshift bandage for Blue's wing, surrounded by lush greenery and colorful flowers.",
+  "description": "Join Ruby, a kind-hearted rabbit, as she discovers the power of empathy and friendship in the jungle. When she meets a hurt bird named Blue, Ruby must make choices that teach her valuable lessons about caring for others and working together.",
+  "estimated_reading_time": 300
+}
