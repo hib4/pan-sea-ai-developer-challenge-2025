@@ -15,16 +15,18 @@ class IndonesianStoryRAG:
     def __init__(
         self,
         data_dir: str,
-        persist_directory: str,
-        model: str = "text-embedding-3-small",
+        similarity_threshold: float = 0.1,
+        top_k: int = 5,
     ):
         self.data_dir = data_dir
-        self.persist_directory = persist_directory
-        self.embeddings = OpenAIEmbeddings(model=model)
+        self.persist_directory = os.getenv("VECTOR_DB_PATH", "chroma_db")
+        self.embeddings = OpenAIEmbeddings(model=os.getenv("EMBEDDING_MODEL", "text-embedding-3-small"))
         self.vectorstore = None
         self.retriever = None
+        self.similarity_threshold = similarity_threshold
+        self.top_k = top_k
 
-    def setup_vector_store(self, documents, top_k: int = 10, chunk_size: int = 600):
+    def setup_vector_store(self, documents, chunk_size: int = 600):
         """
         Create vector store and set up retriever
         """
@@ -44,14 +46,8 @@ class IndonesianStoryRAG:
             persist_directory=self.persist_directory,
         )
 
-        # Set up retriever
-        self.retriever = self.vector_store.as_retriever(
-            search_type="similarity_score_threshold",
-            search_kwargs={"k": top_k, "score_threshold": 0.1},
-        )
-
     @staticmethod
-    def build_output_format_template(user_id, age_group):
+    def build_output_format_template(user_id, age_group, language):
         """
         Build the output format template for the story
         """
@@ -59,69 +55,69 @@ class IndonesianStoryRAG:
         return json.dumps(
             {
                 "user_id": user_id,
-                "title": "<judul cerita akan diisi oleh LLM>",
+                "title": f"<LLM will fill the title in {language}>",
                 "theme": [
                     """
-                    Kejujuran, Tanggung Jawab, Disiplin, Empati, Rasa Hormat, Toleransi, Kerja Sama, 
-                    Kepedulian, Keadilan, Keberanian, Kerendahan Hati, Ketekunan, Pantang Menyerah, 
-                    Amanah, Gotong Royong, Sopan Santun, Sportivitas, Syukur, 
-                    Komunikasi, Pemecahan Masalah, Pengambilan Keputusan, Manajemen Waktu, Pengendalian Diri, 
-                    Manajemen Emosi, Resolusi Konflik, Kerja Tim, Berpikir Kritis, Kreativitas, Literasi Digital, 
-                    Keamanan Daring, Etika Bermedia Sosial, Kebersihan Diri, Kesehatan Dasar, Kesadaran Diri, 
-                    Perencanaan Tujuan
-                    """
-                    "<pilih 1 - 3 tema yang sesuai dari pilihan tersebut, pastikan sama dan konsisten dengan pilihan tersebut, kembalikan dalam bentuk list>"
+                    Honesty, Responsibility, Discipline, Empathy, Respect, Tolerance, Cooperation, 
+                    Caring, Justice, Courage, Humility, Perseverance, Never Give Up, 
+                    Trustworthiness, Mutual Cooperation, Politeness, Sportsmanship, Gratitude, 
+                    Communication, Problem Solving, Decision Making, Time Management, Self Control, 
+                    Emotional Management, Conflict Resolution, Teamwork, Critical Thinking, Creativity, Digital Literacy, 
+                    Online Safety, Social Media Ethics, Personal Hygiene, Basic Health, Self Awareness, 
+                    Goal Planning
+                    """,
+                    "<choose 1 - 3 appropriate themes from the list, ensure they are consistent with the list, return as a list>",
                 ],
-                "language": "indonesian",
+                "language": f"{language}",
                 "status": "not_started",
                 "age_group": age_group,
                 "current_scene": 1,
                 "created_at": None,
                 "finished_at": None,
-                "maximum_point": "<jumlah poin maksimum akan diisi oleh LLM (integer)>",
+                "maximum_point": "<LLM will fill the maximum points (integer)>",
                 "story_flow": {"total_scene": 0, "decision_point": [], "ending": []},
                 "cover_img_url": None,
-                "cover_img_description": "<buat deskripsi gambar sampul dalam bahasa Inggris>",
-                "description": "<buat deskripsi cerita dalam bahasa Indonesia>",
-                "estimated_reading_time": "<perkiraan waktu membaca dalam bahasa Indonesia (dalam detik (integer))>",
+                "cover_img_description": "<create a cover image description in English>",
+                "description": f"<create a story description in {language}>",
+                "estimated_reading_time": "<estimated reading time in seconds (integer)>",
                 "characters": [
                     {
-                        "name": "<buat nama karakter dalam bahasa Indonesia>",
-                        "description": "<buat deskripsi karakter dalam bahasa Inggris, masukkan ciri fisik, sifat, dan peran dalam cerita>",
+                        "name": "create a character name with a culturally relevant name in Indonesia",
+                        "description": "<create a character description in English, including physical traits, personality, and role in the story>",
                     },
-                    "<tambah karakter lain jika diperlukan sesuai dengan format di atas, minimal 2 karakter, maksimal 5 karakter. Pastikan semua karakter di cerita sudah didefinisikan di sini, termasuk karakter utama dan pendukung>",
+                    "<add other characters as needed, min 2, max 5. Ensure all characters in the story are defined here, including main and supporting characters>",
                 ],
                 "scene": [
                     {
                         "scene_id": 1,
                         "type": "narrative",
                         "img_url": None,
-                        "img_description": "<buat deskripsi gambar yang sesuai dengan scene dalam bahasa Inggris>",
+                        "img_description": "<create an image description for the scene in English>",
                         "voice_url": None,
-                        "content": "<isi konten cerita yang sesuai dengan scene dalam bahasa Indonesia>",
-                        "next_scene": "<buat nomor scene selanjutnya yang sesuai dengan alur cerita (integer)>",
+                        "content": f"<fill in the story content for the scene in {language}>",
+                        "next_scene": "<create the next scene number (integer)>",
                     },
                     {
                         "scene_id": 2,
                         "type": "decision_point",
                         "img_url": None,
-                        "img_description": "<buat deskripsi gambar yang sesuai dengan scene dalam bahasa Inggris>",
+                        "img_description": "<create an image description for the scene in English>",
                         "voice_url": None,
-                        "content": "<isi konten cerita yang sesuai dengan scene dalam bahasa Indonesia>",
+                        "content": f"<fill in the story content for the scene in {language}>",
                         "branch": [
                             {
-                                "choice": "baik",
-                                "content": "<buat teks pilihan yang sesuai dengan konteks cerita dalam bahasa Indonesia, pilihan ini bersifat positif atau negatif>",
-                                "moral_value": "<buat nilai moral yang sesuai dengan pilihan dalam bahasa Indonesia>",
-                                "point": "<buat poin yang sesuai dengan pilihan, bisa positif atau negatif (integer)>",
-                                "next_scene": "<buat nomor scene selanjutnya yang sesuai dengan percabangan (integer)>",
+                                "choice": "good",
+                                "content": f"<create the choice text in {language}, this choice is either positive or negative>",
+                                "moral_value": f"<create the moral value for the choice in {language}>",
+                                "point": "<create the points for the choice, can be positive or negative (integer)>",
+                                "next_scene": "<create the next scene number based on the choice (integer)>",
                             },
                             {
-                                "choice": "buruk",
-                                "content": "<buat teks pilihan yang sesuai dengan konteks cerita dalam bahasa Indonesia, pilihan ini bersifat negatif atau positif>",
-                                "moral_value": "<buat nilai moral yang sesuai dengan pilihan dalam bahasa Indonesia>",
-                                "point": "<buat poin yang sesuai dengan pilihan, bisa positif atau negatif (integer)>",
-                                "next_scene": "<buat nomor scene selanjutnya yang sesuai dengan percabangan (integer)>",
+                                "choice": "bad",
+                                "content": f"<create the choice text in {language}, this choice is either negative or positive>",
+                                "moral_value": f"<create the moral value for the choice in {language}>",
+                                "point": "<create the points for the choice, can be positive or negative (integer)>",
+                                "next_scene": "<create the next scene number based on the choice (integer)>",
                             },
                         ],
                         "selected_choice": None,
@@ -130,10 +126,10 @@ class IndonesianStoryRAG:
                         "scene_id": 3,
                         "type": "ending",
                         "img_url": None,
-                        "img_description": "<buat deskripsi gambar yang sesuai dengan scene dalam bahasa Inggris>",
+                        "img_description": "<create an image description for the scene in English>",
                         "voice_url": None,
-                        "content": "<isi konten cerita yang sesuai dengan scene dalam bahasa Indonesia>",
-                        "lesson_learned": "<buat pelajaran yang didapat dari cerita ini dalam bahasa Indonesia>",
+                        "content": f"<fill in the story content for the scene in {language}>",
+                        "lesson_learned": f"<create the lesson learned from the story in {language}>",
                     },
                     "<more scenes can be added here>",
                 ],
@@ -168,15 +164,20 @@ class IndonesianStoryRAG:
         """
         print("Initializing RAG system...")
         print(f"Data directory: {self.data_dir}")
-        # Check if the persist directory
+        
+        # Setup retriever
+        self.retriever = self.vector_store.as_retriever(
+            search_type="similarity_score_threshold",
+            search_kwargs={
+                "k": self.top_k,
+                "score_threshold": self.similarity_threshold,
+            },
+        )
+        
         if os.path.exists(self.persist_directory) and not rebuild:
             self.vector_store = Chroma(
                 persist_directory=self.persist_directory,
                 embedding_function=self.embeddings,
-            )
-            self.retriever = self.retriever = self.vector_store.as_retriever(
-                search_type="similarity_score_threshold",
-                search_kwargs={"k": 10, "score_threshold": 0.1},
             )
             print("Using existing vector store from:", self.persist_directory)
             return True
@@ -191,39 +192,39 @@ class IndonesianStoryRAG:
     def build_story_structure_rules(age_group: int) -> str:
         if 4 <= age_group <= 5:
             return (
-                "Buat cerita dengan total 5 scene:\n"
-                "- Scene 1: naratif pembuka\n"
-                "- Scene 2: pengembangan\n"
-                "- Scene 3: decision point (anak memilih baik/buruk)\n"
-                "- Scene 4 & 5: masing-masing adalah ending berdasarkan pilihan\n"
+                "Create a story with a total of 5 scenes:\n"
+                "- Scene 1: opening narrative\n"
+                "- Scene 2: development\n"
+                "- Scene 3: decision point (child chooses good/bad)\n"
+                "- Scene 4 & 5: each is an ending based on the choice\n"
             )
         elif 6 <= age_group <= 12:
             return (
-                "Buat cerita dengan total 10 scene:\n"
-                "- Scene 1: naratif pembuka\n"
-                "- Scene 2: decision point pertama\n"
-                "   - Pilihan baik → scene 3 (berikan reward disini) → scene 4\n"
-                "   - Pilihan buruk → scene 5 (berikan koreksi atau konsekuensi disini) → scene 6\n"
-                "- Scene 4: decision point kedua untuk cabang baik\n"
-                "   - Pilihan baik → scene 7 (ending terbaik)\n"
-                "   - Pilihan buruk → scene 8 (ending cukup baik)\n"
-                "- Scene 6: decision point kedua untuk cabang buruk\n"
-                "   - Pilihan baik → scene 9 (ending cukup buruk)\n"
-                "   - Pilihan buruk → scene 10 (ending terburuk)\n"
+                "Create a story with a total of 10 scenes:\n"
+                "- Scene 1: opening narrative\n"
+                "- Scene 2: first decision point\n"
+                "  - Good choice -> scene 3 (provide a reward here) -> scene 4\n"
+                "  - Bad choice -> scene 5 (provide a correction or consequence here) -> scene 6\n"
+                "- Scene 4: second decision point for the good branch\n"
+                "  - Good choice -> scene 7 (best ending)\n"
+                "  - Bad choice -> scene 8 (a decent ending)\n"
+                "- Scene 6: second decision point for the bad branch\n"
+                "  - Good choice -> scene 9 (a somewhat bad ending)\n"
+                "  - Bad choice -> scene 10 (worst ending)\n"
             )
         else:
-            return "Gunakan struktur 10 scene default."
+            return "Use the default 10-scene structure."
 
-    def create_prompt(self, language, query, user_id, age: int):  # Change parameter to int
+    def create_prompt(self, language, query, user_id, age: int):
         PROMPT_TEMPLATE = """
-        You are an expert Indonesian storyteller specializing in teaching **general moral values** 
-        and **basic life skills** to children.
+        You are an expert storyteller specializing in teaching **general moral values** and **basic life skills** to children.
 
-        Generate a JSON-formatted interactive story in {language} for children aged {age}. with:
-        - Indonesian character names and culturally relevant settings
+        Generate a JSON-formatted interactive story in {language} for children aged {age}. The story should have:
+        - Character names and culturally relevant settings based on the requested language and query
         - Two decision points (unless otherwise noted), each with two choices, that affect the story ending
 
-        You can use the following Indonesian story contexts and examples as inspiration for your story, but you are not limited to it. Feel free to create engaging and educational content based on the query provided.
+        You can use the following story contexts and examples as inspiration for your story, but you are not limited to it. Feel free to create engaging and educational content based on the query provided.
+
         ### Context:
         {context}
         
@@ -234,12 +235,14 @@ class IndonesianStoryRAG:
         {structure_rules}
 
         ### General Instructions:
-        1. Use simple and engaging Indonesian suitable for age {age}
+        1. Use simple and engaging language suitable for age {age} in the requested language
         2. Scene types must be: "narrative", "decision_point", or "ending"
         3. Choices should lead to consequences that are constructive but realistic
         4. Provide at least two different endings with different moral outcomes
         5. Do not include markdown or explanations—just clean JSON
         6. For higher age groups (11 - 12), the decision points can be more like a quiz to test their understanding for the said concept.
+        7. The story title, description, character names, and all story content must be in the requested language.
+        8. The character descriptions, image descriptions, and cover image description must be in English.
 
         ### Format:
         {output_format}
@@ -256,25 +259,24 @@ class IndonesianStoryRAG:
                 context = [doc.page_content for doc in context_docs]
             except Exception as e:
                 print(f"Error retrieving documents: {e}")
-                context = ["Tidak ada konteks yang relevan ditemukan."]
+                context = ["No relevant context found."]
         else:
             print(
                 "Retriever not initialized. Make sure to call initialize_rag() first."
             )
-            context = ["Tidak ada konteks yang relevan ditemukan."]
+            context = ["No relevant context found."]
 
         if not context:
-            context = ["Tidak ada konteks yang relevan ditemukan."]
+            context = ["No relevant context found."]
 
         output_format = self.build_output_format_template(
-            user_id=user_id, age_group=age  # Keep as int
+            user_id=user_id, age_group=age, language=language
         )
-        # Use age directly for structure rules
         structure_rules = self.build_story_structure_rules(age)
-        # Create and format the prompt
+
         prompt = ChatPromptTemplate.from_template(PROMPT_TEMPLATE)
         formatted_prompt = prompt.format_prompt(
-            context=context,
+            context="\n".join(context),
             query=query,
             age=age,
             output_format=output_format,
@@ -284,21 +286,33 @@ class IndonesianStoryRAG:
 
         return formatted_prompt
 
+
 # Create test instance
 if __name__ == "__main__":
     rag_system = IndonesianStoryRAG(
-        data_dir="knowledge_base",
-        persist_directory="chroma_db",
-        model="text-embedding-3-small",
+        data_dir="knowledge_base"
     )
     rag_system.initialize_rag(rebuild=True)
     print("RAG system initialized and ready to use.")
-    
-    # Example usage
-    prompt = rag_system.create_prompt(
+
+    # Example usage with Indonesian
+    prompt_id = rag_system.create_prompt(
         language="indonesian",
-        query="Ceritakan tentang pentingnya mmemiliki rasa mempati kepada sesama dengan karakter binatang - binatang di hutan",
+        query="Ceritakan tentang pentingnya memiliki rasa empati kepada sesama dengan karakter binatang-binatang di hutan",
         user_id="user123",
-        age=7
+        age=7,
     )
-    print(prompt.to_messages())
+    print("--- Indonesian Prompt ---")
+    print(prompt_id.to_messages())
+
+    print("\n" + "=" * 50 + "\n")
+
+    # Example usage with English
+    prompt_en = rag_system.create_prompt(
+        language="english",
+        query="Tell a story about the importance of empathy with forest animal characters.",
+        user_id="user456",
+        age=7,
+    )
+    print("--- English Prompt ---")
+    print(prompt_en.to_messages())
