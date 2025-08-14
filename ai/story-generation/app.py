@@ -19,7 +19,7 @@ class StoryRequest(BaseModel):
     query: str = Field(description="Story request in Indonesian", examples=["Cerita tentang menabung"])
     user_id: str = Field(examples=["user123"], description="Unique identifier for the user")
     age: int = Field(description="Age of the child")
-    language: str = Field(default="indonesian", description="Language of the story", examples=["indonesian", "english"])
+    lang_code: str = Field(default="indonesian", description="Language code for the story", examples=["id", "en"])
 
 # Response models
 class Character(BaseModel):
@@ -62,7 +62,7 @@ class StoryResponse(BaseModel):
     user_story: Dict[str, Any]
     cover_img_url: Optional[str] = None
     cover_img_description: Optional[str] = ""
-    description: str = "A story about financial literacy for children."
+    description: str = "A story about being kind to others."
     estimated_reading_time: int = 600  # Default to 5 minutes in seconds
 
 # Create FastAPI instance
@@ -84,12 +84,11 @@ app.add_middleware(
 # Initialize your RAG system
 rag = IndonesianStoryRAG(
     data_dir='./knowledge_base',
-    persist_directory='./chroma_db'
 )
 rag.initialize_rag(rebuild=True)
 
 chat_model = ChatOpenAI(
-    model="aisingapore/Llama-SEA-LION-v3.5-70B-R",
+    model=os.getenv("LLM_MODEL", "aisingapore/Llama-SEA-LION-v3.5-70B-R"),
     temperature=0.7,
     api_key=SecretStr(os.getenv("SEALION_API_KEY", "")),
     base_url="https://api.sea-lion.ai/v1"
@@ -289,7 +288,7 @@ async def generate_story(request: StoryRequest):
             query=request.query,
             user_id=request.user_id,
             age=request.age,
-            language=request.language
+            lang_code=request.lang_code
         )
         
         # Get response from LLM

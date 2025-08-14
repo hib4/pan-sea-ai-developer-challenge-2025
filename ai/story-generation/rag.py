@@ -13,6 +13,7 @@ import requests
 
 load_dotenv()
 
+
 class IndonesianStoryRAG:
     def __init__(
         self,
@@ -22,7 +23,9 @@ class IndonesianStoryRAG:
     ):
         self.data_dir = data_dir
         self.persist_directory = os.getenv("VECTOR_DB_PATH", "chroma_db")
-        self.embeddings = OpenAIEmbeddings(model=os.getenv("EMBEDDING_MODEL", "text-embedding-3-small"))
+        self.embeddings = OpenAIEmbeddings(
+            model=os.getenv("EMBEDDING_MODEL", "text-embedding-3-small")
+        )
         self.vectorstore = None
         self.retriever = None
         self.similarity_threshold = similarity_threshold
@@ -53,7 +56,7 @@ class IndonesianStoryRAG:
     def initialize_rag(self, rebuild: bool = False):
         print("Initializing RAG system...")
         print(f"Data directory: {self.data_dir}")
-        
+
         if os.path.exists(self.persist_directory) and not rebuild:
             self.vector_store = Chroma(
                 persist_directory=self.persist_directory,
@@ -79,30 +82,35 @@ class IndonesianStoryRAG:
             },
         )
         return True
-    
+
     def retrieve_context(self, query: str, lang_code: str = "id"):
         if not self.retriever:
             raise ValueError("Retriever not initialized. Call initialize_rag() first.")
         try:
-            if lang_code != 'id':
-                print(f'Translating query from {Language.get(lang_code).display_name()} to Indonesian...')
-                response = requests.post("http://localhost:8003/translate", 
+            if lang_code != "id":
+                print(
+                    f"Translating query from {Language.get(lang_code).display_name()} to Indonesian..."
+                )
+                response = requests.post(
+                    "http://localhost:8003/translate",
                     json={
                         "q": query,
                         "source": lang_code,
                         "target": "id",
                         "format": "text",
                         "alternatives": 3,
-                        "api_key": ""
+                        "api_key": "",
                     },
-                    headers={"Content-Type": "application/json"}
+                    headers={"Content-Type": "application/json"},
                 )
-                
+
                 translation_result = response.json()
-                query = translation_result.get('translatedText', query)
-            
+                query = translation_result.get("translatedText", query)
+
             context_docs = self.retriever.invoke(query)
-            print(f"Retrieved {len(context_docs)} relevant documents for query: {query}")
+            print(
+                f"Retrieved {len(context_docs)} relevant documents for query: {query}"
+            )
             return context_docs
         except Exception as e:
             print(f"Error retrieving context: {e}")
@@ -118,7 +126,7 @@ class IndonesianStoryRAG:
 
         # Get lang_code display name from code
         language = Language.get(lang_code).display_name()
-        
+
         output_format = StoryInstructions.build_output_format_template(
             user_id=user_id, age_group=age, language=language
         )
