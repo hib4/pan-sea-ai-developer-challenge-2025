@@ -203,7 +203,7 @@ class StoryCard extends StatelessWidget {
           ),
           10.vertical,
           Text(
-            'Petualangan Mini Kimo dan Teman-Teman',
+            'Kimo and Friends Mini Adventure',
             style: textTheme.body.copyWith(
               color: colors.grey[500],
               fontWeight: FontWeight.w600,
@@ -214,7 +214,7 @@ class StoryCard extends StatelessWidget {
           ),
           4.vertical,
           Text(
-            'Belajar bagaimana menabung bersama Kimo si Rubah',
+            'Learn how to save money with Kimo the Fox',
             style: textTheme.caption.copyWith(
               color: colors.grey[400],
               fontWeight: FontWeight.w500,

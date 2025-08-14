@@ -86,7 +86,7 @@ class _DashboardPageState extends State<DashboardPage> {
               width: 32,
               height: 32,
             ),
-            label: 'Beranda',
+            label: 'Home',
             isActive: _selectedIndex == 0,
           ),
           buildItem(
@@ -94,7 +94,7 @@ class _DashboardPageState extends State<DashboardPage> {
               width: 32,
               height: 32,
             ),
-            label: 'Prestasi',
+            label: 'Achievement',
             isActive: _selectedIndex == 1,
           ),
           buildItem(
@@ -102,7 +102,7 @@ class _DashboardPageState extends State<DashboardPage> {
               width: 32,
               height: 32,
             ),
-            label: 'Langkah',
+            label: 'Progress',
             isActive: _selectedIndex == 2,
           ),
           buildItem(
@@ -110,7 +110,7 @@ class _DashboardPageState extends State<DashboardPage> {
               width: 32,
               height: 32,
             ),
-            label: 'Profil',
+            label: 'Profile',
             isActive: _selectedIndex == 3,
           ),
         ],

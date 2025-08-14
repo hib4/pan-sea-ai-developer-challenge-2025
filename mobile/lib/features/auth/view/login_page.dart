@@ -32,40 +32,6 @@ class _LoginPageState extends State<LoginPage> {
     final email = _emailController.text.trim();
     final password = _passwordController.text;
 
-    // try {
-    //   final response = await http.post(
-    //     Uri.parse(
-    //       '${Env.apiBaseUrl}/login',
-    //     ), // Replace with your actual API endpoint
-    //     headers: {'Content-Type': 'application/json'},
-    //     body: '{"email": "$email", "password": "$password"}',
-    //   );
-
-    //   final data = jsonDecode(response.body);
-
-    //   if (response.statusCode == 200) {
-    //     final token = data['token'] as String?;
-    //     if (token != null) {
-    //       // Save token to secure storage or state management
-    //       await SecureStorageService().write('token', token);
-    //       // Navigate to home page or dashboard
-    //       if (mounted) {
-    //         await context.push(const TestPage());
-    //       }
-    //     }
-    //   } else {
-    //     // Handle error
-    //     final error = data['detail'] as String? ?? 'Unknown error';
-    //     ScaffoldMessenger.of(context).showSnackBar(
-    //       SnackBar(content: Text('Login failed: $error')),
-    //     );
-    //   }
-    // } catch (e) {
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     SnackBar(content: Text('An error occurred: $e')),
-    //   );
-    // }
-
     await context.pushAndRemoveUntil(
       const DashboardPage(),
       (route) => false,
@@ -99,7 +65,7 @@ class _LoginPageState extends State<LoginPage> {
                   flex: 2,
                   child: Center(
                     child: Text(
-                      'MASUK',
+                      'LOGIN',
                       style: textTheme.h1.copyWith(
                         color: Colors.white,
                         fontSize: 105,
@@ -133,7 +99,7 @@ class _LoginPageState extends State<LoginPage> {
                         KancaTextField(
                           controller: _emailController,
                           textInputType: TextInputType.emailAddress,
-                          label: 'Email',
+                          label: 'example@mail.com',
                         ),
                         16.vertical,
                         Text(
@@ -144,7 +110,7 @@ class _LoginPageState extends State<LoginPage> {
                         KancaTextField(
                           controller: _passwordController,
                           textInputType: TextInputType.visiblePassword,
-                          label: 'Password',
+                          label: 'Enter your password',
                           isPassword: true,
                         ),
                         12.vertical,
@@ -164,9 +130,8 @@ class _LoginPageState extends State<LoginPage> {
                         32.vertical,
                         ElevatedButton(
                           onPressed: _login,
-                          child: const Text('Lanjutkan'),
+                          child: const Text('Continue'),
                         ),
-                        // Or
                         16.vertical,
                         Row(
                           children: [
@@ -181,7 +146,7 @@ class _LoginPageState extends State<LoginPage> {
                                 horizontal: 16,
                               ),
                               child: Text(
-                                'Atau',
+                                'Or',
                                 style: textTheme.caption,
                               ),
                             ),
@@ -208,7 +173,7 @@ class _LoginPageState extends State<LoginPage> {
                                 height: 24,
                               ),
                               10.horizontal,
-                              const Text('Lanjutkan dengan Google'),
+                              const Text('Continue with Google'),
                             ],
                           ),
                         ),
@@ -217,7 +182,7 @@ class _LoginPageState extends State<LoginPage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              'Belum punya akun?',
+                              'Don’t have an account?',
                               style: textTheme.caption.copyWith(
                                 fontSize: 14,
                               ),
@@ -226,7 +191,7 @@ class _LoginPageState extends State<LoginPage> {
                             InkWell(
                               onTap: _goToRegister,
                               child: Text(
-                                'Daftar sekarang!',
+                                'Sign up now!',
                                 style: textTheme.lexendCaption.copyWith(
                                   color: colors.primary[500],
                                   fontSize: 14,
@@ -250,11 +215,10 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                                 children: [
                                   const TextSpan(
-                                    text:
-                                        'Dengan menggunakan Kanca, Anda setuju pada ',
+                                    text: 'By using Kanca, you agree to our ',
                                   ),
                                   TextSpan(
-                                    text: 'Ketentuan Layanan',
+                                    text: 'Terms of Service',
                                     style: textTheme.lexendCaption.copyWith(
                                       fontWeight: FontWeight.w700,
                                       decoration: TextDecoration.underline,
@@ -266,10 +230,10 @@ class _LoginPageState extends State<LoginPage> {
                                       },
                                   ),
                                   const TextSpan(
-                                    text: ' dan ',
+                                    text: ' and ',
                                   ),
                                   TextSpan(
-                                    text: 'Kebijakan Privasi',
+                                    text: 'Privacy Policy',
                                     style: textTheme.lexendCaption.copyWith(
                                       fontWeight: FontWeight.w700,
                                       decoration: TextDecoration.underline,
@@ -281,7 +245,7 @@ class _LoginPageState extends State<LoginPage> {
                                       },
                                   ),
                                   const TextSpan(
-                                    text: ' kami.',
+                                    text: '.',
                                   ),
                                 ],
                               ),

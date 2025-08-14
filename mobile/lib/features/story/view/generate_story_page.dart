@@ -28,7 +28,6 @@ class _GenerateStoryPageState extends State<GenerateStoryPage> {
     final colors = context.colors;
     final textTheme = context.textTheme;
 
-    // Check if user has provided valid input
     final hasTextInput = _textController.text.trim().isNotEmpty;
     final hasStoryAndMoral = _selectedStory != -1 && _selectedMoral != -1;
     final isButtonEnabled = hasTextInput || hasStoryAndMoral;
@@ -66,12 +65,13 @@ class _GenerateStoryPageState extends State<GenerateStoryPage> {
               text: TextSpan(
                 style: textTheme.h4.copyWith(
                   color: colors.grey[500],
+                  fontSize: 34,
                   fontWeight: FontWeight.w600,
                 ),
-                text: 'Yuk Buat ',
+                text: 'Let’s Create ',
                 children: [
                   TextSpan(
-                    text: 'Ceritamu!',
+                    text: 'Your Story!',
                     style: TextStyle(
                       color: colors.primary[500],
                     ),
@@ -82,12 +82,10 @@ class _GenerateStoryPageState extends State<GenerateStoryPage> {
             ),
             24.vertical,
             GenerateStoryTextField(
-              label: 'Ketik ide cerita kamu di sini...',
+              label: 'Type your story idea here...',
               controller: _textController,
               onChanged: (value) {
-                setState(() {
-                  // Trigger rebuild when text changes
-                });
+                setState(() {});
                 return null;
               },
             ),
@@ -95,7 +93,7 @@ class _GenerateStoryPageState extends State<GenerateStoryPage> {
             Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                'Atau Pilih Ide Cerita:',
+                'Or Choose a Story Idea:',
                 style: textTheme.lexendLargeBody.copyWith(
                   fontWeight: FontWeight.w500,
                 ),
@@ -105,185 +103,65 @@ class _GenerateStoryPageState extends State<GenerateStoryPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Material(
-                  color: colors.primary[500],
-                  borderRadius: BorderRadius.circular(12),
-                  child: InkWell(
-                    onTap: () {
-                      setState(() {
-                        _selectedStory = _selectedStory == 0 ? -1 : 0;
-                      });
-                    },
-                    borderRadius: BorderRadius.circular(12),
-                    splashColor: Colors.black.withOpacity(0.2),
-                    highlightColor: Colors.black.withOpacity(0.1),
-                    child: Container(
-                      width: 88,
-                      height: 88,
-                      padding: const EdgeInsets.only(bottom: 4),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: _selectedStory == 0
-                              ? colors.primary[50]
-                              : colors.primary[100],
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Assets.icons.school.image(
-                              width: 40,
-                              height: 40,
-                            ),
-                            6.vertical,
-                            Text(
-                              'Sekolah',
-                              style: textTheme.lexendBody.copyWith(
-                                color: colors.primary[800],
-                                fontWeight: FontWeight.w400,
-                                height: 1.2,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
+                _storyOption(
+                  index: 0,
+                  selectedIndex: _selectedStory,
+                  onTap: () {
+                    setState(() {
+                      _selectedStory = _selectedStory == 0 ? -1 : 0;
+                    });
+                  },
+                  color: colors.primary[500]!,
+                  bgSelected: colors.primary[50]!,
+                  bgUnselected: colors.primary[100]!,
+                  icon: Assets.icons.school.image(width: 40, height: 40),
+                  label: 'School',
+                  labelColor: colors.primary[800]!,
                 ),
-                Material(
-                  color: colors.secondary[500],
-                  borderRadius: BorderRadius.circular(12),
-                  child: InkWell(
-                    onTap: () {
-                      setState(() {
-                        _selectedStory = _selectedStory == 1 ? -1 : 1;
-                      });
-                    },
-                    borderRadius: BorderRadius.circular(12),
-                    splashColor: Colors.black.withOpacity(0.2),
-                    highlightColor: Colors.black.withOpacity(0.1),
-                    child: Container(
-                      width: 88,
-                      height: 88,
-                      padding: const EdgeInsets.only(bottom: 4),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: _selectedStory == 1
-                              ? colors.secondary[50]
-                              : colors.secondary[100],
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Assets.icons.fantasy.image(
-                              width: 40,
-                              height: 40,
-                            ),
-                            6.vertical,
-                            Text(
-                              'Fantasi',
-                              style: textTheme.lexendBody.copyWith(
-                                color: colors.secondary[800],
-                                fontWeight: FontWeight.w400,
-                                height: 1.2,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
+                _storyOption(
+                  index: 1,
+                  selectedIndex: _selectedStory,
+                  onTap: () {
+                    setState(() {
+                      _selectedStory = _selectedStory == 1 ? -1 : 1;
+                    });
+                  },
+                  color: colors.secondary[500]!,
+                  bgSelected: colors.secondary[50]!,
+                  bgUnselected: colors.secondary[100]!,
+                  icon: Assets.icons.fantasy.image(width: 40, height: 40),
+                  label: 'Fantasy',
+                  labelColor: colors.secondary[800]!,
                 ),
-                Material(
-                  color: colors.darkAccent[500],
-                  borderRadius: BorderRadius.circular(12),
-                  child: InkWell(
-                    onTap: () {
-                      setState(() {
-                        _selectedStory = _selectedStory == 2 ? -1 : 2;
-                      });
-                    },
-                    borderRadius: BorderRadius.circular(12),
-                    splashColor: Colors.black.withOpacity(0.2),
-                    highlightColor: Colors.black.withOpacity(0.1),
-                    child: Container(
-                      width: 88,
-                      height: 88,
-                      padding: const EdgeInsets.only(bottom: 4),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: _selectedStory == 2
-                              ? const Color(0xFFF8F7FB)
-                              : const Color(0xFFEBEAEF),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Assets.icons.shopping.image(
-                              width: 40,
-                              height: 40,
-                            ),
-                            6.vertical,
-                            Text(
-                              'Belanja',
-                              style: textTheme.lexendBody.copyWith(
-                                color: colors.darkAccent[800],
-                                fontWeight: FontWeight.w400,
-                                height: 1.2,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
+                _storyOption(
+                  index: 2,
+                  selectedIndex: _selectedStory,
+                  onTap: () {
+                    setState(() {
+                      _selectedStory = _selectedStory == 2 ? -1 : 2;
+                    });
+                  },
+                  color: colors.darkAccent[500]!,
+                  bgSelected: const Color(0xFFF8F7FB),
+                  bgUnselected: const Color(0xFFEBEAEF),
+                  icon: Assets.icons.shopping.image(width: 40, height: 40),
+                  label: 'Shopping',
+                  labelColor: colors.darkAccent[800]!,
                 ),
-                Material(
+                _storyOption(
+                  index: 3,
+                  selectedIndex: _selectedStory,
+                  onTap: () {
+                    setState(() {
+                      _selectedStory = _selectedStory == 3 ? -1 : 3;
+                    });
+                  },
                   color: const Color(0xFF52BC00),
-                  borderRadius: BorderRadius.circular(12),
-                  child: InkWell(
-                    onTap: () {
-                      setState(() {
-                        _selectedStory = _selectedStory == 3 ? -1 : 3;
-                      });
-                    },
-                    borderRadius: BorderRadius.circular(12),
-                    splashColor: Colors.black.withOpacity(0.2),
-                    highlightColor: Colors.black.withOpacity(0.1),
-                    child: Container(
-                      width: 88,
-                      height: 88,
-                      padding: const EdgeInsets.only(bottom: 4),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: _selectedStory == 3
-                              ? const Color(0xFFF0F8E8)
-                              : const Color(0XFFDFF1D1),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Assets.icons.explore.image(
-                              width: 40,
-                              height: 40,
-                            ),
-                            6.vertical,
-                            Text(
-                              'Jelajah',
-                              style: textTheme.lexendBody.copyWith(
-                                color: const Color(0XFF2F6C00),
-                                fontWeight: FontWeight.w400,
-                                height: 1.2,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
+                  bgSelected: const Color(0xFFF0F8E8),
+                  bgUnselected: const Color(0XFFDFF1D1),
+                  icon: Assets.icons.explore.image(width: 40, height: 40),
+                  label: 'Explore',
+                  labelColor: const Color(0XFF2F6C00),
                 ),
               ],
             ),
@@ -291,7 +169,7 @@ class _GenerateStoryPageState extends State<GenerateStoryPage> {
             Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                'Nilai Moral:',
+                'Moral Value:',
                 style: textTheme.lexendLargeBody.copyWith(
                   fontWeight: FontWeight.w500,
                 ),
@@ -303,204 +181,68 @@ class _GenerateStoryPageState extends State<GenerateStoryPage> {
               children: [
                 Column(
                   children: [
-                    Material(
-                      color: _selectedMoral == 0
-                          ? colors.primary[50]
-                          : colors.primary[100],
-                      borderRadius: BorderRadius.circular(12),
-                      child: InkWell(
-                        onTap: () {
-                          setState(() {
-                            _selectedMoral = _selectedMoral == 0 ? -1 : 0;
-                          });
-                        },
-                        borderRadius: BorderRadius.circular(12),
-                        splashColor: Colors.grey.withOpacity(0.2),
-                        highlightColor: Colors.grey.withOpacity(0.1),
-                        child: Container(
-                          height: 48,
-                          constraints: const BoxConstraints(
-                            minWidth: 186,
-                          ),
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: colors.primary[500]!,
-                              width: 2,
-                            ),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Assets.icons.saving.image(
-                                width: 24,
-                                height: 24,
-                              ),
-                              10.horizontal,
-                              Text(
-                                'Menabung',
-                                style: GoogleFonts.fredoka(
-                                  color: colors.primary[800],
-                                  fontSize: 21,
-                                  fontWeight: FontWeight.w500, // SemiBold
-                                  height: 1.5,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
+                    _moralOption(
+                      index: 0,
+                      selectedIndex: _selectedMoral,
+                      onTap: () {
+                        setState(() {
+                          _selectedMoral = _selectedMoral == 0 ? -1 : 0;
+                        });
+                      },
+                      color: colors.primary[500]!,
+                      bgSelected: colors.primary[50]!,
+                      bgUnselected: colors.primary[100]!,
+                      icon: Assets.icons.saving.image(width: 24, height: 24),
+                      label: 'Saving',
+                      labelColor: colors.primary[800]!,
                     ),
                     10.vertical,
-                    Material(
-                      color: _selectedMoral == 1
-                          ? colors.secondary[50]
-                          : colors.secondary[100],
-                      borderRadius: BorderRadius.circular(12),
-                      child: InkWell(
-                        onTap: () {
-                          setState(() {
-                            _selectedMoral = _selectedMoral == 1 ? -1 : 1;
-                          });
-                        },
-                        borderRadius: BorderRadius.circular(12),
-                        splashColor: Colors.grey.withOpacity(0.2),
-                        highlightColor: Colors.grey.withOpacity(0.1),
-                        child: Container(
-                          height: 48,
-                          constraints: const BoxConstraints(
-                            minWidth: 186,
-                          ),
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: colors.secondary[500]!,
-                              width: 2,
-                            ),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Assets.icons.honesty.image(
-                                width: 24,
-                                height: 24,
-                              ),
-                              10.horizontal,
-                              Text(
-                                'Kejujuran',
-                                style: GoogleFonts.fredoka(
-                                  color: colors.secondary[800],
-                                  fontSize: 21,
-                                  fontWeight: FontWeight.w500, // SemiBold
-                                  height: 1.5,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
+                    _moralOption(
+                      index: 1,
+                      selectedIndex: _selectedMoral,
+                      onTap: () {
+                        setState(() {
+                          _selectedMoral = _selectedMoral == 1 ? -1 : 1;
+                        });
+                      },
+                      color: colors.secondary[500]!,
+                      bgSelected: colors.secondary[50]!,
+                      bgUnselected: colors.secondary[100]!,
+                      icon: Assets.icons.honesty.image(width: 24, height: 24),
+                      label: 'Honesty',
+                      labelColor: colors.secondary[800]!,
                     ),
                   ],
                 ),
-                Material(
-                  color: _selectedMoral == 2
-                      ? const Color(0xFFF8F7FB)
-                      : const Color(0xFFEBEAEF),
-                  borderRadius: BorderRadius.circular(12),
-                  child: InkWell(
-                    onTap: () {
-                      setState(() {
-                        _selectedMoral = _selectedMoral == 2 ? -1 : 2;
-                      });
-                    },
-                    borderRadius: BorderRadius.circular(12),
-                    splashColor: Colors.grey.withOpacity(0.2),
-                    highlightColor: Colors.grey.withOpacity(0.1),
-                    child: Container(
-                      constraints: const BoxConstraints(
-                        minWidth: 86,
-                        minHeight: 106,
-                      ),
-                      padding: const EdgeInsets.symmetric(horizontal: 6),
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: colors.darkAccent[400]!,
-                          width: 2,
-                        ),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Assets.icons.wise.image(
-                            width: 32,
-                            height: 32,
-                          ),
-                          10.vertical,
-                          Text(
-                            'Bijak',
-                            style: GoogleFonts.fredoka(
-                              color: colors.darkAccent[800],
-                              fontSize: 21,
-                              fontWeight: FontWeight.w500, // SemiBold
-                              height: 1.5,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                _moralOptionVertical(
+                  index: 2,
+                  selectedIndex: _selectedMoral,
+                  onTap: () {
+                    setState(() {
+                      _selectedMoral = _selectedMoral == 2 ? -1 : 2;
+                    });
+                  },
+                  borderColor: colors.darkAccent[400]!,
+                  bgSelected: const Color(0xFFF8F7FB),
+                  bgUnselected: const Color(0xFFEBEAEF),
+                  icon: Assets.icons.wise.image(width: 32, height: 32),
+                  label: 'Wisdom',
+                  labelColor: colors.darkAccent[800]!,
                 ),
-                Material(
-                  color: _selectedMoral == 3
-                      ? colors.support[50]
-                      : colors.support[100],
-                  borderRadius: BorderRadius.circular(12),
-                  child: InkWell(
-                    onTap: () {
-                      setState(() {
-                        _selectedMoral = _selectedMoral == 3 ? -1 : 3;
-                      });
-                    },
-                    borderRadius: BorderRadius.circular(12),
-                    splashColor: Colors.grey.withOpacity(0.2),
-                    highlightColor: Colors.grey.withOpacity(0.1),
-                    child: Container(
-                      constraints: const BoxConstraints(
-                        minWidth: 86,
-                        minHeight: 106,
-                      ),
-                      padding: const EdgeInsets.symmetric(horizontal: 6),
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: colors.support[700]!,
-                          width: 2,
-                        ),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Assets.icons.sharing.image(
-                            width: 32,
-                            height: 32,
-                          ),
-                          10.vertical,
-                          Text(
-                            'Berbagi',
-                            style: GoogleFonts.fredoka(
-                              color: colors.support[800],
-                              fontSize: 21,
-                              fontWeight: FontWeight.w500, // SemiBold
-                              height: 1.5,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                _moralOptionVertical(
+                  index: 3,
+                  selectedIndex: _selectedMoral,
+                  onTap: () {
+                    setState(() {
+                      _selectedMoral = _selectedMoral == 3 ? -1 : 3;
+                    });
+                  },
+                  borderColor: colors.support[700]!,
+                  bgSelected: colors.support[50]!,
+                  bgUnselected: colors.support[100]!,
+                  icon: Assets.icons.sharing.image(width: 32, height: 32),
+                  label: 'Sharing',
+                  labelColor: colors.support[800]!,
                 ),
               ],
             ),
@@ -512,19 +254,162 @@ class _GenerateStoryPageState extends State<GenerateStoryPage> {
                     }
                   : null,
               style: ElevatedButton.styleFrom(
-                minimumSize: const Size(
-                  140,
-                  56,
-                ),
+                minimumSize: const Size(140, 56),
                 textStyle: GoogleFonts.lexend(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
                   height: 1.2,
                 ),
               ),
-              child: const Text('Buat Cerita Sekarang!'),
+              child: const Text('Create Story Now!'),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _storyOption({
+    required int index,
+    required int selectedIndex,
+    required VoidCallback onTap,
+    required Color color,
+    required Color bgSelected,
+    required Color bgUnselected,
+    required Widget icon,
+    required String label,
+    required Color labelColor,
+  }) {
+    final colors = context.colors;
+    final textTheme = context.textTheme;
+    return Material(
+      color: color,
+      borderRadius: BorderRadius.circular(12),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        splashColor: Colors.black.withOpacity(0.2),
+        highlightColor: Colors.black.withOpacity(0.1),
+        child: Container(
+          width: 88,
+          height: 88,
+          padding: const EdgeInsets.only(bottom: 4),
+          child: Container(
+            decoration: BoxDecoration(
+              color: selectedIndex == index ? bgSelected : bgUnselected,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                icon,
+                6.vertical,
+                Text(
+                  label,
+                  style: textTheme.lexendBody.copyWith(
+                    color: labelColor,
+                    fontWeight: FontWeight.w400,
+                    height: 1.2,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _moralOption({
+    required int index,
+    required int selectedIndex,
+    required VoidCallback onTap,
+    required Color color,
+    required Color bgSelected,
+    required Color bgUnselected,
+    required Widget icon,
+    required String label,
+    required Color labelColor,
+  }) {
+    return Material(
+      color: selectedIndex == index ? bgSelected : bgUnselected,
+      borderRadius: BorderRadius.circular(12),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        splashColor: Colors.grey.withOpacity(0.2),
+        highlightColor: Colors.grey.withOpacity(0.1),
+        child: Container(
+          height: 48,
+          constraints: const BoxConstraints(minWidth: 186),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          decoration: BoxDecoration(
+            border: Border.all(color: color, width: 2),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              icon,
+              10.horizontal,
+              Text(
+                label,
+                style: GoogleFonts.fredoka(
+                  color: labelColor,
+                  fontSize: 21,
+                  fontWeight: FontWeight.w500,
+                  height: 1.5,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _moralOptionVertical({
+    required int index,
+    required int selectedIndex,
+    required VoidCallback onTap,
+    required Color borderColor,
+    required Color bgSelected,
+    required Color bgUnselected,
+    required Widget icon,
+    required String label,
+    required Color labelColor,
+  }) {
+    return Material(
+      color: selectedIndex == index ? bgSelected : bgUnselected,
+      borderRadius: BorderRadius.circular(12),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        splashColor: Colors.grey.withOpacity(0.2),
+        highlightColor: Colors.grey.withOpacity(0.1),
+        child: Container(
+          constraints: const BoxConstraints(minWidth: 86, minHeight: 106),
+          padding: const EdgeInsets.symmetric(horizontal: 6),
+          decoration: BoxDecoration(
+            border: Border.all(color: borderColor, width: 2),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              icon,
+              10.vertical,
+              Text(
+                label,
+                style: GoogleFonts.fredoka(
+                  color: labelColor,
+                  fontSize: 21,
+                  fontWeight: FontWeight.w500,
+                  height: 1.5,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

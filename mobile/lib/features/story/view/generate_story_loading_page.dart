@@ -49,10 +49,10 @@ class _GenerateStoryLoadingPageState extends State<GenerateStoryLoadingPage> {
                     color: colors.grey[500],
                     fontWeight: FontWeight.w600,
                   ),
-                  text: 'Tunggu sebentar... ',
+                  text: 'Please wait... ',
                   children: [
                     TextSpan(
-                      text: 'Bersiap untuk petualangan seru!',
+                      text: 'Get ready for an exciting adventure!',
                       style: TextStyle(
                         color: colors.primary[500],
                       ),
@@ -61,6 +61,7 @@ class _GenerateStoryLoadingPageState extends State<GenerateStoryLoadingPage> {
                 ),
                 textAlign: TextAlign.center,
               ),
+
               32.vertical,
               Container(
                 width: 181,
