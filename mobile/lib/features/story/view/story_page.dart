@@ -1,143 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kanca/core/core.dart';
+import 'package:kanca/data/data.dart';
 import 'package:kanca/features/dashboard/dashboard.dart';
 import 'package:kanca/features/story/story.dart';
 import 'package:kanca/gen/assets.gen.dart';
 import 'package:kanca/utils/utils.dart';
 
-class Story {
-  Story({
-    required this.title,
-    required this.description,
-    required this.themes,
-    required this.scenes,
-    required this.currentScene,
-    required this.totalScenes,
-    this.id,
-    this.userId,
-    this.language,
-    this.status,
-    this.ageGroup,
-    this.createdAt,
-    this.finishedAt,
-    this.maximumPoint,
-    this.storyFlow,
-    this.characters,
-    this.userStory,
-    this.coverImgUrl,
-    this.estimatedReadingTime,
-  });
-
-  final String? id;
-  final String? userId;
-  final String title;
-  final String description;
-  final String? coverImgUrl;
-  final List<String> themes;
-  final String? language;
-  final String? status;
-  final int? ageGroup;
-  final String? createdAt;
-  final String? finishedAt;
-  final int? maximumPoint;
-  final StoryFlow? storyFlow;
-  final List<Character>? characters;
-  final UserStory? userStory;
-  final List<Scene> scenes;
-  final int currentScene;
-  final int totalScenes;
-  final int? estimatedReadingTime;
-}
-
-class StoryFlow {
-  StoryFlow({
-    required this.totalScene,
-    required this.decisionPoint,
-    required this.ending,
-  });
-
-  final int totalScene;
-  final List<int> decisionPoint;
-  final List<int> ending;
-}
-
-class Character {
-  Character({
-    required this.name,
-    required this.description,
-  });
-
-  final String name;
-  final String description;
-}
-
-class UserStory {
-  UserStory({
-    required this.visitedScene,
-    required this.choices,
-    required this.totalPoint,
-    required this.finishedTime,
-  });
-
-  final List<int> visitedScene;
-  final List<String> choices;
-  final int totalPoint;
-  final int finishedTime;
-}
-
-class Scene {
-  Scene({
-    required this.sceneId,
-    required this.type,
-    required this.imgDescription,
-    required this.content,
-    this.imgUrl,
-    this.voiceUrl,
-    this.branch,
-    this.lessonLearned,
-    this.nextScene,
-    this.selectedChoice,
-    this.endingType,
-    this.moralValue,
-    this.meaning,
-    this.example,
-  });
-
-  final int sceneId;
-  final String type; // 'narrative', 'decision_point', 'ending'
-  final String? imgUrl;
-  final String imgDescription;
-  final String? voiceUrl;
-  final String content;
-  final int? nextScene;
-  final List<SceneChoice>? branch;
-  final String? lessonLearned;
-  final String? selectedChoice;
-  final String? endingType;
-  final String? moralValue;
-  final String? meaning;
-  final String? example;
-}
-
-class SceneChoice {
-  SceneChoice({
-    required this.choice,
-    required this.content,
-    required this.moralValue,
-    required this.point,
-    required this.nextScene,
-  });
-
-  final String choice; // 'baik' or 'buruk'
-  final String content;
-  final String moralValue;
-  final int point;
-  final int nextScene;
-}
-
 class StoryPage extends StatefulWidget {
-  const StoryPage({super.key});
+  const StoryPage({required this.story, super.key});
+
+  final StoryModel story;
 
   @override
   State<StoryPage> createState() => _StoryPageState();
@@ -145,7 +18,7 @@ class StoryPage extends StatefulWidget {
 
 class _StoryPageState extends State<StoryPage> {
   // For demo, use a static story. Replace with real data/fetching logic.
-  late Story story;
+  late StoryModel story;
   int currentSceneIndex = 0;
   int totalPoint = 0;
   List<int> visitedScenes = [];
@@ -155,16 +28,9 @@ class _StoryPageState extends State<StoryPage> {
   @override
   void initState() {
     super.initState();
-    story = _demoStory();
+    // story = _demoStory();
+    story = widget.story;
     currentSceneIndex = story.currentScene - 1;
-
-    // Debug: Print image URLs
-    debugPrint('=== Image URL Debug ===');
-    debugPrint('Cover image URL: ${story.coverImgUrl}');
-    for (final scene in story.scenes) {
-      debugPrint('Scene ${scene.sceneId} image URL: ${scene.imgUrl}');
-    }
-    debugPrint('=== End Debug ===');
   }
 
   void _goToScene(int sceneId) {
@@ -213,52 +79,84 @@ class _StoryPageState extends State<StoryPage> {
     final scene = story.scenes[currentSceneIndex];
     final isDecision = scene.type == 'decision_point';
     final isEnding = scene.type == 'ending';
-    final progress = (currentSceneIndex + 1) / story.totalScenes;
+    final progress = (currentSceneIndex + 1) / story.scenes.length;
 
     // Initial: Only show Story Header and Start button
     if (!started) {
       return Scaffold(
-        body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.only(
-              left: 24,
-              right: 24,
-              bottom: 24,
-            ),
-            child: Column(
-              children: [
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: InkWell(
-                    onTap: () {
-                      context.pop();
-                    },
-                    borderRadius: BorderRadius.circular(28),
-                    child: Assets.icons.back.image(
-                      width: 56,
-                      height: 56,
-                    ),
-                  ),
-                ),
-                32.vertical,
-                _StoryHeader(story: story),
-                32.vertical,
-                Center(
-                  child: ElevatedButton(
-                    onPressed: _startStory,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: colors.primary[500],
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 32,
-                        vertical: 16,
+        body: Stack(
+          children: [
+            SingleChildScrollView(
+              padding: EdgeInsets.only(
+                left: 24,
+                top: MediaQuery.of(context).padding.top,
+                right: 24,
+                bottom: 110,
+              ),
+              child: Column(
+                children: [
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: InkWell(
+                      onTap: () {
+                        context.pop();
+                      },
+                      borderRadius: BorderRadius.circular(28),
+                      child: Assets.icons.back.image(
+                        width: 56,
+                        height: 56,
                       ),
                     ),
-                    child: const Text('Start Story'),
+                  ),
+                  32.vertical,
+                  _StoryHeader(story: story),
+                ],
+              ),
+            ),
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.only(
+                  left: 24,
+                  right: 24,
+                  top: 16,
+                  bottom: 24,
+                ),
+                decoration: BoxDecoration(
+                  color: colors.neutral[500],
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 8,
+                      offset: const Offset(0, -2),
+                    ),
+                  ],
+                ),
+                child: ElevatedButton(
+                  onPressed: _startStory,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: colors.primary[500],
+                    minimumSize: const Size(double.infinity, 56),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(24),
+                    ),
+                    elevation: 2,
+                  ),
+                  child: const Text(
+                    'Start Adventure',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
-              ],
+              ),
             ),
-          ),
+          ],
         ),
       );
     }
@@ -288,7 +186,7 @@ class _StoryPageState extends State<StoryPage> {
         colors: colors,
         progress: progress,
         sceneIndex: currentSceneIndex,
-        totalScenes: story.totalScenes,
+        totalScenes: story.scenes.length,
         onNext: !isDecision && !isEnding ? _next : null,
         isDecision: isDecision,
         isEnding: isEnding,
@@ -299,7 +197,7 @@ class _StoryPageState extends State<StoryPage> {
 
 class _StoryHeader extends StatelessWidget {
   const _StoryHeader({required this.story});
-  final Story story;
+  final StoryModel story;
 
   @override
   Widget build(BuildContext context) {
@@ -869,8 +767,8 @@ class _EndingCard extends StatelessWidget {
 }
 
 // Demo data for preview
-Story _demoStory() {
-  return Story(
+StoryModel _demoStory() {
+  return const StoryModel(
     id: '689e16ee04fdedcaa9fa341b',
     userId: '68720d0d6a0d2694067fd18e',
     title: 'Princess Melati and the Fair Kingdom',

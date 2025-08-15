@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kanca/core/core.dart';
+import 'package:kanca/features/story/bloc/story_bloc.dart';
 import 'package:kanca/features/story/story.dart';
 import 'package:kanca/gen/assets.gen.dart';
 import 'package:kanca/utils/extensions/extensions.dart';
@@ -250,6 +252,10 @@ class _GenerateStoryPageState extends State<GenerateStoryPage> {
             ElevatedButton(
               onPressed: isButtonEnabled
                   ? () {
+                      final prompt = _generatePrompt();
+                      context.read<StoryBloc>().add(
+                        StoryEvent.createStory(prompt),
+                      );
                       context.push(const GenerateStoryLoadingPage());
                     }
                   : null,
@@ -280,7 +286,6 @@ class _GenerateStoryPageState extends State<GenerateStoryPage> {
     required String label,
     required Color labelColor,
   }) {
-    final colors = context.colors;
     final textTheme = context.textTheme;
     return Material(
       color: color,
@@ -413,6 +418,49 @@ class _GenerateStoryPageState extends State<GenerateStoryPage> {
         ),
       ),
     );
+  }
+
+  String _generatePrompt() {
+    final buffer = StringBuffer();
+
+    // Check if user has typed custom input
+    if (_textController.text.trim().isNotEmpty) {
+      buffer.write(
+        'Create a children\'s story based on this idea: "${_textController.text.trim()}"',
+      );
+    } else {
+      // Use selected story type and moral value
+      buffer.write("Create a children's story");
+
+      // Add story theme if selected
+      if (_selectedStory != -1) {
+        final storyThemes = ['School', 'Fantasy', 'Shopping', 'Explore'];
+        buffer.write(
+          ' with a ${storyThemes[_selectedStory].toLowerCase()} theme',
+        );
+      }
+
+      // Add moral value if selected
+      if (_selectedMoral != -1) {
+        final moralValues = ['Saving', 'Honesty', 'Wisdom', 'Sharing'];
+        buffer.write(
+          ' that teaches about ${moralValues[_selectedMoral].toLowerCase()}',
+        );
+      }
+    }
+
+    // Add additional requirements
+    buffer.write(
+      '. The story should be engaging, educational, and appropriate for children aged 5-12. ',
+    );
+    buffer.write(
+      'Include interactive decision points where children can make moral choices that affect the story outcome. ',
+    );
+    buffer.write(
+      'Make sure the story has clear moral lessons and positive values.',
+    );
+
+    return buffer.toString();
   }
 }
 
