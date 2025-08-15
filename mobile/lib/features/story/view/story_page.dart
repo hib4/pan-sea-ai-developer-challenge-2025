@@ -248,9 +248,6 @@ class _StoryPageState extends State<StoryPage> {
                     onPressed: _startStory,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: colors.primary[500],
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
                       padding: const EdgeInsets.symmetric(
                         horizontal: 32,
                         vertical: 16,
@@ -316,7 +313,7 @@ class _StoryHeader extends StatelessWidget {
           child: story.coverImgUrl != null
               ? Image.network(
                   story.coverImgUrl!,
-                  height: 180,
+                  height: 350,
                   width: double.infinity,
                   fit: BoxFit.cover,
                   webHtmlElementStrategy: WebHtmlElementStrategy.prefer,
@@ -398,7 +395,7 @@ class _StoryHeader extends StatelessWidget {
                   ),
                   backgroundColor: colors.primary[50],
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(16),
                   ),
                 ),
               )
@@ -874,22 +871,23 @@ class _EndingCard extends StatelessWidget {
 // Demo data for preview
 Story _demoStory() {
   return Story(
-    id: '689dedaccc3eb2600d547ede',
-    userId: '689ddfa87511fa82112bcbce',
-    title: 'The Magic Paintbrush Team',
+    id: '689e16ee04fdedcaa9fa341b',
+    userId: '68720d0d6a0d2694067fd18e',
+    title: 'Princess Melati and the Fair Kingdom',
     description:
-        'Three friends must learn to work together to win the school art contest. Will they create something magical together or let their differences tear them apart?',
+        'In the prosperous Kingdom of Melati, Princess Melati must prove her honesty and fairness to her people. Help her make wise decisions to earn their trust and become a just ruler.',
     coverImgUrl:
-        'https://bihackathon.blob.core.windows.net/storage/images/0964ce18-2665-4e25-b92d-a7f6f1dcb27e.png',
-    themes: ['Teamwork', 'Cooperation', 'Problem Solving'],
+        'https://bihackathon.blob.core.windows.net/storage/images/8eca92d0-d5e8-4a93-8e42-62ed8ade5a99.webp',
+    themes: ['Honesty', 'Justice', 'Responsibility'],
     language: 'English',
     status: 'not_started',
-    ageGroup: 8,
-    createdAt: '2025-08-14T14:07:40.873000',
-    maximumPoint: 10,
+    ageGroup: 12,
+    createdAt: '2025-08-14T17:03:42.810000',
+    finishedAt: null,
+    maximumPoint: 100,
     currentScene: 1,
     totalScenes: 10,
-    estimatedReadingTime: 120,
+    estimatedReadingTime: 360,
     storyFlow: StoryFlow(
       totalScene: 10,
       decisionPoint: [2, 4, 6],
@@ -897,24 +895,24 @@ Story _demoStory() {
     ),
     characters: [
       Character(
-        name: 'Lina',
+        name: 'Princess Melati',
         description:
-            'A kind and organized leader with curly brown hair. She loves planning and making sure everyone is happy.',
+            'A kind-hearted princess with long dark hair and bright eyes. She wears a traditional kebaya and is known for her fairness and wisdom.',
       ),
       Character(
-        name: 'Ben',
+        name: 'King Harun',
         description:
-            "A shy but talented artist with glasses. He's quiet but has amazing ideas when he speaks up.",
+            'The aging king with a gentle smile. He values wisdom and fairness, seeking a worthy successor to rule the kingdom.',
       ),
       Character(
-        name: 'Mia',
+        name: 'Tuan Budi',
         description:
-            "A confident and creative girl with a big smile. She sometimes forgets to listen to others' ideas.",
+            "The kingdom's wise advisor, always wearing a traditional batik shirt. He guides the royal family with honesty and integrity.",
       ),
       Character(
-        name: 'Mrs. Green',
+        name: 'Villager Siti',
         description:
-            'A warm and encouraging teacher with green earrings. She believes in the power of teamwork.',
+            'A kind and honest woman who often shares her thoughts with Princess Melati. She represents the common people of the kingdom.',
       ),
     ],
     userStory: UserStory(
@@ -928,175 +926,246 @@ Story _demoStory() {
         sceneId: 1,
         type: 'narrative',
         imgUrl:
-            'https://bihackathon.blob.core.windows.net/storage/images/8de026ca-f55f-4a20-b1f5-5fcf851d34f8.png',
+            'https://bihackathon.blob.core.windows.net/storage/images/3ae2be14-b57c-43fa-9f84-ffdf0f17291a.webp',
         imgDescription:
-            'A classroom filled with colorful posters. Mrs. Green stands at the front, holding a paintbrush.',
+            'A bustling marketplace in the Kingdom of Melati, with colorful stalls and happy villagers.',
+        voiceUrl: null,
         content:
-            "The big school art contest was coming up! Mrs. Green announced that each class needed to create one special project. 'This year, we're making a mural!' she said. 'Who has ideas?'\n\nLina jumped up. 'We could paint a magical forest!' Ben whispered, 'Maybe add a rainbow?' Mia shouted, 'I want to paint a unicorn!' The class buzzed with excitement. But how would they decide what to make?",
+            "In the lush Kingdom of Melati, King Harun ruled with kindness and fairness. With his advanced age, he sought a worthy successor among his children. Princess Melati, known for her honesty and empathy, and her brother Prince Rajah, often impulsive, were the candidates. One day, the king announced a challenge: 'Whoever solves the land dispute fairly will inherit the throne!'",
         nextScene: 2,
+        branch: null,
+        lessonLearned: null,
+        selectedChoice: null,
+        endingType: null,
+        moralValue: null,
+        meaning: null,
+        example: null,
       ),
       Scene(
         sceneId: 2,
         type: 'decision_point',
         imgUrl:
-            'https://bihackathon.blob.core.windows.net/storage/images/ba090920-cfea-49ae-8e6a-cf10f1085401.png',
-        imgDescription: 'The class voting on ideas, with hands raised.',
+            'https://bihackathon.blob.core.windows.net/storage/images/3dc2f45c-4e16-48cc-a672-daf5a2b1750b.webp',
+        imgDescription:
+            "Princess Melati and Prince Rajah stand before a map of the kingdom's lands.",
+        voiceUrl: null,
         content:
-            "The class voted on ideas. Lina said, 'Let's make a magical forest with everyone's ideas!' Mia said, 'I want to paint my own unicorn!' Ben whispered, 'Maybe we can combine both ideas...'\n\nWhat should they do?",
+            "The king presented a map divided into unequal land portions. 'Make this fair for all villagers,' he said. Princess Melati hesitated, while Prince Rajah suggested giving more land to wealthy families. What should Melati do?",
+        nextScene: null,
         branch: [
           SceneChoice(
             choice: 'good',
-            content: "Combine everyone's ideas into one big mural!",
-            moralValue: 'Teamwork',
-            point: 3,
+            content:
+                'Distribute land equally among all villagers, regardless of wealth.',
+            moralValue: 'Justice',
+            point: 30,
             nextScene: 3,
           ),
           SceneChoice(
             choice: 'bad',
-            content: 'Let each student paint their own small picture.',
-            moralValue: 'Individualism',
-            point: -2,
+            content: 'Give more land to wealthy families to gain their favor.',
+            moralValue: 'Greed',
+            point: -20,
             nextScene: 5,
           ),
         ],
+        lessonLearned: null,
+        selectedChoice: null,
+        endingType: null,
+        moralValue: null,
+        meaning: null,
+        example: null,
       ),
       Scene(
         sceneId: 3,
         type: 'narrative',
         imgUrl:
-            'https://bihackathon.blob.core.windows.net/storage/images/a4605fb5-8e87-41f7-b228-f5959502522f.png',
+            'https://bihackathon.blob.core.windows.net/storage/images/a5644183-ff5c-41df-8e78-70b0f70e46ec.webp',
         imgDescription:
-            'The class sketching a mural with a forest, rainbow, and unicorn.',
+            'Villagers cheer as Princess Melati hands out equal land portions.',
+        voiceUrl: null,
         content:
-            "They decided to make one big mural! Lina organized the sections. Ben drew a beautiful rainbow. Mia painted a sparkly unicorn. But Mia started adding too many unicorns, making the forest look crowded.\n\n'Wait, Mia,' Lina said gently. 'We need space for the trees too.' Should Mia listen or keep adding unicorns?",
+            "Princess Melati carefully divided the land, ensuring everyone received a fair share. The villagers rejoiced, calling her 'The Just Princess.' Tuan Budi praised her, 'Your heart is as pure as the morning dew.'",
         nextScene: 4,
+        branch: null,
+        lessonLearned: null,
+        selectedChoice: null,
+        endingType: null,
+        moralValue: null,
+        meaning: null,
+        example: null,
       ),
       Scene(
         sceneId: 4,
         type: 'decision_point',
         imgUrl:
-            'https://bihackathon.blob.core.windows.net/storage/images/4a8ea64a-2ccc-40f8-a1d4-0ab9e6eb1fbd.png',
-        imgDescription: 'Mia holding a paintbrush, looking unsure.',
+            'https://bihackathon.blob.core.windows.net/storage/images/c4a8aa58-7748-4a65-b614-3249c6e8a8ec.webp',
+        imgDescription:
+            'A merchant points accusingly at a young boy in the marketplace.',
+        voiceUrl: null,
         content:
-            "Mia frowned. 'But I love unicorns!' Ben suggested, 'What if we make one big unicorn with a rainbow mane?' Mia thought... Should she share her idea or keep it to herself?",
+            'A merchant accused a poor boy of stealing a valuable cloth. Villager Siti defended the boy, claiming he was innocent. Should Princess Melati investigate the claim or believe the merchant?',
+        nextScene: null,
         branch: [
           SceneChoice(
             choice: 'good',
-            content: 'Share her unicorn idea with Ben and Lina.',
-            moralValue: 'Cooperation',
-            point: 3,
+            content: 'Question the merchant and the boy to find the truth.',
+            moralValue: 'Responsibility',
+            point: 30,
             nextScene: 7,
           ),
           SceneChoice(
             choice: 'bad',
-            content: 'Keep painting unicorns without asking.',
-            moralValue: 'Selfishness',
-            point: -2,
+            content: 'Trust the merchant and punish the boy immediately.',
+            moralValue: 'Impatience',
+            point: -20,
             nextScene: 8,
           ),
         ],
+        lessonLearned: null,
+        selectedChoice: null,
+        endingType: null,
+        moralValue: null,
+        meaning: null,
+        example: null,
       ),
       Scene(
         sceneId: 5,
         type: 'narrative',
         imgUrl:
-            'https://bihackathon.blob.core.windows.net/storage/images/759b8acb-3119-4538-b109-fb835f082efd.png',
-        imgDescription: 'Students working alone on separate paintings.',
+            'https://bihackathon.blob.core.windows.net/storage/images/adacc86e-67a2-42c1-981e-89a054cfbea5.webp',
+        imgDescription: 'Angry villagers protest outside the palace.',
+        voiceUrl: null,
         content:
-            "Each student painted their own small picture. Lina made a forest, Ben painted a rainbow, and Mia drew a unicorn. But when they tried to hang them together, they looked messy and didn't match.\n\nMrs. Green said, 'Maybe if you combine them...'\n\nShould they try to fix it together or give up?",
+            "The villagers grew angry when they learned the wealthy received more land. 'This is not justice!' they cried. Tuan Budi warned Princess Melati, 'A ruler must serve all, not just a few.'",
         nextScene: 6,
+        branch: null,
+        lessonLearned: null,
+        selectedChoice: null,
+        endingType: null,
+        moralValue: null,
+        meaning: null,
+        example: null,
       ),
       Scene(
         sceneId: 6,
         type: 'decision_point',
         imgUrl:
-            'https://bihackathon.blob.core.windows.net/storage/images/0c5bdcb8-051d-4943-8d29-506cd64ee54c.png',
-        imgDescription: 'Students looking at their mismatched paintings.',
+            'https://bihackathon.blob.core.windows.net/storage/images/ff33db90-187d-4033-af59-0c383c13303b.webp',
+        imgDescription:
+            'Princess Melati kneels among the protesting villagers, listening to their concerns.',
+        voiceUrl: null,
         content:
-            "Lina said, 'Let's try!' Ben said, 'But it's too late!' Mia said, 'I don't want to change my unicorn!' Should they try to fix it together or keep their own work?",
+            'The villagers demanded fair land distribution. Should Princess Melati correct her mistake and redistribute the land, or ignore their pleas to avoid conflict?',
+        nextScene: null,
         branch: [
           SceneChoice(
             choice: 'good',
-            content: 'Work together to combine the paintings.',
-            moralValue: 'Problem Solving',
-            point: 3,
+            content: 'Apologize and redistribute the land fairly.',
+            moralValue: 'Humility',
+            point: 20,
             nextScene: 9,
           ),
           SceneChoice(
             choice: 'bad',
-            content: 'Keep the paintings separate and hope for the best.',
-            moralValue: 'Laziness',
-            point: -2,
+            content: 'Refuse to change the distribution to maintain order.',
+            moralValue: 'Stubbornness',
+            point: -30,
             nextScene: 10,
           ),
         ],
+        lessonLearned: null,
+        selectedChoice: null,
+        endingType: null,
+        moralValue: null,
+        meaning: null,
+        example: null,
       ),
       Scene(
         sceneId: 7,
         type: 'ending',
         imgUrl:
-            'https://bihackathon.blob.core.windows.net/storage/images/f6d6e83a-0e87-47e4-b37a-1ea14114f1a1.png',
+            'https://bihackathon.blob.core.windows.net/storage/images/b14b6d75-9a05-4f09-8e77-8dbb46cbd33b.webp',
         imgDescription:
-            'The class holding a first-place ribbon in front of their beautiful mural.',
+            'Princess Melati crowns herself queen, surrounded by cheering villagers.',
+        voiceUrl: null,
         content:
-            "They created a magical forest with a rainbow, a unicorn, and space for everyone's ideas! The judges loved it. 'First place!' they cheered. Mrs. Green smiled, 'See? When we work together, anything is possible!'\n\n**Lesson:** Teamwork makes dreams come true.",
-        lessonLearned: 'Teamwork and sharing ideas create something amazing.',
+            "Princess Melati discovered the merchant had mistakenly accused the boy. The villagers praised her fairness. King Harun declared, 'You are the true heir to the throne!' Princess Melati ruled with honesty and justice, earning the love of her people.",
+        nextScene: null,
+        branch: null,
+        lessonLearned: 'Honesty and fairness earn trust and respect.',
+        selectedChoice: null,
         endingType: 'good',
-        moralValue: 'Teamwork',
+        moralValue: 'Justice',
         meaning:
-            'Teamwork means working together to achieve something greater than you could alone.',
+            'Justice means treating everyone equally, regardless of their status.',
         example:
-            "Like when you and your friends build a fort together – it's stronger and more fun!",
+            'Sharing toys with friends even if you want to keep them shows justice.',
       ),
       Scene(
         sceneId: 8,
         type: 'ending',
         imgUrl:
-            'https://bihackathon.blob.core.windows.net/storage/images/83995eef-03fa-40ae-9d8e-916806f5903b.png',
+            'https://bihackathon.blob.core.windows.net/storage/images/f2c017a4-08df-437a-acf8-09be4551f728.webp',
         imgDescription:
-            'The class standing in front of a messy mural with arguing students.',
+            'Princess Melati, now queen, kneels to apologize to the boy and his family.',
+        voiceUrl: null,
         content:
-            "They argued about the mural, and it ended up looking messy. The judges said, 'Great effort, but it needs teamwork.' They didn't win, but Mrs. Green said, 'Let's try again next time, together!'\n\n**Lesson:** Teamwork is better than working alone, but it takes practice.",
-        lessonLearned: "Even when teamwork is hard, it's worth trying.",
-        endingType: 'bad',
-        moralValue: 'Cooperation',
+            'Princess Melati punished the boy without proof, later learning he was innocent. She apologized publicly and worked harder to be fair. King Harun still named her queen, but she vowed to never rush judgments again.',
+        nextScene: null,
+        branch: null,
+        lessonLearned:
+            'Impatience can lead to unfair consequences, but admitting mistakes is important.',
+        selectedChoice: null,
+        endingType: 'good',
+        moralValue: 'Responsibility',
         meaning:
-            "Cooperation means working together even when it's challenging.",
+            'Responsibility means owning up to your actions and correcting mistakes.',
         example:
-            "Like when you and your sibling clean your room together – it's faster and less messy.",
+            "Saying sorry when you accidentally break a friend's toy shows responsibility.",
       ),
       Scene(
         sceneId: 9,
         type: 'ending',
         imgUrl:
-            'https://bihackathon.blob.core.windows.net/storage/images/62c4079c-32b8-4be5-b531-8b44055dc6e0.png',
+            'https://bihackathon.blob.core.windows.net/storage/images/0cab5144-6ac2-4c1f-a510-be40be807312.webp',
         imgDescription:
-            'The class holding a second-place ribbon in front of mismatched paintings.',
+            'Princess Melati stands alone, looking out at a kingdom divided.',
+        voiceUrl: null,
         content:
-            "They tried to combine their paintings, but it looked patchy. They got second place. Mrs. Green said, 'Good job trying! Next time, let's plan together first.'\n\n**Lesson:** Teamwork is better than working alone, but planning helps.",
-        lessonLearned: 'Planning and teamwork lead to better results.',
+            'Princess Melati corrected the land distribution, but some villagers remained distrustful. Though she eventually earned their respect, her early mistake left a lasting impression. She ruled cautiously, always mindful of her actions.',
+        nextScene: null,
+        branch: null,
+        lessonLearned:
+            'Unfair decisions can damage trust, but humility can help rebuild it.',
+        selectedChoice: null,
         endingType: 'bad',
-        moralValue: 'Problem Solving',
-        meaning: 'Problem Solving means finding creative ways to fix mistakes.',
-        example:
-            'Like when you spill glue – you clean it up instead of giving up.',
+        moralValue: 'Humility',
+        meaning:
+            'Humility means acknowledging your mistakes and learning from them.',
+        example: 'Apologizing to a teacher after lying shows humility.',
       ),
       Scene(
         sceneId: 10,
         type: 'ending',
         imgUrl:
-            'https://bihackathon.blob.core.windows.net/storage/images/ab622f8a-7b65-4abd-aef3-2ec42afbc27b.png',
+            'https://bihackathon.blob.core.windows.net/storage/images/15ff642a-dfaf-45f8-bb52-1d18520b6c0f.webp',
         imgDescription:
-            'The class looking disappointed in front of separate paintings.',
+            "The kingdom's throne stands empty as villagers walk away in disappointment.",
+        voiceUrl: null,
         content:
-            "They kept their paintings separate and didn't win anything. Mrs. Green said, 'Remember, teamwork makes everything better. Let's try again next time!'\n\n**Lesson:** Teamwork is essential for success.",
-        lessonLearned: 'Teamwork is necessary to achieve great things.',
+            'Princess Melati refused to change the land distribution, causing unrest. King Harun declared her unfit to rule. The kingdom fell into disarray, and the people suffered under a new, harsh ruler. Princess Melati realized too late that greed and stubbornness had ruined her chance to lead.',
+        nextScene: null,
+        branch: null,
+        lessonLearned:
+            'Stubbornness and greed can destroy trust and opportunities.',
+        selectedChoice: null,
         endingType: 'bad',
-        moralValue: 'Teamwork',
+        moralValue: 'Stubbornness',
         meaning:
-            'Teamwork means everyone working together toward a common goal.',
+            "Stubbornness means refusing to listen or change, even when you're wrong.",
         example:
-            'Like a soccer team – each player has a role, and together they win the game.',
+            "Refusing to share a toy with a friend because you don't want to shows stubbornness.",
       ),
     ],
   );

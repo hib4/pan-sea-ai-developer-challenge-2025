@@ -117,7 +117,9 @@ class _LoginPageState extends State<LoginPage> {
                         Align(
                           alignment: Alignment.centerRight,
                           child: InkWell(
-                            onTap: () {},
+                            onTap: () {
+                              context.push(const ForgotPasswordPage());
+                            },
                             child: Text(
                               'Forgot Password?',
                               style: textTheme.lexendCaption.copyWith(
@@ -164,6 +166,13 @@ class _LoginPageState extends State<LoginPage> {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.white,
                             foregroundColor: Colors.black,
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                              side: BorderSide(
+                                color: Colors.black.withOpacity(0.1),
+                              ),
+                              borderRadius: BorderRadius.circular(24),
+                            ),
                           ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,

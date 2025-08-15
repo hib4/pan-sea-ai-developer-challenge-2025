@@ -119,14 +119,14 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
                         16.vertical,
                         Text(
-                          'Confirm your password',
+                          'Confirm Password',
                           style: textTheme.caption,
                         ),
                         4.vertical,
                         KancaTextField(
                           controller: _confirmPasswordController,
                           textInputType: TextInputType.visiblePassword,
-                          label: 'Confirm Password',
+                          label: 'Confirm your password',
                           isPassword: true,
                         ),
                         32.vertical,
@@ -166,6 +166,13 @@ class _RegisterPageState extends State<RegisterPage> {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.white,
                             foregroundColor: Colors.black,
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                              side: BorderSide(
+                                color: Colors.black.withOpacity(0.1),
+                              ),
+                              borderRadius: BorderRadius.circular(24),
+                            ),
                           ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
