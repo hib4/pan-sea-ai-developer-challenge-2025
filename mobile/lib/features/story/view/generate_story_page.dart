@@ -254,7 +254,7 @@ class _GenerateStoryPageState extends State<GenerateStoryPage> {
                   ? () {
                       final prompt = _generatePrompt();
                       context.read<StoryBloc>().add(
-                        StoryEvent.createStory(prompt),
+                        StoryEvent.getStoryById('689f60526c7d61acb63f23eb'),
                       );
                       context.push(const GenerateStoryLoadingPage());
                     }

@@ -7,7 +7,6 @@ environment:
   sdk: ^3.8.0
 
 dependencies:
-  audioplayers: ^6.5.0
   bloc: ^9.0.0
   device_frame: ^1.4.0
   dio: ^5.9.0
@@ -26,6 +25,7 @@ dependencies:
   google_fonts: ^6.2.1
   intl: ^0.20.2
   json_annotation: ^4.9.0
+  just_audio: ^0.10.4
   logger: ^2.6.0
   page_transition: ^2.2.1
 

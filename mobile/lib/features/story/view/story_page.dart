@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:kanca/core/core.dart';
 import 'package:kanca/data/data.dart';
 import 'package:kanca/features/dashboard/dashboard.dart';
@@ -25,21 +26,113 @@ class _StoryPageState extends State<StoryPage> {
   List<String> choices = [];
   bool started = false;
 
+  // Audio player instance
+  late AudioPlayer _audioPlayer;
+  bool _isAudioPlaying = false;
+  String? _currentAudioUrl;
+
   @override
   void initState() {
     super.initState();
     // story = _demoStory();
     story = widget.story;
     currentSceneIndex = story.currentScene - 1;
+
+    // Initialize audio player
+    _audioPlayer = AudioPlayer();
+    _audioPlayer.playerStateStream.listen((PlayerState state) {
+      setState(() {
+        _isAudioPlaying = state.playing;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _audioPlayer.dispose();
+    super.dispose();
+  }
+
+  // Audio control methods
+  Future<void> _playAudio(String? voiceUrl) async {
+    if (voiceUrl != null && voiceUrl.isNotEmpty) {
+      try {
+        // Always stop current audio and load new one for scene changes
+        await _audioPlayer.stop();
+        await _audioPlayer.setUrl(voiceUrl);
+        _currentAudioUrl = voiceUrl;
+        await _audioPlayer.play();
+      } catch (e) {
+        // Handle audio play error silently
+      }
+    }
+  }
+
+  Future<void> _stopAudio() async {
+    try {
+      await _audioPlayer.stop();
+      _currentAudioUrl = null;
+    } catch (e) {
+      // Handle audio stop error silently
+    }
+  }
+
+  Future<void> _pauseAudio() async {
+    try {
+      await _audioPlayer.pause();
+    } catch (e) {
+      // Handle audio pause error silently
+    }
+  }
+
+  Future<void> _resumeAudio() async {
+    try {
+      // Only resume if we have the same audio loaded
+      final scene = story.scenes[currentSceneIndex];
+      if (_currentAudioUrl == scene.voiceUrl) {
+        await _audioPlayer.play();
+      } else {
+        // If different audio, load and play the current scene's audio
+        await _playAudio(scene.voiceUrl);
+      }
+    } catch (e) {
+      // Handle audio resume error silently
+    }
+  }
+
+  // Manual audio control for play/pause button
+  Future<void> _toggleAudio() async {
+    if (_isAudioPlaying) {
+      await _pauseAudio();
+    } else {
+      await _resumeAudio();
+    }
   }
 
   void _goToScene(int sceneId) {
     final idx = story.scenes.indexWhere((s) => s.sceneId == sceneId);
     if (idx != -1) {
+      // Stop current audio before changing scene
+      _stopAudio();
+
       setState(() {
         currentSceneIndex = idx;
         visitedScenes.add(sceneId);
       });
+
+      // Check if this is an ending scene - if so, don't auto-play audio
+      final newScene = story.scenes[currentSceneIndex];
+      if (newScene.type == 'ending') {
+        // For ending scenes, ensure audio is completely stopped
+        _stopAudio();
+      } else {
+        // Auto-play audio for non-ending scenes after a brief delay
+        Future.delayed(const Duration(milliseconds: 100), () {
+          if (newScene.voiceUrl != null && newScene.voiceUrl!.isNotEmpty) {
+            _playAudio(newScene.voiceUrl);
+          }
+        });
+      }
     }
   }
 
@@ -57,6 +150,9 @@ class _StoryPageState extends State<StoryPage> {
   }
 
   void _restart() {
+    // Stop any playing audio
+    _stopAudio();
+
     setState(() {
       currentSceneIndex = 0;
       totalPoint = 0;
@@ -69,6 +165,14 @@ class _StoryPageState extends State<StoryPage> {
   void _startStory() {
     setState(() {
       started = true;
+    });
+
+    // Auto-play audio for the first scene after a brief delay
+    Future.delayed(const Duration(milliseconds: 100), () {
+      final scene = story.scenes[currentSceneIndex];
+      if (scene.voiceUrl != null && scene.voiceUrl!.isNotEmpty) {
+        _playAudio(scene.voiceUrl);
+      }
     });
   }
 
@@ -85,6 +189,7 @@ class _StoryPageState extends State<StoryPage> {
     if (!started) {
       return Scaffold(
         body: Stack(
+          fit: StackFit.expand,
           children: [
             SingleChildScrollView(
               padding: EdgeInsets.only(
@@ -171,6 +276,7 @@ class _StoryPageState extends State<StoryPage> {
             meaning: scene.meaning ?? '',
             realLifeExample: scene.example ?? '',
             onRestart: _restart,
+            onStopAudio: _stopAudio,
             textTheme: textTheme,
             colors: colors,
           ),
@@ -190,6 +296,9 @@ class _StoryPageState extends State<StoryPage> {
         onNext: !isDecision && !isEnding ? _next : null,
         isDecision: isDecision,
         isEnding: isEnding,
+        audioPlayer: _audioPlayer,
+        isAudioPlaying: _isAudioPlaying,
+        onToggleAudio: _toggleAudio,
       ),
     );
   }
@@ -233,8 +342,6 @@ class _StoryHeader extends StatelessWidget {
                     );
                   },
                   errorBuilder: (c, e, s) {
-                    debugPrint('Cover image load error: $e');
-                    debugPrint('Cover image URL: ${story.coverImgUrl}');
                     return Container(
                       height: 180,
                       width: double.infinity,
@@ -316,6 +423,9 @@ class _SceneCard extends StatelessWidget {
     this.onNext,
     this.isDecision = false,
     this.isEnding = false,
+    this.audioPlayer,
+    this.isAudioPlaying = false,
+    this.onToggleAudio,
   });
 
   final Scene scene;
@@ -328,6 +438,9 @@ class _SceneCard extends StatelessWidget {
   final VoidCallback? onNext;
   final bool isDecision;
   final bool isEnding;
+  final AudioPlayer? audioPlayer;
+  final bool isAudioPlaying;
+  final VoidCallback? onToggleAudio;
 
   @override
   Widget build(BuildContext context) {
@@ -358,9 +471,6 @@ class _SceneCard extends StatelessWidget {
                     );
                   },
                   errorBuilder: (c, e, s) {
-                    debugPrint('Scene image load error: $e');
-                    debugPrint('Scene image URL: ${scene.imgUrl}');
-                    debugPrint('Scene ID: ${scene.sceneId}');
                     return Container(
                       color: colors.neutral[200],
                       child: Center(
@@ -430,6 +540,10 @@ class _SceneCard extends StatelessWidget {
                     content: scene.content,
                     textTheme: textTheme,
                     colors: colors,
+                    hasAudio:
+                        scene.voiceUrl != null && scene.voiceUrl!.isNotEmpty,
+                    isAudioPlaying: isAudioPlaying,
+                    onToggleAudio: onToggleAudio,
                   ),
                   const Spacer(),
                   if (scene.branch != null && onChoice != null)
@@ -495,12 +609,18 @@ class _SpeechBubble extends StatelessWidget {
     required this.content,
     required this.textTheme,
     required this.colors,
+    this.hasAudio = false,
+    this.isAudioPlaying = false,
+    this.onToggleAudio,
   });
 
   final IconData icon;
   final String content;
   final AppTextStyles textTheme;
   final AppColors colors;
+  final bool hasAudio;
+  final bool isAudioPlaying;
+  final VoidCallback? onToggleAudio;
 
   @override
   Widget build(BuildContext context) {
@@ -573,6 +693,36 @@ class _SpeechBubble extends StatelessWidget {
             ),
           ),
         ),
+        // Audio control button
+        // if (hasAudio)
+        //   Positioned(
+        //     top: 8,
+        //     right: 8,
+        //     child: GestureDetector(
+        //       onTap: () {
+        //         onToggleAudio?.call();
+        //       },
+        //       child: Container(
+        //         padding: const EdgeInsets.all(8),
+        //         decoration: BoxDecoration(
+        //           color: colors.primary[500]?.withOpacity(0.8),
+        //           borderRadius: BorderRadius.circular(20),
+        //           boxShadow: [
+        //             BoxShadow(
+        //               color: Colors.black.withOpacity(0.2),
+        //               blurRadius: 4,
+        //               offset: const Offset(0, 2),
+        //             ),
+        //           ],
+        //         ),
+        //         child: Icon(
+        //           isAudioPlaying ? Icons.pause : Icons.play_arrow,
+        //           color: Colors.white,
+        //           size: 20,
+        //         ),
+        //       ),
+        //     ),
+        //   ),
       ],
     );
   }
@@ -618,6 +768,7 @@ class _EndingCard extends StatelessWidget {
     required this.onRestart,
     required this.textTheme,
     required this.colors,
+    this.onStopAudio,
   });
 
   final bool endingType;
@@ -625,11 +776,17 @@ class _EndingCard extends StatelessWidget {
   final String meaning;
   final String realLifeExample;
   final VoidCallback onRestart;
+  final VoidCallback? onStopAudio;
   final AppTextStyles textTheme;
   final AppColors colors;
 
   @override
   Widget build(BuildContext context) {
+    // Ensure audio is stopped when ending card is displayed
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      onStopAudio?.call();
+    });
+
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.all(24),
@@ -764,307 +921,4 @@ class _EndingCard extends StatelessWidget {
       ),
     );
   }
-}
-
-// Demo data for preview
-StoryModel _demoStory() {
-  return const StoryModel(
-    id: '689e16ee04fdedcaa9fa341b',
-    userId: '68720d0d6a0d2694067fd18e',
-    title: 'Princess Melati and the Fair Kingdom',
-    description:
-        'In the prosperous Kingdom of Melati, Princess Melati must prove her honesty and fairness to her people. Help her make wise decisions to earn their trust and become a just ruler.',
-    coverImgUrl:
-        'https://bihackathon.blob.core.windows.net/storage/images/8eca92d0-d5e8-4a93-8e42-62ed8ade5a99.webp',
-    themes: ['Honesty', 'Justice', 'Responsibility'],
-    language: 'English',
-    status: 'not_started',
-    ageGroup: 12,
-    createdAt: '2025-08-14T17:03:42.810000',
-    finishedAt: null,
-    maximumPoint: 100,
-    currentScene: 1,
-    totalScenes: 10,
-    estimatedReadingTime: 360,
-    storyFlow: StoryFlow(
-      totalScene: 10,
-      decisionPoint: [2, 4, 6],
-      ending: [7, 8, 9, 10],
-    ),
-    characters: [
-      Character(
-        name: 'Princess Melati',
-        description:
-            'A kind-hearted princess with long dark hair and bright eyes. She wears a traditional kebaya and is known for her fairness and wisdom.',
-      ),
-      Character(
-        name: 'King Harun',
-        description:
-            'The aging king with a gentle smile. He values wisdom and fairness, seeking a worthy successor to rule the kingdom.',
-      ),
-      Character(
-        name: 'Tuan Budi',
-        description:
-            "The kingdom's wise advisor, always wearing a traditional batik shirt. He guides the royal family with honesty and integrity.",
-      ),
-      Character(
-        name: 'Villager Siti',
-        description:
-            'A kind and honest woman who often shares her thoughts with Princess Melati. She represents the common people of the kingdom.',
-      ),
-    ],
-    userStory: UserStory(
-      visitedScene: [],
-      choices: [],
-      totalPoint: 0,
-      finishedTime: 0,
-    ),
-    scenes: [
-      Scene(
-        sceneId: 1,
-        type: 'narrative',
-        imgUrl:
-            'https://bihackathon.blob.core.windows.net/storage/images/3ae2be14-b57c-43fa-9f84-ffdf0f17291a.webp',
-        imgDescription:
-            'A bustling marketplace in the Kingdom of Melati, with colorful stalls and happy villagers.',
-        voiceUrl: null,
-        content:
-            "In the lush Kingdom of Melati, King Harun ruled with kindness and fairness. With his advanced age, he sought a worthy successor among his children. Princess Melati, known for her honesty and empathy, and her brother Prince Rajah, often impulsive, were the candidates. One day, the king announced a challenge: 'Whoever solves the land dispute fairly will inherit the throne!'",
-        nextScene: 2,
-        branch: null,
-        lessonLearned: null,
-        selectedChoice: null,
-        endingType: null,
-        moralValue: null,
-        meaning: null,
-        example: null,
-      ),
-      Scene(
-        sceneId: 2,
-        type: 'decision_point',
-        imgUrl:
-            'https://bihackathon.blob.core.windows.net/storage/images/3dc2f45c-4e16-48cc-a672-daf5a2b1750b.webp',
-        imgDescription:
-            "Princess Melati and Prince Rajah stand before a map of the kingdom's lands.",
-        voiceUrl: null,
-        content:
-            "The king presented a map divided into unequal land portions. 'Make this fair for all villagers,' he said. Princess Melati hesitated, while Prince Rajah suggested giving more land to wealthy families. What should Melati do?",
-        nextScene: null,
-        branch: [
-          SceneChoice(
-            choice: 'good',
-            content:
-                'Distribute land equally among all villagers, regardless of wealth.',
-            moralValue: 'Justice',
-            point: 30,
-            nextScene: 3,
-          ),
-          SceneChoice(
-            choice: 'bad',
-            content: 'Give more land to wealthy families to gain their favor.',
-            moralValue: 'Greed',
-            point: -20,
-            nextScene: 5,
-          ),
-        ],
-        lessonLearned: null,
-        selectedChoice: null,
-        endingType: null,
-        moralValue: null,
-        meaning: null,
-        example: null,
-      ),
-      Scene(
-        sceneId: 3,
-        type: 'narrative',
-        imgUrl:
-            'https://bihackathon.blob.core.windows.net/storage/images/a5644183-ff5c-41df-8e78-70b0f70e46ec.webp',
-        imgDescription:
-            'Villagers cheer as Princess Melati hands out equal land portions.',
-        voiceUrl: null,
-        content:
-            "Princess Melati carefully divided the land, ensuring everyone received a fair share. The villagers rejoiced, calling her 'The Just Princess.' Tuan Budi praised her, 'Your heart is as pure as the morning dew.'",
-        nextScene: 4,
-        branch: null,
-        lessonLearned: null,
-        selectedChoice: null,
-        endingType: null,
-        moralValue: null,
-        meaning: null,
-        example: null,
-      ),
-      Scene(
-        sceneId: 4,
-        type: 'decision_point',
-        imgUrl:
-            'https://bihackathon.blob.core.windows.net/storage/images/c4a8aa58-7748-4a65-b614-3249c6e8a8ec.webp',
-        imgDescription:
-            'A merchant points accusingly at a young boy in the marketplace.',
-        voiceUrl: null,
-        content:
-            'A merchant accused a poor boy of stealing a valuable cloth. Villager Siti defended the boy, claiming he was innocent. Should Princess Melati investigate the claim or believe the merchant?',
-        nextScene: null,
-        branch: [
-          SceneChoice(
-            choice: 'good',
-            content: 'Question the merchant and the boy to find the truth.',
-            moralValue: 'Responsibility',
-            point: 30,
-            nextScene: 7,
-          ),
-          SceneChoice(
-            choice: 'bad',
-            content: 'Trust the merchant and punish the boy immediately.',
-            moralValue: 'Impatience',
-            point: -20,
-            nextScene: 8,
-          ),
-        ],
-        lessonLearned: null,
-        selectedChoice: null,
-        endingType: null,
-        moralValue: null,
-        meaning: null,
-        example: null,
-      ),
-      Scene(
-        sceneId: 5,
-        type: 'narrative',
-        imgUrl:
-            'https://bihackathon.blob.core.windows.net/storage/images/adacc86e-67a2-42c1-981e-89a054cfbea5.webp',
-        imgDescription: 'Angry villagers protest outside the palace.',
-        voiceUrl: null,
-        content:
-            "The villagers grew angry when they learned the wealthy received more land. 'This is not justice!' they cried. Tuan Budi warned Princess Melati, 'A ruler must serve all, not just a few.'",
-        nextScene: 6,
-        branch: null,
-        lessonLearned: null,
-        selectedChoice: null,
-        endingType: null,
-        moralValue: null,
-        meaning: null,
-        example: null,
-      ),
-      Scene(
-        sceneId: 6,
-        type: 'decision_point',
-        imgUrl:
-            'https://bihackathon.blob.core.windows.net/storage/images/ff33db90-187d-4033-af59-0c383c13303b.webp',
-        imgDescription:
-            'Princess Melati kneels among the protesting villagers, listening to their concerns.',
-        voiceUrl: null,
-        content:
-            'The villagers demanded fair land distribution. Should Princess Melati correct her mistake and redistribute the land, or ignore their pleas to avoid conflict?',
-        nextScene: null,
-        branch: [
-          SceneChoice(
-            choice: 'good',
-            content: 'Apologize and redistribute the land fairly.',
-            moralValue: 'Humility',
-            point: 20,
-            nextScene: 9,
-          ),
-          SceneChoice(
-            choice: 'bad',
-            content: 'Refuse to change the distribution to maintain order.',
-            moralValue: 'Stubbornness',
-            point: -30,
-            nextScene: 10,
-          ),
-        ],
-        lessonLearned: null,
-        selectedChoice: null,
-        endingType: null,
-        moralValue: null,
-        meaning: null,
-        example: null,
-      ),
-      Scene(
-        sceneId: 7,
-        type: 'ending',
-        imgUrl:
-            'https://bihackathon.blob.core.windows.net/storage/images/b14b6d75-9a05-4f09-8e77-8dbb46cbd33b.webp',
-        imgDescription:
-            'Princess Melati crowns herself queen, surrounded by cheering villagers.',
-        voiceUrl: null,
-        content:
-            "Princess Melati discovered the merchant had mistakenly accused the boy. The villagers praised her fairness. King Harun declared, 'You are the true heir to the throne!' Princess Melati ruled with honesty and justice, earning the love of her people.",
-        nextScene: null,
-        branch: null,
-        lessonLearned: 'Honesty and fairness earn trust and respect.',
-        selectedChoice: null,
-        endingType: 'good',
-        moralValue: 'Justice',
-        meaning:
-            'Justice means treating everyone equally, regardless of their status.',
-        example:
-            'Sharing toys with friends even if you want to keep them shows justice.',
-      ),
-      Scene(
-        sceneId: 8,
-        type: 'ending',
-        imgUrl:
-            'https://bihackathon.blob.core.windows.net/storage/images/f2c017a4-08df-437a-acf8-09be4551f728.webp',
-        imgDescription:
-            'Princess Melati, now queen, kneels to apologize to the boy and his family.',
-        voiceUrl: null,
-        content:
-            'Princess Melati punished the boy without proof, later learning he was innocent. She apologized publicly and worked harder to be fair. King Harun still named her queen, but she vowed to never rush judgments again.',
-        nextScene: null,
-        branch: null,
-        lessonLearned:
-            'Impatience can lead to unfair consequences, but admitting mistakes is important.',
-        selectedChoice: null,
-        endingType: 'good',
-        moralValue: 'Responsibility',
-        meaning:
-            'Responsibility means owning up to your actions and correcting mistakes.',
-        example:
-            "Saying sorry when you accidentally break a friend's toy shows responsibility.",
-      ),
-      Scene(
-        sceneId: 9,
-        type: 'ending',
-        imgUrl:
-            'https://bihackathon.blob.core.windows.net/storage/images/0cab5144-6ac2-4c1f-a510-be40be807312.webp',
-        imgDescription:
-            'Princess Melati stands alone, looking out at a kingdom divided.',
-        voiceUrl: null,
-        content:
-            'Princess Melati corrected the land distribution, but some villagers remained distrustful. Though she eventually earned their respect, her early mistake left a lasting impression. She ruled cautiously, always mindful of her actions.',
-        nextScene: null,
-        branch: null,
-        lessonLearned:
-            'Unfair decisions can damage trust, but humility can help rebuild it.',
-        selectedChoice: null,
-        endingType: 'bad',
-        moralValue: 'Humility',
-        meaning:
-            'Humility means acknowledging your mistakes and learning from them.',
-        example: 'Apologizing to a teacher after lying shows humility.',
-      ),
-      Scene(
-        sceneId: 10,
-        type: 'ending',
-        imgUrl:
-            'https://bihackathon.blob.core.windows.net/storage/images/15ff642a-dfaf-45f8-bb52-1d18520b6c0f.webp',
-        imgDescription:
-            "The kingdom's throne stands empty as villagers walk away in disappointment.",
-        voiceUrl: null,
-        content:
-            'Princess Melati refused to change the land distribution, causing unrest. King Harun declared her unfit to rule. The kingdom fell into disarray, and the people suffered under a new, harsh ruler. Princess Melati realized too late that greed and stubbornness had ruined her chance to lead.',
-        nextScene: null,
-        branch: null,
-        lessonLearned:
-            'Stubbornness and greed can destroy trust and opportunities.',
-        selectedChoice: null,
-        endingType: 'bad',
-        moralValue: 'Stubbornness',
-        meaning:
-            "Stubbornness means refusing to listen or change, even when you're wrong.",
-        example:
-            "Refusing to share a toy with a friend because you don't want to shows stubbornness.",
-      ),
-    ],
-  );
 }
