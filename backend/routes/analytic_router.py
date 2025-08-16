@@ -7,8 +7,9 @@ from typing import Optional
 router = APIRouter()
 
 class ChatRequest(BaseModel):
-    message: str = Field(..., description="User's message/question")
+    message: str = Field(..., description="User's message/question", examples=["How is my child's performance on the concept of empathy for the last one month? Also give me activity example to increase my child's empathy"])
     child_age: int = Field(..., ge=3, le=18, description="Child's age in years")
+    language: str = Field(..., description="Language for the question and response", examples=["indonesian", "english"])
 
 @router.get("/api/v1/analytic/dashboard")
 async def get_dashboard_analytic(current_user=Depends(get_current_user)):
@@ -65,4 +66,5 @@ async def chat_stream_route(
         current_user=current_user,
         message=request.message,
         child_age=request.child_age,
+        language=request.language
     )

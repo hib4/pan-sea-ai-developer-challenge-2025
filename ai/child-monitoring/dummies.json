@@ -1,0 +1,279 @@
+{
+    "user_id": "68720d0d6a0d2694067fd18e",
+    "title": "Aruna and the Whispering Wayang",
+    "theme": [
+        "Creativity",
+        "Perseverance",
+        "Empathy"
+    ],
+    "language": "English",
+    "status": "not_started",
+    "age_group": 11,
+    "current_scene": 1,
+    "created_at": {
+        "$date": "2025-08-14T03:39:25.997Z"
+    },
+    "finished_at": "2025-08-14T03:45:25.997Z",
+    "maximum_point": 10,
+    "story_flow": {
+        "total_scene": 10,
+        "decision_point": [
+            2,
+            4,
+            6
+        ],
+        "ending": [
+            7,
+            8,
+            9,
+            10
+        ]
+    },
+    "characters": [
+        {
+            "name": "Aruna",
+            "description": "A curious 11-year-old girl who loves storytelling and traditional Indonesian art. She wears a bright batik dress and has a big imagination."
+        },
+        {
+            "name": "Bima",
+            "description": "A wise old wayang puppet who acts as Aruna's guide. He has a golden crown and a gentle voice."
+        },
+        {
+            "name": "Ibu Sari",
+            "description": "Aruna's kind mother who teaches her about traditional Javanese culture. She wears a sarong and is always encouraging."
+        }
+    ],
+    "scene": [
+        {
+            "scene_id": 1,
+            "type": "narrative",
+            "img_url": "https://bihackathon.blob.core.windows.net/storage/images/0b8e9833-b3fa-4951-bcb2-ef28e4e67f07.png",
+            "img_description": "Aruna sits under a mango tree, holding a wayang puppet. The village market bustles in the background with colorful stalls and traditional music.",
+            "voice_url": "https://bihackathon.blob.core.windows.net/storage/voices/f4fe269f-95ee-4445-9287-4cc3c1252a0b.wav",
+            "content": "In the village of Surya, Aruna loved nothing more than listening to her mother's stories about the ancient heroes of Java. One day, while exploring the attic, she found an old wayang puppet named Bima. To her surprise, Bima spoke! 'The village festival is coming,' he said. 'But the storyteller has fallen ill. Will you take his place, Aruna?'",
+            "next_scene": 2,
+            "branch": null,
+            "lesson_learned": null,
+            "selected_choice": null,
+            "ending_type": null,
+            "moral_value": null,
+            "meaning": null,
+            "example": null
+        },
+        {
+            "scene_id": 2,
+            "type": "decision_point",
+            "img_url": "https://bihackathon.blob.core.windows.net/storage/images/731fc89c-3fec-45c3-a105-cb489a67ad34.png",
+            "img_description": "Aruna holds Bima, looking worried. A traditional storybook and a blank notebook are on the table.",
+            "voice_url": "https://bihackathon.blob.core.windows.net/storage/voices/017c3875-4d9d-400d-8fc5-c0c030dd3c87.wav",
+            "content": "Aruna hesitated. She knew the traditional story of 'Arjuna's Journey,' but she also wanted to create something new. What should she do?",
+            "next_scene": null,
+            "branch": [
+                {
+                    "choice": "good",
+                    "content": "Use the traditional story of 'Arjuna's Journey' to honor the village's heritage.",
+                    "moral_value": "Respect for Tradition",
+                    "point": 3,
+                    "next_scene": 3
+                },
+                {
+                    "choice": "bad",
+                    "content": "Create a completely new story without learning from the old ones.",
+                    "moral_value": "Disregard for Tradition",
+                    "point": -2,
+                    "next_scene": 5
+                }
+            ],
+            "lesson_learned": null,
+            "selected_choice": null,
+            "ending_type": null,
+            "moral_value": null,
+            "meaning": null,
+            "example": null
+        },
+        {
+            "scene_id": 3,
+            "type": "narrative",
+            "img_url": "https://bihackathon.blob.core.windows.net/storage/images/bb600739-0f15-4a1e-b39a-b08679aa818e.png",
+            "img_description": "Aruna studies the traditional storybook under a lantern. Bima looks on approvingly.",
+            "voice_url": "https://bihackathon.blob.core.windows.net/storage/voices/cbfb098e-6310-4ad8-8ed3-febeea69af08.wav",
+            "content": "Aruna decided to learn the old story. Bima helped her practice, teaching her the proper gestures and voices. 'A good storyteller respects the past,' he said. But Aruna still felt something was missing. 'Can I add a little bit of my own imagination?' she asked. Bima smiled. 'Creativity is the soul of any story.'",
+            "next_scene": 4,
+            "branch": null,
+            "lesson_learned": null,
+            "selected_choice": null,
+            "ending_type": null,
+            "moral_value": null,
+            "meaning": null,
+            "example": null
+        },
+        {
+            "scene_id": 4,
+            "type": "decision_point",
+            "img_url": "https://bihackathon.blob.core.windows.net/storage/images/c1ff4720-b886-403f-b43b-7417baeb856f.png",
+            "img_description": "Aruna stands on stage, holding Bima. The audience looks expectant. A storm cloud looms outside.",
+            "voice_url": "https://bihackathon.blob.core.windows.net/storage/voices/33a813a6-c943-4e0a-a68f-86dfc93c4a0b.wav",
+            "content": "The day of the festival arrived. Just as Aruna began to tell her story, a loud clap of thunder startled her. She forgot her lines! What should she do?",
+            "next_scene": null,
+            "branch": [
+                {
+                    "choice": "good",
+                    "content": "Take a deep breath and improvise, using the traditional story as a foundation.",
+                    "moral_value": "Perseverance",
+                    "point": 3,
+                    "next_scene": 7
+                },
+                {
+                    "choice": "bad",
+                    "content": "Panick and run off the stage, letting the audience down.",
+                    "moral_value": "Lack of Courage",
+                    "point": -3,
+                    "next_scene": 8
+                }
+            ],
+            "lesson_learned": null,
+            "selected_choice": null,
+            "ending_type": null,
+            "moral_value": null,
+            "meaning": null,
+            "example": null
+        },
+        {
+            "scene_id": 5,
+            "type": "narrative",
+            "img_url": "https://bihackathon.blob.core.windows.net/storage/images/66ccc08e-4232-4c5c-82b4-300d8a910e71.png",
+            "img_description": "Aruna scribbles furiously in her notebook. Bima looks concerned. The village market is quiet and empty.",
+            "voice_url": "https://bihackathon.blob.core.windows.net/storage/voices/3b509c95-e74e-407d-b126-c77019e37fb5.wav",
+            "content": "Aruna spent all night creating a brand-new story. But when she tried to tell it, the villagers looked confused. 'This isn't how the story goes,' one elder said. Aruna felt embarrassed. Bima whispered, 'Sometimes, innovation needs a foundation. Would you like to try again, combining old and new?'",
+            "next_scene": 6,
+            "branch": null,
+            "lesson_learned": null,
+            "selected_choice": null,
+            "ending_type": null,
+            "moral_value": null,
+            "meaning": null,
+            "example": null
+        },
+        {
+            "scene_id": 6,
+            "type": "decision_point",
+            "img_url": "https://bihackathon.blob.core.windows.net/storage/images/b5e9b980-f0c3-46e9-9dad-0a958351f1b0.png",
+            "img_description": "Aruna stands on stage again, holding Bima. The audience is skeptical but willing to listen.",
+            "voice_url": "https://bihackathon.blob.core.windows.net/storage/voices/e322ddf9-dfe6-4b60-ae14-1f118e86e4a4.wav",
+            "content": "Aruna had another chance. Should she stick to her new story or try to blend it with the traditional one?",
+            "next_scene": null,
+            "branch": [
+                {
+                    "choice": "good",
+                    "content": "Weave the new story into the old one, showing respect for both.",
+                    "moral_value": "Empathy",
+                    "point": 2,
+                    "next_scene": 9
+                },
+                {
+                    "choice": "bad",
+                    "content": "Refuse to change and insist her way is better.",
+                    "moral_value": "Stubbornness",
+                    "point": -2,
+                    "next_scene": 10
+                }
+            ],
+            "lesson_learned": null,
+            "selected_choice": null,
+            "ending_type": null,
+            "moral_value": null,
+            "meaning": null,
+            "example": null
+        },
+        {
+            "scene_id": 7,
+            "type": "ending",
+            "img_url": "https://bihackathon.blob.core.windows.net/storage/images/0eadf092-002a-4246-b24e-68a83a0de637.png",
+            "img_description": "Aruna and Bima bow to a cheering audience. The storm has passed, and the sky is filled with stars.",
+            "voice_url": "https://bihackathon.blob.core.windows.net/storage/voices/f7e5e50b-eba8-42b3-a215-5c9552382cb7.wav",
+            "content": "Aruna took a deep breath and began again. This time, she wove her own ideas into the traditional story, creating something magical. The villagers clapped and cheered. 'You are a true storyteller,' said Ibu Sari, hugging her. Aruna realized that creativity and tradition could go hand in hand.",
+            "next_scene": null,
+            "branch": null,
+            "lesson_learned": "Creativity thrives when it respects the past and embraces the new.",
+            "selected_choice": null,
+            "ending_type": "good",
+            "moral_value": "Creativity",
+            "meaning": "Creativity means finding new ways to express ideas while honoring what has come before.",
+            "example": "Like Aruna, you can draw inspiration from your favorite stories and add your own unique touches."
+        },
+        {
+            "scene_id": 8,
+            "type": "ending",
+            "img_url": "https://bihackathon.blob.core.windows.net/storage/images/16b395d2-a185-4504-a890-5ffb83fdbbb5.png",
+            "img_description": "Aruna sits alone in the dark, looking sad. The festival continues without her.",
+            "voice_url": "https://bihackathon.blob.core.windows.net/storage/voices/725ef07e-d547-4c3e-a7bb-8685a3d5668f.wav",
+            "content": "Aruna ran off the stage, feeling ashamed. The festival went on without her, and she missed the chance to share her story. 'It's okay to make mistakes,' said Ibu Sari later. 'But courage is what helps us try again.' Aruna vowed to practice harder next time.",
+            "next_scene": null,
+            "branch": null,
+            "lesson_learned": "Courage is needed to overcome fears and try new things.",
+            "selected_choice": null,
+            "ending_type": "bad",
+            "moral_value": "Courage",
+            "meaning": "Courage means facing your fears and trying your best, even if you might fail.",
+            "example": "Like Aruna, you might feel scared before a presentation, but taking a deep breath can help you go through with it."
+        },
+        {
+            "scene_id": 9,
+            "type": "ending",
+            "img_url": "https://bihackathon.blob.core.windows.net/storage/images/6bf50ac3-400f-449f-bc1f-eafbbc294ea5.png",
+            "img_description": "Aruna tells her story to a small group of children. They look interested but the rest of the village is elsewhere.",
+            "voice_url": "https://bihackathon.blob.core.windows.net/storage/voices/6b5aaa23-89f4-427d-9032-1154495d1696.wav",
+            "content": "Aruna blended the stories, but her stubbornness made the tale confusing. Only a few children listened. 'Sometimes, listening to others is as important as sharing your own ideas,' said Bima. Aruna learned that empathy is key to connecting with an audience.",
+            "next_scene": null,
+            "branch": null,
+            "lesson_learned": "Empathy helps us understand and respect others' perspectives.",
+            "selected_choice": null,
+            "ending_type": "bad",
+            "moral_value": "Empathy",
+            "meaning": "Empathy means trying to understand how others feel and what they need.",
+            "example": "Like Aruna, you can ask your friends what they think before deciding what game to play together."
+        },
+        {
+            "scene_id": 10,
+            "type": "ending",
+            "img_url": "https://bihackathon.blob.core.windows.net/storage/images/b975240f-5ddd-4903-b79e-3eb8a9fb0420.png",
+            "img_description": "Aruna stands alone on the empty stage. The village is dark and quiet.",
+            "voice_url": "https://bihackathon.blob.core.windows.net/storage/voices/ad1dd0aa-5dc2-4033-90c9-cf459872a156.wav",
+            "content": "Aruna refused to change her story. The villagers left, disappointed. 'A storyteller must always respect her audience,' said Ibu Sari sadly. Aruna realized too late that stubbornness had ruined her chance to shine.",
+            "next_scene": null,
+            "branch": null,
+            "lesson_learned": "Stubbornness can prevent us from learning and growing.",
+            "selected_choice": null,
+            "ending_type": "bad",
+            "moral_value": "Humility",
+            "meaning": "Humility means being open to learning from others and admitting when we are wrong.",
+            "example": "Like Aruna, you might think you know the best way to do something, but asking for help can lead to better results."
+        }
+    ],
+    "user_story": {
+        "visited_scene": [
+            1,
+            2,
+            3,
+            4,
+            7
+        ],
+        "choices": [
+            {
+                "scene_id": 2,
+                "choice": "good",
+                "point": 3
+            },
+            {
+                "scene_id": 4,
+                "choice": "good",
+                "point": 3
+            }
+        ],
+        "total_point": 6,
+        "finished_time": 450
+    },
+    "cover_img_url": "https://bihackathon.blob.core.windows.net/storage/images/c941cc13-2e76-45ef-8c85-ef64809ffe18.png",
+    "description": "In a small Indonesian village, Aruna discovers a magical wayang puppet that comes to life. With the village festival approaching, she must decide how to use her creativity to save the day. Will she follow tradition or forge her own path?",
+    "estimated_reading_time": 300
+}
