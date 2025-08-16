@@ -24,7 +24,7 @@ def _generate_image(image_prompt):
         model=FLUX_1_SCHNELL_MODEL,
         response_format=FLUX_1_SCHNELL_IMAGE_RESPONSE_FORMAT,
         extra_body={
-            "response_extension": "png",
+            "response_extension": "webp",
             "width": 512,
             "height": 1024,
             "num_inference_steps": 4,
@@ -44,7 +44,7 @@ def _generate_image(image_prompt):
         url = upload_file_to_blob(
             base64_string=b64_string,
             folder_name=IMAGE_FOLDER_NAME,
-            blob_filename= f"{unique_id}.png"
+            blob_filename= f"{unique_id}.webp"
         )
 
     if image_type == "cover_image":  
