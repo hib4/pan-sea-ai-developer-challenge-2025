@@ -25,8 +25,7 @@ class StoryRepositoryImpl implements StoryRepository {
         },
         options: Options(
           headers: {
-            'Authorization':
-                'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4OWYxYjY2YzU5OTlmYzQwMWY5MzA3NiIsIm5hbWUiOiJqdWFuIiwiZW1haWwiOiJqQGdtYWlsLmNvbSIsImF1dGgiOiJsb2NhbCIsImdvb2dsZV9pZCI6bnVsbCwiZXhwIjoxNzU1MzA2ODM4fQ.S1sxQkbHXKqjVOjOOuSmEd96EpYMugGDCPe6g15Yj_g',
+            'Authorization': 'Bearer ${Env.bearerToken}',
           },
         ),
       );
@@ -60,8 +59,7 @@ class StoryRepositoryImpl implements StoryRepository {
         '/book/$id',
         options: Options(
           headers: {
-            'Authorization':
-                'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4OWYxYjY2YzU5OTlmYzQwMWY5MzA3NiIsIm5hbWUiOiJqdWFuIiwiZW1haWwiOiJqQGdtYWlsLmNvbSIsImF1dGgiOiJsb2NhbCIsImdvb2dsZV9pZCI6bnVsbCwiZXhwIjoxNzU1MzA2ODM4fQ.S1sxQkbHXKqjVOjOOuSmEd96EpYMugGDCPe6g15Yj_g',
+            'Authorization': 'Bearer ${Env.bearerToken}',
           },
         ),
       );
