@@ -262,8 +262,6 @@ def validate_story_content(story_data: dict, user_id: str, age: int):
                 scene["ending_type"] = "bad"
             elif "good" in scene['ending_type'].lower():
                 scene["ending_type"] = "good"
-            else:
-                raise HTTPException(status_code=500, detail=f"Invalid ending type in scene {scene['scene_id']}, must be 'good' or 'bad'")
             # Add to endings list
             endings.append(scene["scene_id"])
         

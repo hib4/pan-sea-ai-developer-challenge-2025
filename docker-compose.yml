@@ -1,10 +1,10 @@
-version: "3.9"
+version: "3.3"
 
 services:
   story-generation:
     build:
       context: ./ai/story-generation
-      dockerfile: Dockerfile
+      dockerfile: dockerfile
     env_file: ./ai/.env
     ports:
       - "8001:8001"
@@ -15,7 +15,7 @@ services:
   child-monitoring:
     build:
       context: ./ai/child-monitoring
-      dockerfile: Dockerfile
+      dockerfile: dockerfile
     env_file: ./ai/.env
     ports:
       - "8002:8002"
@@ -23,16 +23,32 @@ services:
     networks:
       - ai-network
 
+  libretranslate:
+    image: libretranslate/libretranslate:latest
+    ports:
+      - "8003:8003"             # host:container
+    command: >
+      --host 0.0.0.0
+      --port 8003
+      --load-only en,id
+      --update-models
+    volumes:
+      - lt-models:/root/.local/share/argos-translate
+    restart: always
+    networks:
+      - ai-network
+
   backend:
     build:
       context: ./backend
-      dockerfile: Dockerfile
+      dockerfile: dockerfile
     env_file:
       - ./backend/.env
     ports:
       - "8000:8000"
     depends_on:
       - mongo
+      - libretranslate
     restart: always
     networks:
       - ai-network
@@ -45,15 +61,18 @@ services:
     networks:
       - ai-network
 
-    # cloudflared:
-    # image: cloudflare/cloudflared:latest
-    # command: tunnel --no-autoupdate run --token x
-    # restart: unless-stopped
-    # depends_on:
-    #   - backend
-    # networks:
-    #   - ai-network
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    command: tunnel --no-autoupdate run --token eyJhIjoiNDk3NzQyYmMzOGU4ZTEwYzI3YmU3NzNkZjEyZmNkZGIiLCJ0IjoiNDE5Y2MyY2QtMDVkYS00MzQ5LTgzYTMtODVmODJiYTZkNTFlIiwicyI6Ik9USTFZV05oWWpVdE5tWm1OaTAwTUdFMkxXSm1OamN0TmpGaE1qTXpNMkU0TTJZMiJ9
+    restart: unless-stopped
+    depends_on:
+      - backend
+    networks:
+      - ai-network
 
 networks:
   ai-network:
     driver: bridge
+
+volumes:
+  lt-models:

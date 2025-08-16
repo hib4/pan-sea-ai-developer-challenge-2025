@@ -464,12 +464,22 @@ async def chat_stream(
         current_user,
         message: str,
         child_age: int,
+        language: str = "indonesian"
     ):
     
+    # Map language to code
+    language_map = {
+        "indonesian": "id",
+        "english": "en"
+    }
+    language_code = language_map.get(language, "id")
+    # Debug language code
+    print(f"Using language code: {language_code}")
     request_body = {
         "message": message,
         "child_age": child_age,
-        "token": current_user.get('token')
+        "token": current_user.get('token'),
+        "lang_code": language_code
     }
     
     return await stream(

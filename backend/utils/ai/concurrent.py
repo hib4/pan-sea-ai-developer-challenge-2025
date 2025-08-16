@@ -14,7 +14,7 @@ async def generate_multiple_image_and_voice_concurrently(requests):
         if request_type == "image" or request_type == "cover_image":
             tasks.append(generate_image(request))
 
-        if request_type == "voice":
-            tasks.append(synthesize_speech(request))
+        # if request_type == "voice":
+        #     tasks.append(synthesize_speech(request))
 
     return await asyncio.gather(*tasks)
