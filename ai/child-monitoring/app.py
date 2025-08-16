@@ -28,13 +28,9 @@ async def lifespan(app: FastAPI):
     # Initialize RAG system
     print("Initializing RAG system...")
     rag_system = ChildMonitoringRAG(
-        data_dir=os.getenv("DATA_DIR", "knowledge_base/financial_literacy_guide.pdf"),
-        persist_directory=os.getenv("VECTOR_DB_PATH", "vectordb"),
-        embedding_model_name="text-embedding-3-small",
-        llm_model_name="gpt-4o",
+        data_dir="knowledge_base/",
         similarity_threshold=0.25,
         top_k=3,
-        backend_api_base_url=os.getenv("BACKEND_API_BASE_URL", "http://localhost:8000/api/v1/analytic")
     )
     
     # Initialize the RAG system (this will create/load vector database)
@@ -47,8 +43,8 @@ async def lifespan(app: FastAPI):
     print("Shutting down RAG system...")
 
 app = FastAPI(
-    title="Child Financial Literacy Monitoring Chatbot",
-    description="A chatbot system for analyzing children's financial literacy learning patterns",
+    title="Child Moral Monitoring Chatbot",
+    description="A chatbot system for analyzing children's learning and development patterns, providing actionable advice to parents and educators.",
     version="1.0.0",
     lifespan=lifespan
 )
@@ -63,12 +59,11 @@ app.add_middleware(
 )
 
 # Initialize the main LLM for final response generation
-api_key = os.getenv("OPENAI_API_KEY")
-main_llm = ChatOpenAI(
-    model="gpt-4o",
-    temperature=0.7,
-    api_key=SecretStr(api_key) if api_key else None,
-    streaming=True  # Enable streaming
+chat_model = ChatOpenAI(
+    model=os.getenv("LLM_MODEL", "aisingapore/Llama-SEA-LION-v3.5-70B-R"),
+    temperature=0.4,
+    api_key=SecretStr(os.getenv("SEALION_API_KEY", "")),
+    base_url="https://api.sea-lion.ai/v1"
 )
 
 # Pydantic models for request/response
@@ -76,6 +71,7 @@ class ChatRequest(BaseModel):
     message: str = Field(..., description="User's message/question")
     child_age: int = Field(..., ge=3, le=18, description="Child's age in years")
     token: str = Field(..., description="Authentication token for internal use")
+    lang_code: str = Field(default="indonesian", description="Language code for the response", examples=["id", "en"])
 
 class ChatResponse(BaseModel):
     response: str
@@ -89,14 +85,14 @@ async def health_check():
     """Health check endpoint"""
     return HealthResponse(
         status="healthy",
-        message="Child Financial Literacy Monitoring Chatbot is running"
+        message="Child Monitoring Chatbot is running"
     )
 
 @app.get("/")
 async def root():
     """Root endpoint with basic info"""
     return {
-        "message": "Child Financial Literacy Monitoring Chatbot API",
+        "message": "Child Monitoring Chatbot API",
         "version": "1.0.0",
         "endpoints": {
             "chat": "/chat",
@@ -111,7 +107,7 @@ async def generate_streaming_response(prompt_value) -> AsyncGenerator[str, None]
     """
     try:
         # Stream the response from the LLM
-        async for chunk in main_llm.astream(prompt_value.to_messages()):
+        async for chunk in chat_model.astream(prompt_value.to_messages()):
             if chunk.content:                
                 # Format as Server-Sent Events
                 data = {
@@ -154,6 +150,7 @@ async def chat_stream(request: ChatRequest):
             token=request.token,
             query=request.message,
             child_age=request.child_age,
+            lang_code=request.lang_code  # Use lang_code for language-specific responses
         )
         
         # Return streaming response
@@ -191,10 +188,11 @@ async def chat(request: ChatRequest):
             query=request.message,
             child_age=request.child_age,
             token=request.token,  # Optional token for internal use
+            lang_code=request.lang_code  # Use lang_code for language-specific responses
         )
         
         # Get response from LLM (non-streaming)
-        response = await main_llm.ainvoke(prompt_value.to_messages())
+        response = await chat_model.ainvoke(prompt_value.to_messages())
         
         return ChatResponse(
             response=response.content, # type: ignore

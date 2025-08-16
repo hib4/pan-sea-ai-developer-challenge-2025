@@ -14,6 +14,8 @@ from langchain.prompts import ChatPromptTemplate
 from langchain_core.documents import Document
 from langchain_core.prompt_values import PromptValue
 from dotenv import load_dotenv
+from chatbot_instructions import build_output_format_template, PROMPT_TEMPLATE_CHATBOT
+from langcodes import Language
 
 load_dotenv()
 
@@ -22,22 +24,19 @@ class ChildMonitoringRAG:
     def __init__(
         self,
         data_dir: str,
-        persist_directory: str,
-        embedding_model_name: str = "text-embedding-3-small",
-        llm_model_name: str = "gpt-4o-mini",
         similarity_threshold: float = 0.25,
         top_k: int = 3,
-        backend_api_base_url: str = os.getenv(
-            "BACKEND_API_BASE_URL", "http://localhost:8000/api/v1/analytic"
-        ),
     ):
         self.data_dir = data_dir
-        self.persist_directory = persist_directory
-        self.embedding_model_name = embedding_model_name
-        self.llm_model_name = llm_model_name  # For the main conversational LLM
+        self.persist_directory = os.getenv("VECTOR_DB_PATH", "chroma_db")
+        self.embedding_model_name = os.getenv(
+            "EMBEDDING_MODEL", "text-embedding-3-small"
+        )
         self.similarity_threshold = similarity_threshold
         self.top_k = top_k
-        self.backend_api_base_url = backend_api_base_url
+        self.backend_api_base_url = os.getenv(
+            "BACKEND_API_BASE_URL", "http://localhost:8000/api/analysis"
+        )
 
         api_key = os.getenv("OPENAI_API_KEY")
         self.embeddings = OpenAIEmbeddings(
@@ -57,10 +56,14 @@ class ChildMonitoringRAG:
         Load documents from the data directory (PDF file).
         Returns a list of Document objects, where each document is typically a page.
         """
-        loader = PyPDFLoader(self.data_dir)
-        documents = loader.load()
-
-        print(f"Loaded {len(documents)} documents (pages) from {self.data_dir}")
+        documents = []
+        for filename in os.listdir(self.data_dir):
+            if filename.endswith(".pdf"):
+                file_path = os.path.join(self.data_dir, filename)
+                loader = PyPDFLoader(file_path)
+                loaded_docs = loader.load()
+                documents.extend(loaded_docs)
+                print(f"Loaded {len(loaded_docs)} documents from {file_path}")
         return documents
 
     def _setup_vector_store(self, chunk_size: int = 1000):
@@ -92,94 +95,7 @@ class ChildMonitoringRAG:
             f"Vector store created at {self.persist_directory} with {len(splits)} chunks."
         )
 
-    def initialize_rag(self, rebuild: bool = False):
-        """
-        Initialize the complete RAG system.
-        Args:
-            rebuild (bool): If True, forces a rebuild of the vector store
-                            even if it already exists.
-        """
-        print("Initializing RAG system...")
-
-        if os.path.exists(self.persist_directory) and not rebuild:
-            print("Using existing vector store from:", self.persist_directory)
-            self.vectorstore = Chroma(
-                persist_directory=self.persist_directory,
-                embedding_function=self.embeddings,
-            )
-            if self.vectorstore._collection.count() == 0:
-                print("Existing vector store is empty, rebuilding...")
-                self._setup_vector_store()
-        else:
-            print("Creating new vector store...")
-            self._setup_vector_store()
-
-        if self.vectorstore is not None:
-            self.retriever = self.vectorstore.as_retriever(
-                search_type="similarity_score_threshold",
-                search_kwargs={
-                    "k": self.top_k,
-                    "score_threshold": self.similarity_threshold,
-                },
-            )
-        else:
-            print("Error: Vector store is not initialized.")
-            return
-
-        print(
-            f"Retriever initialized with top_k={self.top_k} and similarity threshold={self.similarity_threshold}."
-        )
-        print("RAG system initialized successfully.")
-
-    @staticmethod
-    def build_output_format_template() -> str:
-        """
-        Build the output format template for chatbot response.
-        Returns a conversational text format instead of JSON.
-        """
-        return """
-            Berikan respons dalam format percakapan yang natural dan ramah untuk orang tua/guru tentang perkembangan literasi finansial anak. Apabila diperlukan juga gunakan emoji yang sesuai. Gunakan format berikut:
-
-            Mulai dengan sapaan hangat dan ringkasan singkat tentang perkembangan anak.
-
-            Apabila orang tua/guru meminta ringkasan perkembangan anak untuk setiap tema, gunakan format berikut:
-                **Yang sudah dikuasai dengan baik:**
-                - Sebutkan konsep-konsep yang success_rate >= 80'%' dengan bahasa yang positif
-
-                **Yang sedang dipelajari:**
-                - Sebutkan konsep-konsep yang success_rate 60-80'%' dengan nada mendukung
-
-                **Yang masih butuh perhatian:**
-                - Sebutkan konsep-konsep yang success_rate < 60'%' dengan nada yang tetap positif dan memberikan harapan
-                Jika ada data yang tidak tersedia, jelaskan dengan sopan.
-            
-            Apabila orang tua/guru meminta ringkasan perkembangan anak dalam periode waktu tertentu, gunakan format berikut:
-            **Perkembangan Anak dalam Periode Tersebut:**
-            - Berikan ringkasan perkembangan anak dalam periode waktu yang diminta, dengan fokus pada perubahan positif dan area yang perlu perhatian.
-            - Gunakan bahasa yang mudah dipahami dan tidak menggurui.
-            - Jika ada referensi dari panduan, sertakan dengan jelas.
-            
-            Apabila orang tua/guru meminta ringkasan umum atau statistik performa anak, gunakan format berikut:
-            **Ringkasan Umum Performa Anak:**
-            - Berikan ringkasan umum tentang progres belajar anak, dengan fokus pada kekuatan dan area yang perlu peningkatan.
-            - Gunakan bahasa yang mudah dipahami dan tidak menggurui.
-            - Jika ada referensi dari panduan, sertakan dengan jelas.
-            - Jika ada data yang tidak tersedia, jelaskan dengan sopan.
-            
-            Apabila orang tua/guru meminta saran atau tips, gunakan format berikut:
-            **Saran untuk Orang Tua/Guru:**
-            - Berikan saran yang relevan dengan perkembangan anak
-            - Gunakan bahasa yang mudah dipahami dan tidak menggurui
-            - Sertakan contoh konkret atau aktivitas yang bisa dilakukan bersama anak
-            - Jika ada referensi dari panduan, sertakan dengan jelas
-            
-
-            Akhiri dengan kata-kata motivasi dan dukungan untuk orang tua/guru.
-
-            Pastikan seluruh respons terasa seperti sedang berbicara langsung dengan orang tua/guru, bukan laporan formal.
-        """
-
-    def make_backend_api_call(self, api_details: dict, token: str) -> dict[str, str]:
+    def _make_backend_api_call(self, api_details: dict, token: str) -> dict[str, str]:
         """
         Makes API calls to the backend based on the classified intent's details.
         Handles multiple API types if present in api_details['api_type'].
@@ -235,91 +151,166 @@ class ChildMonitoringRAG:
                 url=url,
                 headers=header,
             )
-            results[api_type] = response.content.decode('utf-8')
-        
+            results[api_type] = response.content.decode("utf-8")
+
         return results
-        
-    def create_prompt(self, query: str, child_age: int, token: str) -> PromptValue:
+
+    def _get_children_data_context(
+        self, query: str, token: str, lang_code: str
+    ) -> dict:
+        """
+        Fetch children's data context based on the query.
+        This method makes an API call to the backend to retrieve the relevant data.
+        Returns a dictionary with the children's data context.
+        """
+
+        if lang_code != "en":
+            print(
+                f"Translating query from {Language.get(lang_code).display_name()} to English..."
+            )
+            response = requests.post(
+                "http://localhost:8003/translate",
+                json={
+                    "q": query,
+                    "source": lang_code,
+                    "target": "en",
+                    "format": "text",
+                    "alternatives": 3,
+                    "api_key": "",
+                },
+                headers={"Content-Type": "application/json"},
+            )
+
+            translation_result = response.json()
+            query = translation_result.get("translatedText", query)
+
+        api_details = self.intent_classifier.classify(query)
+        intent = api_details.get("intent")
+        if intent != "child_performance_data":
+            return {}
+
+        try:
+            
+            response = self._make_backend_api_call(api_details.get("api_call_details", []), token)
+            return response
+        except Exception as e:
+            print(f"An error occurred while fetching children's data: {e}")
+            return {}
+
+    def _get_rag_context(self, query: str, lang_code) -> str:
+        """
+        Fetches the RAG context based on the query.
+        This method retrieves relevant documents from the vector store.
+        Returns a string containing the RAG context.
+        """
+        if not self.retriever:
+            print("Retriever not initialized. Ensure initialize_rag() was called.")
+            return ""
+
+        try:
+            if lang_code != "id":
+                print(
+                    f"Translating query from {Language.get(lang_code).display_name()} to Indonesian..."
+                )
+                response = requests.post(
+                    "http://localhost:8003/translate",
+                    json={
+                        "q": query,
+                        "source": lang_code,
+                        "target": "id",
+                        "format": "text",
+                        "alternatives": 3,
+                        "api_key": "",
+                    },
+                    headers={"Content-Type": "application/json"},
+                )
+
+                translation_result = response.json()
+                query = translation_result.get("translatedText", query)
+
+            rag_context_docs = self.retriever.invoke(query)
+            rag_context_text = "\n\n".join(
+                [doc.page_content for doc in rag_context_docs]
+            )
+            return rag_context_text.strip()
+        except Exception as e:
+            print(f"Error retrieving RAG documents: {e}")
+            return ""
+
+    def initialize_rag(self, rebuild: bool = False):
+        """
+        Initialize the complete RAG system.
+        Args:
+            rebuild (bool): If True, forces a rebuild of the vector store
+                            even if it already exists.
+        """
+        print("Initializing RAG system...")
+
+        if os.path.exists(self.persist_directory) and not rebuild:
+            print("Using existing vector store from:", self.persist_directory)
+            self.vectorstore = Chroma(
+                persist_directory=self.persist_directory,
+                embedding_function=self.embeddings,
+            )
+            if self.vectorstore._collection.count() == 0:
+                print("Existing vector store is empty, rebuilding...")
+                self._setup_vector_store()
+        else:
+            print("Creating new vector store...")
+            self._setup_vector_store()
+
+        if self.vectorstore is not None:
+            self.retriever = self.vectorstore.as_retriever(
+                search_type="similarity_score_threshold",
+                search_kwargs={
+                    "k": self.top_k,
+                    "score_threshold": self.similarity_threshold,
+                },
+            )
+        else:
+            print("Error: Vector store is not initialized.")
+            return
+
+        print(
+            f"Retriever initialized with top_k={self.top_k} and similarity threshold={self.similarity_threshold}."
+        )
+        print("RAG system initialized successfully.")
+
+    def create_prompt(
+        self, query: str, child_age: int, lang_code: str, token: str
+    ) -> PromptValue:
         """
         Creates a formatted prompt for the LLM, combining children's data context and RAG context.
         """
+        # DEBUG lang_code
+        print(f"Creating prompt for query: {query} with child age: {child_age} and language code: {lang_code}")
+        
         # Get children's data context
-        print("Classifying intent and fetching children's data context...")
-        intent_data = self.intent_classifier.classify(query)
-        intent = intent_data.get("intent")
-        api_details = intent_data.get("api_call_details", {})
-        children_data_context = ""
-        if intent == "child_performance_data":
-            try:
-                children_data_context = self.make_backend_api_call(api_details, token)
-                print("Children's data context retrieved successfully.")
-                print(f"Children's data context: {children_data_context}")
-            except Exception as e:
-                print(f"An exception occurred with details {e}")
+        print("Retrieving children's data context...")
+        children_data_context = self._get_children_data_context(query, token, lang_code)
+        if not children_data_context:
+            print("No children's data context found for the query.")
+            children_data_context = "No children's data context found for the query."
 
         # Get RAG context documents
         print("Retrieving RAG context documents...")
-        rag_context_docs = []
-        if self.retriever:
-            try:
-                rag_context_docs = self.retriever.invoke(query)
-                print(f"Retrieved {len(rag_context_docs)} relevant documents from RAG.")
-            except Exception as e:
-                print(f"Error retrieving RAG documents: {e}")
-                rag_context_docs = []
-        else:
-            print("Retriever not initialized. Ensure initialize_rag() was called.")
-            rag_context_docs = []
+        rag_context_text = self._get_rag_context(query, lang_code)
+        if not rag_context_text:
+            print("No RAG context found for the query.")
+            rag_context_text = "No RAG context found for the query."
 
-        rag_context_text = "\n\n".join([doc.page_content for doc in rag_context_docs])
-        if not rag_context_text.strip():
-            rag_context_text = (
-                "Tidak ada informasi umum yang sangat relevan ditemukan dari panduan."
-            )
+        output_format = build_output_format_template()
 
-        output_format = self.build_output_format_template()
-        PROMPT_TEMPLATE = """
-        Anda adalah seorang asisten AI ahli dalam pedagogi dan literasi finansial di Indonesia.
-        Tugas utama Anda adalah membantu orang tua dan pendidik menganalisis pola belajar dan pemahaman literasi finansial anak, serta memberikan saran yang tepat.
-
-        Tolong berikan respons dalam **Bahasa Indonesia**, dengan nada suportif, empatik, dan penjelasan yang mudah dimengerti oleh orang tua dan guru.
-
-        Berikut adalah data performa dan pola belajar anak:
-        {children_data_context}
-
-        Anda juga dapat menggunakan informasi tambahan dari panduan resmi berikut untuk memberikan analisis dan saran:
-        {rag_context_text}
-        ```
-
-        ---
-        Pertanyaan dari Orang Tua:
-        {query}
-
-        ---
-        Format Output yang Diinginkan:
-        {output_format}
-
-        (Catatan: Jangan sertakan tanda '`' *markdown* di sekitar output JSON Anda. Hasilkan JSON murni.)
-
-        ---
-        Instruksi Umum:
-        1.  Analisis data anak dengan cermat. Identifikasi kekuatan dan area yang perlu peningkatan.
-        2.  Berikan jawaban yang jelas, empatik, dan mudah dimengerti oleh orang tua. Hindari jargon yang rumit.
-        3.  Sesuaikan respons dengan usia dari anak yaitu {child_age} tahun, dan pastikan saran yang diberikan sesuai dengan tahap perkembangan mereka.
-        4.  Jika relevan, sertakan saran konkret dan aktivitas yang bisa dilakukan orang tua untuk membantu anak.
-        5.  Selalu berikan saran yang sesuai dengan konteks budaya Indonesia.
-        6.  Jika data yang diminta tidak tersedia atau relevan, jelaskan dengan sopan, lalu follow-up dengan pertanyaan klarifikasi.
-        7.  Jika pertanyaan umum tidak berkaitan dengan data anak, fokus pada konteks RAG.
-        8.  Prioritaskan informasi dari data anak dan konteks RAG dibandingkan pengetahuan umum Anda.
-        """
-
-        prompt = ChatPromptTemplate.from_template(PROMPT_TEMPLATE)
+        prompt = ChatPromptTemplate.from_template(PROMPT_TEMPLATE_CHATBOT)
         formatted_prompt = prompt.format_prompt(
             children_data_context=children_data_context,
             rag_context_text=rag_context_text,
             query=query,
             output_format=output_format,
             child_age=child_age,
+            language=(
+                Language.get(lang_code).display_name() if lang_code else "Indonesian"
+            ),
         )
 
         return formatted_prompt
