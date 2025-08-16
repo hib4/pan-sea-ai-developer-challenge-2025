@@ -121,7 +121,6 @@ class _GenerateStoryLoadingPageState extends State<GenerateStoryLoadingPage>
         );
       },
       child: Scaffold(
-        backgroundColor: colors.neutral[500],
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),

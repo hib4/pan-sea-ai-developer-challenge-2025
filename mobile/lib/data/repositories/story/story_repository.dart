@@ -4,4 +4,6 @@ mixin StoryRepository {
   Future<StoryModel> createStory(String query);
 
   Future<StoryModel> getStoryById(String id);
+
+  Future<StoryPreviewModel> getStories();
 }

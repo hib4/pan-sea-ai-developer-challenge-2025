@@ -1,11 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kanca/core/core.dart';
+import 'package:kanca/data/data.dart';
+import 'package:kanca/features/story/bloc/story_bloc.dart';
 import 'package:kanca/features/story/story.dart';
 import 'package:kanca/gen/assets.gen.dart';
 import 'package:kanca/utils/utils.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    context.read<StoryBloc>().add(const StoryEvent.getStories());
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +70,7 @@ class HomePage extends StatelessWidget {
                           ),
                           4.horizontal,
                           Text(
-                            '78',
+                            '12',
                             style: textTheme.largeBody.copyWith(
                               color: colors.primary[500],
                               fontWeight: FontWeight.w500,
@@ -80,17 +94,42 @@ class HomePage extends StatelessWidget {
             ),
             16.vertical,
             Expanded(
-              child: GridView.builder(
-                padding: const EdgeInsets.only(top: 16, bottom: 24),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 0.45,
-                  crossAxisSpacing: 24,
-                  mainAxisSpacing: 24,
-                ),
-                itemCount: 4,
-                itemBuilder: (context, index) {
-                  return const StoryCard();
+              child: BlocBuilder<StoryBloc, StoryState>(
+                builder: (context, state) {
+                  return state.storyPreviews.when(
+                    initial: () => const SizedBox.shrink(),
+                    loading: () => Center(
+                      child: Assets.lottie.loading.lottie(
+                        width: 200,
+                        height: 200,
+                      ),
+                    ),
+                    data: (data) {
+                      return GridView.builder(
+                        padding: const EdgeInsets.only(top: 16, bottom: 24),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              childAspectRatio: 0.45,
+                              crossAxisSpacing: 24,
+                              mainAxisSpacing: 24,
+                            ),
+                        itemCount: data.data.length,
+                        itemBuilder: (context, index) {
+                          final story = data.data[index];
+                          return StoryCard(story: story);
+                        },
+                      );
+                    },
+                    error: (error) {
+                      return Center(
+                        child: Text(
+                          'Failed to load stories: $error',
+                          style: textTheme.body,
+                        ),
+                      );
+                    },
+                  );
                 },
               ),
             ),
@@ -113,7 +152,9 @@ class HomePage extends StatelessWidget {
 }
 
 class StoryCard extends StatelessWidget {
-  const StoryCard({super.key});
+  const StoryCard({required this.story, super.key});
+
+  final Data story;
 
   @override
   Widget build(BuildContext context) {
@@ -148,8 +189,20 @@ class StoryCard extends StatelessWidget {
                     topRight: Radius.circular(10),
                     bottomRight: Radius.circular(10),
                   ),
-                  child: Assets.images.kimo2.image(
+                  child: Image.network(
+                    story.coverImgUrl,
                     fit: BoxFit.cover,
+                    webHtmlElementStrategy: WebHtmlElementStrategy.prefer,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Center(
+                        child: Text(
+                          'Image not available',
+                          style: textTheme.body.copyWith(
+                            color: colors.grey[500],
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 ),
               ),
@@ -203,7 +256,7 @@ class StoryCard extends StatelessWidget {
           ),
           10.vertical,
           Text(
-            'Kimo and Friends Mini Adventure',
+            story.title,
             style: textTheme.body.copyWith(
               color: colors.grey[500],
               fontWeight: FontWeight.w600,
@@ -214,7 +267,7 @@ class StoryCard extends StatelessWidget {
           ),
           4.vertical,
           Text(
-            'Learn how to save money with Kimo the Fox',
+            story.description,
             style: textTheme.caption.copyWith(
               color: colors.grey[400],
               fontWeight: FontWeight.w500,
@@ -241,31 +294,40 @@ class StoryCard extends StatelessWidget {
                 ),
               ),
               8.horizontal,
-              Container(
-                height: 32,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                ),
-                decoration: BoxDecoration(
-                  color: colors.primary[500],
+              Material(
+                color: colors.primary[500],
+                borderRadius: BorderRadius.circular(12),
+                child: InkWell(
+                  onTap: () {
+                    context.read<StoryBloc>().add(
+                      StoryEvent.getStoryById(story.id),
+                    );
+                    context.push(const StoryLoadingPage());
+                  },
                   borderRadius: BorderRadius.circular(12),
-                ),
-                child: Row(
-                  children: [
-                    Assets.icons.play.svg(
-                      width: 16,
-                      height: 16,
+                  child: Container(
+                    height: 32,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
                     ),
-                    8.horizontal,
-                    Text(
-                      'Play',
-                      style: textTheme.lexendCaption.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w500,
-                        height: 1,
-                      ),
+                    child: Row(
+                      children: [
+                        Assets.icons.play.svg(
+                          width: 16,
+                          height: 16,
+                        ),
+                        8.horizontal,
+                        Text(
+                          'Play',
+                          style: textTheme.lexendCaption.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
+                            height: 1,
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               ),
             ],

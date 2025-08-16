@@ -83,4 +83,33 @@ class StoryRepositoryImpl implements StoryRepository {
       throw Exception('Failed to get story: $e');
     }
   }
+  
+  @override
+  Future<StoryPreviewModel> getStories() async {
+    try {
+      final response = await _client.get(
+        '/books',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer ${Env.bearerToken}',
+          },
+        ),
+      );
+
+      final raw = response.data;
+      final data = raw is String
+          ? jsonDecode(raw) as Map<String, dynamic>
+          : raw as Map<String, dynamic>;
+
+      return StoryPreviewModel.fromJson(data);
+    } on DioException catch (e) {
+      // Handle Dio exceptions, e.g., log the error or rethrow
+      logger.e('Failed to get stories: ${e.message}');
+      throw Exception('Failed to get stories: ${e.message}');
+    } catch (e) {
+      // Handle exceptions, e.g., log the error or rethrow
+      logger.e('Failed to get stories: $e');
+      throw Exception('Failed to get stories: $e');
+    }
+  }
 }
