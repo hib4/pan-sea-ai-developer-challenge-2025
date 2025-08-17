@@ -1,8 +1,9 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kanca/core/core.dart';
 import 'package:kanca/data/models/models.dart';
-import 'package:kanca/gen/assets.gen.dart';
 
 class ChatMessageWidget extends StatelessWidget {
   const ChatMessageWidget({
@@ -42,7 +43,7 @@ class ChatMessageWidget extends StatelessWidget {
               bottomRight: isAnswer ? const Radius.circular(12) : Radius.zero,
             ),
           ),
-          child: chat.message != 'typingMessage'
+          child: chat.message != '**typingMessage**'
               ? Text(
                   chat.message ?? '',
                   style: GoogleFonts.lexend(
@@ -51,9 +52,88 @@ class ChatMessageWidget extends StatelessWidget {
                     fontWeight: FontWeight.w400,
                   ),
                 )
-              : const CircularProgressIndicator(),
+              : const TypingIndicator(),
         ),
       ),
+    );
+  }
+}
+
+class TypingIndicator extends StatefulWidget {
+  const TypingIndicator({super.key});
+
+  @override
+  State<TypingIndicator> createState() => _TypingIndicatorState();
+}
+
+class _TypingIndicatorState extends State<TypingIndicator>
+    with TickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 1500),
+      vsync: this,
+    );
+    _animation =
+        Tween<double>(
+          begin: 0.0,
+          end: 1.0,
+        ).animate(
+          CurvedAnimation(
+            parent: _animationController,
+            curve: Curves.easeInOut,
+          ),
+        );
+    _animationController.repeat();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _animation,
+      builder: (context, child) {
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Kanca is typing',
+              style: GoogleFonts.lexend(
+                color: Colors.white.withOpacity(0.8),
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+            const SizedBox(width: 8),
+            ...List.generate(3, (index) {
+              final delay = index * 0.2;
+              final animationValue = (_animation.value - delay).clamp(0.0, 1.0);
+              final opacity = (sin(animationValue * pi * 2) + 1) / 2;
+
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 1),
+                child: Container(
+                  width: 4,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(opacity * 0.8 + 0.2),
+                    shape: BoxShape.circle,
+                  ),
+                ),
+              );
+            }),
+          ],
+        );
+      },
     );
   }
 }

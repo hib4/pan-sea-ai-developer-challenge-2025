@@ -4,6 +4,7 @@ import 'package:kanca/core/theme/app_theme.dart';
 import 'package:kanca/data/data.dart';
 import 'package:kanca/features/progress/widgets/chat_message_widget.dart';
 import 'package:kanca/gen/assets.gen.dart';
+import 'package:kanca/injector/injector.dart';
 import 'package:kanca/utils/utils.dart';
 
 class ProgressPage extends StatefulWidget {
@@ -17,21 +18,23 @@ class _ProgressPageState extends State<ProgressPage> {
   final _scrollController = ScrollController();
   final _messageController = TextEditingController();
   final List<ChatModel> _conversations = [];
+  late final ChatRepository _chatRepository;
 
   final List<List<String>> _suggestions = [
     [
-      'Today’s Target',
+      "Today's Target",
       'Did the child complete their mission?',
     ],
     [
       'View Progress',
-      'Summary of the child’s activities today',
+      "Summary of the child's activities today",
     ],
   ];
 
   @override
   void initState() {
     super.initState();
+    _chatRepository = Injector.instance<ChatRepository>();
     _loadInitialMessages();
   }
 
@@ -59,25 +62,88 @@ class _ProgressPageState extends State<ProgressPage> {
     _addMessage(text, false);
 
     // show typing indicator
-    _addMessage('typingMessage', true);
+    _addMessage('**typingMessage**', true);
 
-    // Simulate AI response delay
-    await Future<void>.delayed(const Duration(seconds: 2));
+    try {
+      // Use the streaming chat repository
+      final stream = _chatRepository.chatStream(prompt: text);
 
-    // Remove typing indicator
-    _removeTyping();
+      String fullResponse = '';
+      int? aiMessageIndex;
+      bool hasReceivedFirstChunk = false;
 
-    // Add AI response (dummy response for now)
-    final responses = [
-      'Thank you for your question! Your child has shown good progress in learning today. 😊',
-      'I understand your concern. Based on today’s observation, your child showed enthusiasm for learning.',
-      'That’s a great question! Your child completed several activities well today.',
-      'I’m glad you asked! Your child’s cognitive development showed positive results today.',
-    ];
+      await for (final chunk in stream) {
+        if (chunk != null) {
+          if (chunk.type == 'content' && chunk.content != null) {
+            // On first content chunk, remove typing indicator and create AI message
+            if (!hasReceivedFirstChunk) {
+              _removeTyping();
+              aiMessageIndex = _conversations.length;
+              _addMessage('', true);
+              hasReceivedFirstChunk = true;
+            }
 
-    final randomResponse =
-        responses[DateTime.now().millisecond % responses.length];
-    _addMessage(randomResponse, true);
+            // Append the new content to the full response
+            fullResponse += chunk.content!;
+
+            // Update the AI message with the accumulated response in real-time
+            final currentIndex = aiMessageIndex;
+            if (currentIndex != null) {
+              setState(() {
+                if (currentIndex < _conversations.length) {
+                  _conversations[currentIndex] = ChatModel(
+                    message: fullResponse,
+                    isAnswer: true,
+                  );
+                }
+              });
+
+              // Scroll to bottom to show new content as it arrives
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                _scrollToBottom();
+              });
+            }
+          } else if (chunk.type == 'complete') {
+            // Streaming is complete
+            break;
+          } else if (chunk.type == 'error') {
+            // Remove typing indicator if still present
+            if (!hasReceivedFirstChunk) {
+              _removeTyping();
+              aiMessageIndex = _conversations.length;
+              _addMessage('', true);
+              hasReceivedFirstChunk = true;
+            }
+
+            // Handle error case
+            final currentIndex = aiMessageIndex;
+            if (currentIndex != null) {
+              setState(() {
+                if (currentIndex < _conversations.length) {
+                  _conversations[currentIndex] = const ChatModel(
+                    message: 'Sorry, I encountered an error. Please try again.',
+                    isAnswer: true,
+                  );
+                }
+              });
+            }
+            break;
+          }
+        }
+      }
+
+      // If no content was received, remove typing indicator and show error
+      if (!hasReceivedFirstChunk) {
+        _removeTyping();
+        _addMessage('No response received. Please try again.', true);
+      }
+    } catch (e) {
+      // Remove typing indicator if still present
+      _removeTyping();
+
+      // Add error message
+      _addMessage('Sorry, I encountered an error. Please try again.', true);
+    }
   }
 
   void _addMessage(String msg, bool isAnswer) {
@@ -94,7 +160,7 @@ class _ProgressPageState extends State<ProgressPage> {
 
   void _removeTyping() {
     setState(() {
-      _conversations.removeWhere((m) => m.message == 'typingMessage');
+      _conversations.removeWhere((m) => m.message == '**typingMessage**');
     });
   }
 
