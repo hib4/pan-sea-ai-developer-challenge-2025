@@ -20,12 +20,12 @@ class _ProgressPageState extends State<ProgressPage> {
 
   final List<List<String>> _suggestions = [
     [
-      'Target Hari Ini',
-      'Apakah anak menyelesaikan misinya?',
+      'Today’s Target',
+      'Did the child complete their mission?',
     ],
     [
-      'Lihat Perkembangan',
-      'Ringkasan aktivitas anak hari ini',
+      'View Progress',
+      'Summary of the child’s activities today',
     ],
   ];
 
@@ -39,7 +39,7 @@ class _ProgressPageState extends State<ProgressPage> {
     _conversations.add(
       const ChatModel(
         message:
-            'Halo! Kanca di sini, saya tadi menemani anak Anda bermain dan belajar. Ingin tahu apa saja yang dia pelajari hari ini? ✨',
+            'Hello! Kanca here—I accompanied your child while playing and learning today. Would you like to know what they learned? ✨',
         isAnswer: true,
       ),
     );
@@ -69,10 +69,10 @@ class _ProgressPageState extends State<ProgressPage> {
 
     // Add AI response (dummy response for now)
     final responses = [
-      'Terima kasih atas pertanyaannya! Anak Anda telah menunjukkan kemajuan yang baik dalam pembelajaran hari ini. 😊',
-      'Saya memahami kekhawatiran Anda. Berdasarkan observasi hari ini, anak Anda menunjukkan antusiasme dalam belajar.',
-      'Itu pertanyaan yang bagus! Anak Anda telah menyelesaikan beberapa aktivitas dengan baik hari ini.',
-      'Saya senang Anda bertanya! Perkembangan anak Anda dalam area kognitif menunjukkan hasil yang positif.',
+      'Thank you for your question! Your child has shown good progress in learning today. 😊',
+      'I understand your concern. Based on today’s observation, your child showed enthusiasm for learning.',
+      'That’s a great question! Your child completed several activities well today.',
+      'I’m glad you asked! Your child’s cognitive development showed positive results today.',
     ];
 
     final randomResponse =
@@ -126,16 +126,16 @@ class _ProgressPageState extends State<ProgressPage> {
               children: [
                 Stack(
                   children: [
-                    InkWell(
-                      onTap: () {
-                        context.pop();
-                      },
-                      borderRadius: BorderRadius.circular(28),
-                      child: Assets.icons.back.image(
-                        width: 56,
-                        height: 56,
-                      ),
-                    ),
+                    // InkWell(
+                    //   onTap: () {
+                    //     context.pop();
+                    //   },
+                    //   borderRadius: BorderRadius.circular(28),
+                    //   child: Assets.icons.back.image(
+                    //     width: 56,
+                    //     height: 56,
+                    //   ),
+                    // ),
                     SizedBox(
                       height: 48,
                       child: Center(
