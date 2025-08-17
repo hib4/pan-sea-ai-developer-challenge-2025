@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kanca/core/core.dart';
 import 'package:kanca/features/auth/auth.dart';
+import 'package:kanca/features/dashboard/dashboard.dart';
 import 'package:kanca/gen/assets.gen.dart';
 import 'package:kanca/utils/utils.dart';
 
@@ -284,7 +285,7 @@ class __OnBoardingLoadingState extends State<_OnBoardingLoading> {
     super.initState();
     Future.delayed(const Duration(seconds: 3), () {
       if (mounted) {
-        context.pushAndRemoveUntil(const LoginPage(), (route) => false);
+        context.pushAndRemoveUntil(const DashboardPage(), (route) => false);
       }
     });
   }

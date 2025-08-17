@@ -25,8 +25,7 @@ class StoryRepositoryImpl implements StoryRepository {
         },
         options: Options(
           headers: {
-            'Authorization':
-                'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4OWYxYjY2YzU5OTlmYzQwMWY5MzA3NiIsIm5hbWUiOiJqdWFuIiwiZW1haWwiOiJqQGdtYWlsLmNvbSIsImF1dGgiOiJsb2NhbCIsImdvb2dsZV9pZCI6bnVsbCwiZXhwIjoxNzU1MzA2ODM4fQ.S1sxQkbHXKqjVOjOOuSmEd96EpYMugGDCPe6g15Yj_g',
+            'Authorization': 'Bearer ${Env.bearerToken}',
           },
         ),
       );
@@ -60,8 +59,7 @@ class StoryRepositoryImpl implements StoryRepository {
         '/book/$id',
         options: Options(
           headers: {
-            'Authorization':
-                'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4OWYxYjY2YzU5OTlmYzQwMWY5MzA3NiIsIm5hbWUiOiJqdWFuIiwiZW1haWwiOiJqQGdtYWlsLmNvbSIsImF1dGgiOiJsb2NhbCIsImdvb2dsZV9pZCI6bnVsbCwiZXhwIjoxNzU1MzA2ODM4fQ.S1sxQkbHXKqjVOjOOuSmEd96EpYMugGDCPe6g15Yj_g',
+            'Authorization': 'Bearer ${Env.bearerToken}',
           },
         ),
       );
@@ -83,6 +81,35 @@ class StoryRepositoryImpl implements StoryRepository {
       // Handle exceptions, e.g., log the error or rethrow
       logger.e('Failed to get story: $e');
       throw Exception('Failed to get story: $e');
+    }
+  }
+  
+  @override
+  Future<StoryPreviewModel> getStories() async {
+    try {
+      final response = await _client.get(
+        '/books',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer ${Env.bearerToken}',
+          },
+        ),
+      );
+
+      final raw = response.data;
+      final data = raw is String
+          ? jsonDecode(raw) as Map<String, dynamic>
+          : raw as Map<String, dynamic>;
+
+      return StoryPreviewModel.fromJson(data);
+    } on DioException catch (e) {
+      // Handle Dio exceptions, e.g., log the error or rethrow
+      logger.e('Failed to get stories: ${e.message}');
+      throw Exception('Failed to get stories: ${e.message}');
+    } catch (e) {
+      // Handle exceptions, e.g., log the error or rethrow
+      logger.e('Failed to get stories: $e');
+      throw Exception('Failed to get stories: $e');
     }
   }
 }

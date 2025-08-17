@@ -1,214 +1,462 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:kanca/core/theme/app_theme.dart';
+import 'package:kanca/data/data.dart';
+import 'package:kanca/features/progress/widgets/chat_message_widget.dart';
+import 'package:kanca/gen/assets.gen.dart';
+import 'package:kanca/injector/injector.dart';
+import 'package:kanca/utils/utils.dart';
 
-class ProgressPage extends StatelessWidget {
+class ProgressPage extends StatefulWidget {
   const ProgressPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: context.colors.neutral[500],
-      appBar: AppBar(
-        title: Text(
-          'Progress',
-          style: context.textTheme.lexendLargeBody.copyWith(
-            color: context.colors.darkAccent[500],
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        backgroundColor: context.colors.neutral[500],
-        elevation: 0,
-        centerTitle: true,
-        iconTheme: IconThemeData(
-          color: context.colors.darkAccent[500],
-        ),
+  State<ProgressPage> createState() => _ProgressPageState();
+}
+
+class _ProgressPageState extends State<ProgressPage> {
+  final _scrollController = ScrollController();
+  final _messageController = TextEditingController();
+  final List<ChatModel> _conversations = [];
+  late final ChatRepository _chatRepository;
+
+  final List<List<String>> _suggestions = [
+    [
+      "Today's Target",
+      'Did the child complete their mission?',
+    ],
+    [
+      'View Progress',
+      "Summary of the child's activities today",
+    ],
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _chatRepository = Injector.instance<ChatRepository>();
+    _loadInitialMessages();
+  }
+
+  void _loadInitialMessages() {
+    _conversations.add(
+      const ChatModel(
+        message:
+            'Hello! Kanca here—I accompanied your child while playing and learning today. Would you like to know what they learned? ✨',
+        isAnswer: true,
       ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // Animated progress indicator with chart icon
-              Container(
-                width: 120,
-                height: 120,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: LinearGradient(
-                    colors: [
-                      context.colors.secondary[300]!,
-                      context.colors.support[300]!,
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: context.colors.secondary[200]!.withOpacity(0.3),
-                      blurRadius: 20,
-                      offset: const Offset(0, 8),
-                    ),
-                  ],
-                ),
-                child: Center(
-                  child: Container(
-                    width: 90,
-                    height: 90,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: context.colors.neutral[500],
-                    ),
-                    child: Icon(
-                      Icons.analytics_outlined,
-                      size: 48,
-                      color: context.colors.secondary[500],
-                    ),
-                  ),
-                ),
-              ),
+    );
+  }
 
-              const SizedBox(height: 32),
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    _messageController.dispose();
+    super.dispose();
+  }
 
-              // Title
-              Text(
-                'Progress Tracking',
-                style: context.textTheme.h4.copyWith(
-                  color: context.colors.darkAccent[500],
-                  fontWeight: FontWeight.w600,
-                ),
-                textAlign: TextAlign.center,
-              ),
+  Future<void> _onSendResult(String text) async {
+    if (text.isEmpty) return;
 
-              const SizedBox(height: 16),
+    // add user message
+    _addMessage(text, false);
 
-              // Subtitle
-              Text(
-                'Coming Soon',
-                style: context.textTheme.lexendLargeBody.copyWith(
-                  color: context.colors.secondary[500],
-                  fontWeight: FontWeight.w600,
-                ),
-                textAlign: TextAlign.center,
-              ),
+    // show typing indicator
+    _addMessage('**typingMessage**', true);
 
-              const SizedBox(height: 16),
+    try {
+      // Use the streaming chat repository
+      final stream = _chatRepository.chatStream(prompt: text);
 
-              // Description
-              Text(
-                "We're building comprehensive progress analytics to help you track your learning journey. Soon you'll be able to visualize your reading habits, story completion rates, and learning milestones!",
-                style: context.textTheme.lexendBody.copyWith(
-                  color: context.colors.grey[600],
-                  height: 1.6,
-                ),
-                textAlign: TextAlign.center,
-              ),
+      String fullResponse = '';
+      int? aiMessageIndex;
+      bool hasReceivedFirstChunk = false;
 
-              const SizedBox(height: 40),
+      await for (final chunk in stream) {
+        if (chunk != null) {
+          if (chunk.type == 'content' && chunk.content != null) {
+            // On first content chunk, remove typing indicator and create AI message
+            if (!hasReceivedFirstChunk) {
+              _removeTyping();
+              aiMessageIndex = _conversations.length;
+              _addMessage('', true);
+              hasReceivedFirstChunk = true;
+            }
 
-              Container(
-                padding: const EdgeInsets.all(24),
-                decoration: BoxDecoration(
-                  color: context.colors.neutral[400],
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(
-                    color: context.colors.secondary[200]!,
-                    width: 1.5,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: context.colors.grey[200]!.withOpacity(0.1),
-                      blurRadius: 10,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: Column(
+            // Append the new content to the full response
+            fullResponse += chunk.content!;
+
+            // Update the AI message with the accumulated response in real-time
+            final currentIndex = aiMessageIndex;
+            if (currentIndex != null) {
+              setState(() {
+                if (currentIndex < _conversations.length) {
+                  _conversations[currentIndex] = ChatModel(
+                    message: fullResponse,
+                    isAnswer: true,
+                  );
+                }
+              });
+
+              // Scroll to bottom to show new content as it arrives
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                _scrollToBottom();
+              });
+            }
+          } else if (chunk.type == 'complete') {
+            // Streaming is complete
+            break;
+          } else if (chunk.type == 'error') {
+            // Remove typing indicator if still present
+            if (!hasReceivedFirstChunk) {
+              _removeTyping();
+              aiMessageIndex = _conversations.length;
+              _addMessage('', true);
+              hasReceivedFirstChunk = true;
+            }
+
+            // Handle error case
+            final currentIndex = aiMessageIndex;
+            if (currentIndex != null) {
+              setState(() {
+                if (currentIndex < _conversations.length) {
+                  _conversations[currentIndex] = const ChatModel(
+                    message: 'Sorry, I encountered an error. Please try again.',
+                    isAnswer: true,
+                  );
+                }
+              });
+            }
+            break;
+          }
+        }
+      }
+
+      // If no content was received, remove typing indicator and show error
+      if (!hasReceivedFirstChunk) {
+        _removeTyping();
+        _addMessage('No response received. Please try again.', true);
+      }
+    } catch (e) {
+      // Remove typing indicator if still present
+      _removeTyping();
+
+      // Add error message
+      _addMessage('Sorry, I encountered an error. Please try again.', true);
+    }
+  }
+
+  void _addMessage(String msg, bool isAnswer) {
+    setState(() {
+      _conversations.add(
+        ChatModel(message: msg, isAnswer: isAnswer),
+      );
+    });
+    // Add a small delay to ensure the widget is built before scrolling
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scrollToBottom();
+    });
+  }
+
+  void _removeTyping() {
+    setState(() {
+      _conversations.removeWhere((m) => m.message == '**typingMessage**');
+    });
+  }
+
+  void _scrollToBottom() {
+    if (_scrollController.hasClients) {
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    final textTheme = context.textTheme;
+    return Scaffold(
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(
+              left: 24,
+              top: MediaQuery.of(context).padding.top,
+              right: 24,
+            ),
+            child: Column(
+              children: [
+                Stack(
                   children: [
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.timeline_rounded,
-                          color: context.colors.secondary[500],
-                          size: 24,
+                    // InkWell(
+                    //   onTap: () {
+                    //     context.pop();
+                    //   },
+                    //   borderRadius: BorderRadius.circular(28),
+                    //   child: Assets.icons.back.image(
+                    //     width: 56,
+                    //     height: 56,
+                    //   ),
+                    // ),
+                    SizedBox(
+                      height: 48,
+                      child: Center(
+                        child: Assets.icons.kancaText.image(
+                          width: 125,
+                          height: 32,
                         ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Text(
-                            'Development Progress',
-                            style: context.textTheme.lexendBody.copyWith(
-                              color: context.colors.darkAccent[500],
-                              fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+                16.vertical,
+                Expanded(
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    controller: _scrollController,
+                    padding: EdgeInsets.only(
+                      bottom: MediaQuery.of(context).viewPadding.bottom + 208,
+                    ),
+                    itemCount: _conversations.length,
+                    itemBuilder: (context, index) => ChatMessageWidget(
+                      chat: _conversations[index],
+                      isFirst: index == 0,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(vertical: 24),
+                  color: colors.neutral[500],
+                  child: SizedBox(
+                    height: 52,
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      scrollDirection: Axis.horizontal,
+                      itemCount: _suggestions.length,
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      itemBuilder: (context, index) {
+                        final suggestion = _suggestions[index];
+                        return Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 8),
+                          child: Material(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                            child: InkWell(
+                              onTap: () {
+                                _onSendResult(suggestion[1]);
+                              },
+                              borderRadius: BorderRadius.circular(12),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 20,
+                                ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      suggestion[0],
+                                      style: textTheme.lexendCaption.copyWith(
+                                        color: colors.secondary[900],
+                                        fontWeight: FontWeight.w500,
+                                        height: 1.2,
+                                      ),
+                                    ),
+                                    4.vertical,
+                                    Text(
+                                      suggestion[1],
+                                      style: textTheme.lexendCaption.copyWith(
+                                        color: colors.grey[300],
+                                        fontWeight: FontWeight.w300,
+                                        height: 1.2,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.only(
+                    left: 24,
+                    top: 24,
+                    right: 24,
+                    bottom: MediaQuery.of(context).padding.bottom + 24,
+                  ),
+                  color: Colors.white,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: CustomTextField(
+                          label: 'Type here...',
+                          controller: _messageController,
+                        ),
+                      ),
+                      12.horizontal,
+                      Material(
+                        color: colors.primary[500],
+                        shape: const CircleBorder(),
+                        child: InkWell(
+                          onTap: () {
+                            final text = _messageController.text.trim();
+                            if (text.isNotEmpty) {
+                              _onSendResult(text);
+                              _messageController.clear();
+                            }
+                          },
+                          borderRadius: BorderRadius.circular(24),
+                          child: Container(
+                            width: 48,
+                            height: 48,
+                            padding: const EdgeInsets.all(12),
+                            child: Assets.icons.send.svg(
+                              width: 24,
+                              height: 24,
                             ),
                           ),
                         ),
-                        Text(
-                          '75%',
-                          style: context.textTheme.lexendBody.copyWith(
-                            color: context.colors.secondary[500],
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: LinearProgressIndicator(
-                        value: 0.75,
-                        backgroundColor: context.colors.grey[200],
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                          context.colors.secondary[500]!,
-                        ),
-                        minHeight: 8,
                       ),
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 32),
-
-              // Action button
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          'Progress tracking features coming soon!',
-                          style: context.textTheme.lexendBody.copyWith(
-                            color: Colors.white,
-                          ),
-                        ),
-                        backgroundColor: context.colors.secondary[500],
-                        behavior: SnackBarBehavior.floating,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: context.colors.secondary[500],
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(24),
-                    ),
-                    elevation: 2,
-                  ),
-                  child: Text(
-                    'Notify Me When Ready',
-                    style: context.textTheme.lexendBody.copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    ],
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class CustomTextField extends StatefulWidget {
+  const CustomTextField({
+    required this.label,
+    required this.controller,
+    this.textInputType = TextInputType.text,
+    this.maxLines = 1,
+    this.isPassword = false,
+    this.validator,
+    this.onChanged,
+    super.key,
+  });
+
+  final String label;
+  final TextInputType textInputType;
+  final int maxLines;
+  final bool isPassword;
+  final TextEditingController controller;
+  final String? Function(String?)? validator;
+  final String? Function(String?)? onChanged;
+
+  @override
+  State<CustomTextField> createState() => _CustomTextFieldState();
+}
+
+class _CustomTextFieldState extends State<CustomTextField> {
+  bool _isPasswordVisible = true;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    return TextFormField(
+      controller: widget.controller,
+      keyboardType: widget.textInputType,
+      maxLines: widget.maxLines,
+      validator: widget.validator,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      obscureText: widget.isPassword && _isPasswordVisible,
+      autocorrect: !widget.isPassword,
+      enableSuggestions: !widget.isPassword,
+      onChanged: widget.onChanged,
+      style: GoogleFonts.lexend(
+        color: Colors.black,
+        fontSize: 16,
+        fontWeight: FontWeight.w400,
+      ),
+      decoration: InputDecoration(
+        hintText: widget.label,
+        hintStyle: GoogleFonts.lexend(
+          color: colors.grey[100],
+          fontSize: 16,
+          fontWeight: FontWeight.w400,
+        ),
+        errorStyle: GoogleFonts.lexend(
+          color: Colors.red,
+          fontSize: 16,
+          fontWeight: FontWeight.w400,
+        ),
+        filled: true,
+        fillColor: Colors.white,
+        isDense: true,
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 20,
+          vertical: 18,
+        ),
+        suffixIcon: widget.isPassword
+            ? IconButton(
+                padding: EdgeInsets.zero,
+                onPressed: () {
+                  setState(() {
+                    _isPasswordVisible = !_isPasswordVisible;
+                  });
+                },
+                icon: _isPasswordVisible
+                    ? Assets.icons.eyeSlash.svg()
+                    : Assets.icons.eye.svg(),
+              )
+            : null,
+        suffixIconConstraints: const BoxConstraints(
+          minHeight: 24,
+          maxHeight: 24,
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(24),
+          borderSide: BorderSide.none,
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(24),
+          borderSide: BorderSide(
+            color: colors.grey[50] ?? const Color(0xFFEBEBEB),
+            width: 2,
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(24),
+          borderSide: BorderSide(
+            color: colors.primary[500] ?? const Color(0xFFFF9F00),
+            width: 2,
+          ),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(24),
+          borderSide: const BorderSide(
+            color: Colors.red,
+            width: 2,
+          ),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(24),
+          borderSide: const BorderSide(
+            color: Colors.red,
+            width: 2,
           ),
         ),
       ),

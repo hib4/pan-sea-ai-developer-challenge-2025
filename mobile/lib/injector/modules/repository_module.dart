@@ -10,5 +10,9 @@ class RepositoryModule {
     injector.registerFactory<StoryRepository>(
       () => StoryRepositoryImpl(client: injector()),
     );
+
+    injector.registerFactory<ChatRepository>(
+      () => ChatRepositoryImpl(dioClient: injector()),
+    );
   }
 }
