@@ -93,7 +93,7 @@ class _KancaTextFieldState extends State<KancaTextField> {
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(
             color: colors.grey[50] ?? const Color(0xFFEBEBEB),
-            width: 1,
+            width: 2,
           ),
         ),
         focusedBorder: OutlineInputBorder(

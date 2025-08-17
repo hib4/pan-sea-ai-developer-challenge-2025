@@ -48,7 +48,7 @@ class _AppState extends State<App> {
               screen: child ?? const SizedBox.shrink(),
             );
           },
-          home: const OnboardingPage(),
+          home: const DashboardPage(),
         ),
       ),
     );

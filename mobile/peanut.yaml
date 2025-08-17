@@ -1,0 +1,9 @@
+# Configuration for https://pub.dev/packages/peanut
+
+directories:
+  - web
+
+branch: web
+
+# Extra args to pass directly to flutter build web
+extra-args: "--target lib/main_production.dart"
