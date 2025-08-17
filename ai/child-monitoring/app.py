@@ -63,7 +63,12 @@ chat_model = ChatOpenAI(
     model=os.getenv("LLM_MODEL", "aisingapore/Llama-SEA-LION-v3.5-70B-R"),
     temperature=0.4,
     api_key=SecretStr(os.getenv("SEALION_API_KEY", "")),
-    base_url="https://api.sea-lion.ai/v1"
+    base_url="https://api.sea-lion.ai/v1",
+    extra_body={
+        "chat_template_kwargs": {
+            "thinking_mode": "off"
+        }
+    },
 )
 
 # Pydantic models for request/response
