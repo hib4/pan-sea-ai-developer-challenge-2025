@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:kanca/core/core.dart';
 import 'package:kanca/gen/assets.gen.dart';
+import 'package:kanca/l10n/l10n.dart';
 import 'package:kanca/utils/extensions/extensions.dart';
 import 'package:kanca/widgets/widgets.dart';
 
@@ -66,6 +67,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final textTheme = context.textTheme;
+    final l10n = context.l10n;
 
     return Scaffold(
       backgroundColor: colors.primary[500],
@@ -78,14 +80,14 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                   flex: 10,
                   child: Center(
                     child: Text(
-                      'FORGOT\nPASSWORD',
-                      textAlign: TextAlign.center,
+                      l10n.forgotPasswordTitle,
                       style: textTheme.h1.copyWith(
                         color: Colors.white,
                         fontSize: 80,
                         fontWeight: FontWeight.w700,
                         height: 1.2,
                       ),
+                      textAlign: TextAlign.center,
                     ),
                   ),
                 ),
@@ -109,22 +111,23 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                         if (!_emailSent) ...[
                           12.vertical,
                           Text(
-                            "Don't worry! It happens. Please enter the email address associated with your account.",
+                            context.l10n.dontWorryText,
                             style: textTheme.largeBody.copyWith(
                               color: colors.grey[500],
                               fontSize: 14,
                             ),
+                            textAlign: TextAlign.center,
                           ),
                           24.vertical,
                           Text(
-                            'Email',
+                            l10n.emailText,
                             style: textTheme.caption,
                           ),
                           4.vertical,
                           KancaTextField(
                             controller: _emailController,
                             textInputType: TextInputType.emailAddress,
-                            label: 'example@mail.com',
+                            label: l10n.emailLabel,
                           ),
                           32.vertical,
                           ElevatedButton(
@@ -140,7 +143,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                                       ),
                                     ),
                                   )
-                                : const Text('Send Reset Link'),
+                                : Text(l10n.sendResetLinkButton),
                           ),
                         ] else ...[
                           Center(
@@ -153,7 +156,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                                 ),
                                 16.vertical,
                                 Text(
-                                  'Check your email',
+                                  l10n.checkYourEmailText,
                                   style: textTheme.h4.copyWith(
                                     fontSize: 24,
                                     fontWeight: FontWeight.w600,
@@ -161,7 +164,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                                 ),
                                 8.vertical,
                                 Text(
-                                  'We have sent a password reset link to',
+                                  l10n.weHaveSentText,
                                   style: textTheme.body.copyWith(
                                     color: colors.grey[500],
                                     fontSize: 14,
@@ -178,7 +181,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                                 32.vertical,
                                 ElevatedButton(
                                   onPressed: _goBack,
-                                  child: const Text('Back to Login'),
+                                  child: Text(l10n.backToLoginText),
                                 ),
                                 16.vertical,
                                 TextButton(
@@ -192,7 +195,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                                           ),
                                         )
                                       : Text(
-                                          "Didn't receive the email? Resend",
+                                          l10n.didntReceiveText,
                                           style: textTheme.lexendCaption
                                               .copyWith(
                                                 color: colors.primary[500],
@@ -211,7 +214,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                'Remember your password?',
+                                l10n.rememberYourPasswordText,
                                 style: textTheme.caption.copyWith(
                                   fontSize: 14,
                                 ),
@@ -220,7 +223,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                               InkWell(
                                 onTap: _goBack,
                                 child: Text(
-                                  'Back to Login',
+                                  l10n.backToLoginText,
                                   style: textTheme.lexendCaption.copyWith(
                                     color: colors.primary[500],
                                     fontSize: 14,
@@ -244,11 +247,11 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                                   fontSize: 14,
                                 ),
                                 children: [
-                                  const TextSpan(
-                                    text: 'By using Kanca, you agree to our ',
+                                  TextSpan(
+                                    text: l10n.ruleText1,
                                   ),
                                   TextSpan(
-                                    text: 'Terms of Service',
+                                    text: l10n.ruleText2,
                                     style: textTheme.lexendCaption.copyWith(
                                       fontWeight: FontWeight.w700,
                                       decoration: TextDecoration.underline,
@@ -259,11 +262,11 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                                         // TODO: Open Terms of Service link
                                       },
                                   ),
-                                  const TextSpan(
-                                    text: ' and ',
+                                  TextSpan(
+                                    text: l10n.ruleText3,
                                   ),
                                   TextSpan(
-                                    text: 'Privacy Policy',
+                                    text: l10n.ruleText4,
                                     style: textTheme.lexendCaption.copyWith(
                                       fontWeight: FontWeight.w700,
                                       decoration: TextDecoration.underline,

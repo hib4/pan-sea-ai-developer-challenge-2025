@@ -6,6 +6,7 @@ import 'package:kanca/data/data.dart';
 import 'package:kanca/features/dashboard/dashboard.dart';
 import 'package:kanca/features/story/story.dart';
 import 'package:kanca/gen/assets.gen.dart';
+import 'package:kanca/l10n/l10n.dart';
 import 'package:kanca/utils/utils.dart';
 
 class StoryPage extends StatefulWidget {
@@ -180,6 +181,8 @@ class _StoryPageState extends State<StoryPage> {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final textTheme = context.textTheme;
+    final l10n = context.l10n;
+
     final scene = story.scenes[currentSceneIndex];
     final isDecision = scene.type == 'decision_point';
     final isEnding = scene.type == 'ending';
@@ -250,9 +253,9 @@ class _StoryPageState extends State<StoryPage> {
                     ),
                     elevation: 2,
                   ),
-                  child: const Text(
-                    'Start Adventure',
-                    style: TextStyle(
+                  child: Text(
+                    l10n.startAdventureButton,
+                    style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
                       color: Colors.white,
@@ -444,6 +447,8 @@ class _SceneCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
+
     return Stack(
       children: [
         // Full background image
@@ -589,7 +594,7 @@ class _SceneCard extends StatelessWidget {
                             borderRadius: BorderRadius.circular(16),
                           ),
                         ),
-                        child: const Text('Next'),
+                        child: Text(l10n.nextButton),
                       ),
                     ),
                   const SizedBox(height: 8),
@@ -782,6 +787,8 @@ class _EndingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
+
     // Ensure audio is stopped when ending card is displayed
     WidgetsBinding.instance.addPostFrameCallback((_) {
       onStopAudio?.call();
@@ -802,7 +809,7 @@ class _EndingCard extends StatelessWidget {
                   ),
                   16.vertical,
                   Text(
-                    'Core Value',
+                    l10n.coreValueTitle,
                     style: textTheme.h5.copyWith(
                       color: colors.secondary[900],
                     ),
@@ -812,6 +819,7 @@ class _EndingCard extends StatelessWidget {
                     style: textTheme.h4.copyWith(
                       color: colors.primary[500],
                     ),
+                    textAlign: TextAlign.center,
                   ),
                   24.vertical,
                   Container(
@@ -824,7 +832,7 @@ class _EndingCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(24),
                     ),
                     child: Text(
-                      'Meaning',
+                      l10n.meaningTitle,
                       style: GoogleFonts.fredoka(
                         color: colors.primary[50],
                         fontSize: 21,
@@ -852,7 +860,7 @@ class _EndingCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(24),
                     ),
                     child: Text(
-                      'Real-life Example',
+                      l10n.reallifeTitle,
                       style: GoogleFonts.fredoka(
                         color: colors.primary[50],
                         fontSize: 21,
@@ -895,7 +903,7 @@ class _EndingCard extends StatelessWidget {
                         ),
                       ),
                       child: Text(
-                        'Home',
+                        l10n.homeButton,
                         style: GoogleFonts.lexend(
                           color: colors.primary[500],
                           fontSize: 16,
@@ -910,7 +918,7 @@ class _EndingCard extends StatelessWidget {
                       onPressed: () {
                         context.pushReplacement(const GenerateStoryPage());
                       },
-                      child: const Text('New Story'),
+                      child: Text(l10n.newStoryButton),
                     ),
                   ),
                 ],

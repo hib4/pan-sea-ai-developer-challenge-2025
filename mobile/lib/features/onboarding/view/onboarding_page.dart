@@ -4,6 +4,7 @@ import 'package:kanca/core/core.dart';
 import 'package:kanca/features/auth/auth.dart';
 import 'package:kanca/features/dashboard/dashboard.dart';
 import 'package:kanca/gen/assets.gen.dart';
+import 'package:kanca/l10n/l10n.dart';
 import 'package:kanca/utils/utils.dart';
 
 class OnboardingPage extends StatefulWidget {
@@ -17,105 +18,105 @@ class _OnboardingPageState extends State<OnboardingPage> {
   final PageController _pageController = PageController();
   int _currentIndex = 0;
 
-  final List<_OnboardingData> _onboardingSections = [
-    _OnboardingData(
-      title: RichText(
-        textAlign: TextAlign.center,
-        text: TextSpan(
-          style: GoogleFonts.fredoka(
-            fontSize: 32,
-            fontWeight: FontWeight.w600,
-            color: const Color(0XFF373737),
-          ),
-          children: const [
-            TextSpan(text: 'Let’s Start Your '),
-            TextSpan(
-              text: 'Story!',
-              style: TextStyle(
-                color: Color(
-                  0XFFFF9F00,
-                ), // Use the same color as in the original code
-              ),
+  List<_OnboardingData> _getOnboardingSections(BuildContext context) {
+    final l10n = context.l10n;
+
+    return [
+      _OnboardingData(
+        title: RichText(
+          textAlign: TextAlign.center,
+          text: TextSpan(
+            style: GoogleFonts.fredoka(
+              fontSize: 32,
+              fontWeight: FontWeight.w600,
+              color: const Color(0XFF373737),
             ),
-          ],
-        ),
-      ),
-      subtitle: const Text(
-        'In Kanca, you can create your own exciting stories, learn good values, and practice kindness—all while playing!',
-        style: TextStyle(
-          fontSize: 16,
-          color: Colors.black,
-        ),
-        textAlign: TextAlign.center,
-      ),
-    ),
-    _OnboardingData(
-      title: RichText(
-        textAlign: TextAlign.center,
-        text: TextSpan(
-          style: GoogleFonts.fredoka(
-            fontSize: 32,
-            fontWeight: FontWeight.w600,
-            color: const Color(0XFF373737),
-          ),
-          children: const [
-            TextSpan(text: 'Choose '),
-            TextSpan(
-              text: 'Your Story Path, ',
-              style: TextStyle(
-                color: Color(
-                  0XFFFF9F00,
-                ), // Use the same color as in the original code
+            children: [
+              TextSpan(text: l10n.onboardingTitleFirst1),
+              TextSpan(
+                text: l10n.onboardingTitleFirst2,
+                style: const TextStyle(
+                  color: Color(0XFFFF9F00),
+                ),
               ),
-            ),
-            TextSpan(text: 'Learn the Lesson!'),
-          ],
-        ),
-      ),
-      subtitle: const Text(
-        'The ending depends on your choices! Learn honesty, responsibility, and empathy in a fun & interactive way.',
-        style: TextStyle(
-          fontSize: 16,
-          color: Colors.black,
-        ),
-        textAlign: TextAlign.center,
-      ),
-    ),
-    _OnboardingData(
-      title: RichText(
-        textAlign: TextAlign.center,
-        text: TextSpan(
-          style: GoogleFonts.fredoka(
-            fontSize: 32,
-            fontWeight: FontWeight.w600,
-            color: const Color(0XFF373737),
+            ],
           ),
-          children: const [
-            TextSpan(text: 'Create Moments, '),
-            TextSpan(
-              text: 'Build Character',
-              style: TextStyle(
-                color: Color(
-                  0XFFFF9F00,
-                ), // Use the same color as in the original code
-              ),
+        ),
+        subtitle: Text(
+          l10n.onboardingSubtitleFirst,
+          style: const TextStyle(
+            fontSize: 16,
+            color: Colors.black,
+          ),
+          textAlign: TextAlign.center,
+        ),
+      ),
+      _OnboardingData(
+        title: RichText(
+          textAlign: TextAlign.center,
+          text: TextSpan(
+            style: GoogleFonts.fredoka(
+              fontSize: 32,
+              fontWeight: FontWeight.w600,
+              color: const Color(0XFF373737),
             ),
-          ],
+            children: [
+              TextSpan(text: l10n.onboardingTitleSecond1),
+              TextSpan(
+                text: l10n.onboardingTitleSecond2,
+                style: const TextStyle(
+                  color: Color(0XFFFF9F00),
+                ),
+              ),
+              TextSpan(text: l10n.onboardingTitleSecond3),
+            ],
+          ),
+        ),
+        subtitle: Text(
+          l10n.onboardingSubtitleSecond,
+          style: const TextStyle(
+            fontSize: 16,
+            color: Colors.black,
+          ),
+          textAlign: TextAlign.center,
         ),
       ),
-      subtitle: const Text(
-        'With Kanca, learning becomes a meaningful journey toward a wise, caring, and respectful future.',
-        style: TextStyle(
-          fontSize: 16,
-          color: Colors.black,
+      _OnboardingData(
+        title: RichText(
+          textAlign: TextAlign.center,
+          text: TextSpan(
+            style: GoogleFonts.fredoka(
+              fontSize: 32,
+              fontWeight: FontWeight.w600,
+              color: const Color(0XFF373737),
+            ),
+            children: [
+              TextSpan(text: l10n.onboardingTitleThird1),
+              TextSpan(
+                text: l10n.onboardingTitleThird2,
+                style: const TextStyle(
+                  color: Color(0XFFFF9F00),
+                ),
+              ),
+            ],
+          ),
         ),
-        textAlign: TextAlign.center,
+        subtitle: Text(
+          l10n.onboardingSubtitleThird,
+          style: const TextStyle(
+            fontSize: 16,
+            color: Colors.black,
+          ),
+          textAlign: TextAlign.center,
+        ),
       ),
-    ),
-  ];
+    ];
+  }
 
   void _onNext() {
-    if (_currentIndex < _onboardingSections.length - 1) {
+    final onboardingSections = _getOnboardingSections(context);
+
+    if (_currentIndex < onboardingSections.length - 1) {
       _pageController.nextPage(
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
@@ -141,20 +142,23 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final onboardingSections = _getOnboardingSections(context);
+
     return Scaffold(
       backgroundColor: const Color(0XFFFFF8E8),
       body: Stack(
         children: [
           PageView.builder(
             controller: _pageController,
-            itemCount: _onboardingSections.length,
+            itemCount: onboardingSections.length,
             onPageChanged: (index) {
               setState(() {
                 _currentIndex = index;
               });
             },
             itemBuilder: (context, index) {
-              final data = _onboardingSections[index];
+              final data = onboardingSections[index];
               return Stack(
                 children: [
                   [
@@ -185,7 +189,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
             },
           ),
           Visibility(
-            visible: _currentIndex < _onboardingSections.length - 1,
+            visible: _currentIndex < onboardingSections.length - 1,
             child: Positioned(
               top: 0,
               right: 0,
@@ -197,9 +201,9 @@ class _OnboardingPageState extends State<OnboardingPage> {
                 ),
                 child: GestureDetector(
                   onTap: _onSkip,
-                  child: const Text(
-                    'Skip',
-                    style: TextStyle(
+                  child: Text(
+                    l10n.skipButton,
+                    style: const TextStyle(
                       fontSize: 20,
                       color: Color(0XFFFF9F00),
                     ),
@@ -223,7 +227,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                   // indicator
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: List.generate(_onboardingSections.length, (i) {
+                    children: List.generate(onboardingSections.length, (i) {
                       final isActive = i == _currentIndex;
                       return Container(
                         width: isActive ? 24 : 8,
@@ -242,9 +246,9 @@ class _OnboardingPageState extends State<OnboardingPage> {
                   ElevatedButton(
                     onPressed: _onNext,
                     child: Text(
-                      _currentIndex == _onboardingSections.length - 1
-                          ? 'Let’s Start!'
-                          : 'Next',
+                      _currentIndex == onboardingSections.length - 1
+                          ? l10n.letsStartButton
+                          : l10n.nextButton,
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
@@ -285,7 +289,7 @@ class __OnBoardingLoadingState extends State<_OnBoardingLoading> {
     super.initState();
     Future.delayed(const Duration(seconds: 3), () {
       if (mounted) {
-        context.pushAndRemoveUntil(const DashboardPage(), (route) => false);
+        context.pushAndRemoveUntil(const LoginPage(), (route) => false);
       }
     });
   }
@@ -294,6 +298,8 @@ class __OnBoardingLoadingState extends State<_OnBoardingLoading> {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final textTheme = context.textTheme;
+    final l10n = context.l10n;
+
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.end,
@@ -301,17 +307,17 @@ class __OnBoardingLoadingState extends State<_OnBoardingLoading> {
           RichText(
             text: TextSpan(
               style: textTheme.lexendLargeBody,
-              text: 'Did you know? That... ',
+              text: l10n.onboardingLoading1,
               children: [
                 TextSpan(
-                  text: 'your choices can make the story extraordinary. ',
+                  text: l10n.onboardingLoading2,
                   style: textTheme.lexendLargeBody.copyWith(
                     color: colors.primary[500],
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                const TextSpan(
-                  text: 'Come on, let’s start this exciting adventure!',
+                TextSpan(
+                  text: l10n.onboardingLoading3,
                 ),
               ],
             ),

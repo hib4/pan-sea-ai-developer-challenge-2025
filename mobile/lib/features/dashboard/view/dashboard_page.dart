@@ -5,6 +5,7 @@ import 'package:kanca/features/home/home.dart';
 import 'package:kanca/features/profile/profile.dart';
 import 'package:kanca/features/progress/progress.dart';
 import 'package:kanca/gen/assets.gen.dart';
+import 'package:kanca/l10n/l10n.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -40,6 +41,7 @@ class _DashboardPageState extends State<DashboardPage> {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final textTheme = context.textTheme;
+    final l10n = context.l10n;
 
     BottomNavigationBarItem buildItem({
       required Widget icon,
@@ -86,7 +88,7 @@ class _DashboardPageState extends State<DashboardPage> {
               width: 32,
               height: 32,
             ),
-            label: 'Home',
+            label: l10n.bottomNavHomeTitle,
             isActive: _selectedIndex == 0,
           ),
           buildItem(
@@ -94,7 +96,7 @@ class _DashboardPageState extends State<DashboardPage> {
               width: 32,
               height: 32,
             ),
-            label: 'Achievement',
+            label: l10n.bottomNavAchievementTitle,
             isActive: _selectedIndex == 1,
           ),
           buildItem(
@@ -102,7 +104,7 @@ class _DashboardPageState extends State<DashboardPage> {
               width: 32,
               height: 32,
             ),
-            label: 'Progress',
+            label: l10n.bottomNavProgressTitle,
             isActive: _selectedIndex == 2,
           ),
           buildItem(
@@ -110,7 +112,7 @@ class _DashboardPageState extends State<DashboardPage> {
               width: 32,
               height: 32,
             ),
-            label: 'Profile',
+            label: l10n.bottomNavProfileTitle,
             isActive: _selectedIndex == 3,
           ),
         ],
