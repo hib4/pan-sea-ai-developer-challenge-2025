@@ -4,6 +4,7 @@ import 'package:kanca/core/core.dart';
 import 'package:kanca/features/auth/auth.dart';
 import 'package:kanca/features/dashboard/dashboard.dart';
 import 'package:kanca/gen/assets.gen.dart';
+import 'package:kanca/l10n/l10n.dart';
 import 'package:kanca/utils/extensions/extensions.dart';
 import 'package:kanca/widgets/widgets.dart';
 
@@ -54,6 +55,8 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final textTheme = context.textTheme;
+    final l10n = context.l10n;
+
     return Scaffold(
       backgroundColor: colors.primary[500],
       body: Stack(
@@ -65,12 +68,13 @@ class _LoginPageState extends State<LoginPage> {
                   flex: 2,
                   child: Center(
                     child: Text(
-                      'LOGIN',
+                      l10n.loginTitle,
                       style: textTheme.h1.copyWith(
                         color: Colors.white,
                         fontSize: 105,
                         fontWeight: FontWeight.w700,
                       ),
+                      textAlign: TextAlign.center,
                     ),
                   ),
                 ),
@@ -92,25 +96,25 @@ class _LoginPageState extends State<LoginPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Email',
+                          l10n.emailText,
                           style: textTheme.caption,
                         ),
                         4.vertical,
                         KancaTextField(
                           controller: _emailController,
                           textInputType: TextInputType.emailAddress,
-                          label: 'example@mail.com',
+                          label: l10n.emailLabel,
                         ),
                         16.vertical,
                         Text(
-                          'Password',
+                          l10n.passwordText,
                           style: textTheme.caption,
                         ),
                         4.vertical,
                         KancaTextField(
                           controller: _passwordController,
                           textInputType: TextInputType.visiblePassword,
-                          label: 'Enter your password',
+                          label: l10n.passwordLabel,
                           isPassword: true,
                         ),
                         12.vertical,
@@ -121,7 +125,7 @@ class _LoginPageState extends State<LoginPage> {
                               context.push(const ForgotPasswordPage());
                             },
                             child: Text(
-                              'Forgot Password?',
+                              l10n.forgotPasswordText,
                               style: textTheme.lexendCaption.copyWith(
                                 color: colors.primary[500],
                                 fontWeight: FontWeight.w600,
@@ -132,7 +136,7 @@ class _LoginPageState extends State<LoginPage> {
                         32.vertical,
                         ElevatedButton(
                           onPressed: _login,
-                          child: const Text('Continue'),
+                          child: Text(l10n.continueButton),
                         ),
                         16.vertical,
                         Row(
@@ -148,7 +152,7 @@ class _LoginPageState extends State<LoginPage> {
                                 horizontal: 16,
                               ),
                               child: Text(
-                                'Or',
+                                l10n.orText,
                                 style: textTheme.caption,
                               ),
                             ),
@@ -182,7 +186,7 @@ class _LoginPageState extends State<LoginPage> {
                                 height: 24,
                               ),
                               10.horizontal,
-                              const Text('Continue with Google'),
+                              Text(l10n.continueWithGoogleButton),
                             ],
                           ),
                         ),
@@ -191,7 +195,7 @@ class _LoginPageState extends State<LoginPage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              'Don’t have an account?',
+                              l10n.dontHaveAccountText,
                               style: textTheme.caption.copyWith(
                                 fontSize: 14,
                               ),
@@ -200,7 +204,7 @@ class _LoginPageState extends State<LoginPage> {
                             InkWell(
                               onTap: _goToRegister,
                               child: Text(
-                                'Sign up now!',
+                                l10n.signUpNowText,
                                 style: textTheme.lexendCaption.copyWith(
                                   color: colors.primary[500],
                                   fontSize: 14,
@@ -223,11 +227,11 @@ class _LoginPageState extends State<LoginPage> {
                                   fontSize: 14,
                                 ),
                                 children: [
-                                  const TextSpan(
-                                    text: 'By using Kanca, you agree to our ',
+                                  TextSpan(
+                                    text: l10n.ruleText1,
                                   ),
                                   TextSpan(
-                                    text: 'Terms of Service',
+                                    text: l10n.ruleText2,
                                     style: textTheme.lexendCaption.copyWith(
                                       fontWeight: FontWeight.w700,
                                       decoration: TextDecoration.underline,
@@ -238,11 +242,11 @@ class _LoginPageState extends State<LoginPage> {
                                         // TODO: Open Terms of Service link
                                       },
                                   ),
-                                  const TextSpan(
-                                    text: ' and ',
+                                  TextSpan(
+                                    text: l10n.ruleText3,
                                   ),
                                   TextSpan(
-                                    text: 'Privacy Policy',
+                                    text: l10n.ruleText4,
                                     style: textTheme.lexendCaption.copyWith(
                                       fontWeight: FontWeight.w700,
                                       decoration: TextDecoration.underline,

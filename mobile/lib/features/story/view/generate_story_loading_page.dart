@@ -6,6 +6,7 @@ import 'package:kanca/core/core.dart';
 import 'package:kanca/features/story/bloc/story_bloc.dart';
 import 'package:kanca/features/story/story.dart';
 import 'package:kanca/gen/assets.gen.dart';
+import 'package:kanca/l10n/l10n.dart';
 import 'package:kanca/utils/utils.dart';
 
 class GenerateStoryLoadingPage extends StatefulWidget {
@@ -20,28 +21,35 @@ class _GenerateStoryLoadingPageState extends State<GenerateStoryLoadingPage>
     with TickerProviderStateMixin {
   late AnimationController _animationController;
   late AnimationController _fadeController;
-  late Timer _captionTimer;
+  Timer? _captionTimer;
   int _currentCaptionIndex = 0;
 
-  final List<String> _loadingCaptions = [
-    'Creating your magical story...',
-    'Generating beautiful illustrations...',
-    'Adding voice narration...',
-    'Crafting moral lessons...',
-    'Building interactive choices...',
-    'Polishing your adventure...',
-    'Almost ready for you!',
-    'Adding final touches...',
-    'Preparing your journey...',
-    'Making it perfect...',
-    'Just a few more seconds...',
-  ];
+  List<String> _getLoadingCaptions(BuildContext context) {
+    final l10n = context.l10n;
+
+    return [
+      l10n.storyLoadingCaption1,
+      l10n.storyLoadingCaption2,
+      l10n.storyLoadingCaption3,
+      l10n.storyLoadingCaption4,
+      l10n.storyLoadingCaption5,
+      l10n.storyLoadingCaption6,
+      l10n.storyLoadingCaption7,
+      l10n.storyLoadingCaption8,
+      l10n.storyLoadingCaption9,
+      l10n.storyLoadingCaption10,
+      l10n.storyLoadingCaption11,
+    ];
+  }
 
   @override
   void initState() {
     super.initState();
     _setupAnimations();
-    _startCaptionCycle();
+    // Start caption cycle after the first frame is built
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _startCaptionCycle();
+    });
   }
 
   void _setupAnimations() {
@@ -59,10 +67,13 @@ class _GenerateStoryLoadingPageState extends State<GenerateStoryLoadingPage>
   }
 
   void _startCaptionCycle() {
+    if (!mounted) return;
+
+    final loadingCaptions = _getLoadingCaptions(context);
     _captionTimer = Timer.periodic(const Duration(seconds: 8), (timer) {
       if (mounted) {
         setState(() {
-          if (_currentCaptionIndex < _loadingCaptions.length - 1) {
+          if (_currentCaptionIndex < loadingCaptions.length - 1) {
             _currentCaptionIndex++;
           } else {
             // Stop the timer when we reach the last caption
@@ -80,7 +91,7 @@ class _GenerateStoryLoadingPageState extends State<GenerateStoryLoadingPage>
   void dispose() {
     _animationController.dispose();
     _fadeController.dispose();
-    _captionTimer.cancel();
+    _captionTimer?.cancel();
     super.dispose();
   }
 
@@ -88,6 +99,9 @@ class _GenerateStoryLoadingPageState extends State<GenerateStoryLoadingPage>
   Widget build(BuildContext context) {
     final colors = context.colors;
     final textTheme = context.textTheme;
+    final l10n = context.l10n;
+
+    final loadingCaptions = _getLoadingCaptions(context);
 
     return BlocListener<StoryBloc, StoryState>(
       listener: (context, state) {
@@ -168,10 +182,10 @@ class _GenerateStoryLoadingPageState extends State<GenerateStoryLoadingPage>
                         fontWeight: FontWeight.w600,
                         height: 1.4,
                       ),
-                      text: 'Please wait... ',
+                      text: l10n.storyLoadingTitle1,
                       children: [
                         TextSpan(
-                          text: 'Get ready for an exciting adventure!',
+                          text: l10n.storyLoadingTitle2,
                           style: TextStyle(
                             color: colors.primary[500],
                             fontWeight: FontWeight.w700,
@@ -198,7 +212,7 @@ class _GenerateStoryLoadingPageState extends State<GenerateStoryLoadingPage>
                             child: SlideTransition(
                               position:
                                   Tween<Offset>(
-                                    begin: const Offset(0, 1.0),
+                                    begin: const Offset(0, 1),
                                     end: Offset.zero,
                                   ).animate(
                                     CurvedAnimation(
@@ -264,7 +278,7 @@ class _GenerateStoryLoadingPageState extends State<GenerateStoryLoadingPage>
                           16.horizontal,
                           Flexible(
                             child: Text(
-                              _loadingCaptions[_currentCaptionIndex],
+                              loadingCaptions[_currentCaptionIndex],
                               style: textTheme.lexendBody.copyWith(
                                 color: colors.grey[600],
                                 fontWeight: FontWeight.w700,
@@ -305,7 +319,7 @@ class _GenerateStoryLoadingPageState extends State<GenerateStoryLoadingPage>
 
                 // Subtle footer message
                 Text(
-                  'Your personalized story is being crafted with care ✨',
+                  l10n.storyLoadingSubtitle,
                   style: textTheme.lexendCaption.copyWith(
                     color: colors.grey[400],
                     fontWeight: FontWeight.w500,

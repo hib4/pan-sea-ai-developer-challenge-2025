@@ -5,6 +5,7 @@ import 'package:kanca/core/core.dart';
 import 'package:kanca/features/story/bloc/story_bloc.dart';
 import 'package:kanca/features/story/story.dart';
 import 'package:kanca/gen/assets.gen.dart';
+import 'package:kanca/l10n/l10n.dart';
 import 'package:kanca/utils/extensions/extensions.dart';
 
 class GenerateStoryPage extends StatefulWidget {
@@ -29,6 +30,7 @@ class _GenerateStoryPageState extends State<GenerateStoryPage> {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final textTheme = context.textTheme;
+    final l10n = context.l10n;
 
     final hasTextInput = _textController.text.trim().isNotEmpty;
     final hasStoryAndMoral = _selectedStory != -1 && _selectedMoral != -1;
@@ -70,10 +72,10 @@ class _GenerateStoryPageState extends State<GenerateStoryPage> {
                   fontSize: 34,
                   fontWeight: FontWeight.w600,
                 ),
-                text: 'Let’s Create ',
+                text: l10n.letsCreateTitle,
                 children: [
                   TextSpan(
-                    text: 'Your Story!',
+                    text: l10n.yourStoryTitle,
                     style: TextStyle(
                       color: colors.primary[500],
                     ),
@@ -84,7 +86,7 @@ class _GenerateStoryPageState extends State<GenerateStoryPage> {
             ),
             24.vertical,
             GenerateStoryTextField(
-              label: 'Type your story idea here...',
+              label: l10n.typeStoryLabel,
               controller: _textController,
               onChanged: (value) {
                 setState(() {});
@@ -95,7 +97,7 @@ class _GenerateStoryPageState extends State<GenerateStoryPage> {
             Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                'Or Choose a Story Idea:',
+                l10n.orChooseStoryText,
                 style: textTheme.lexendLargeBody.copyWith(
                   fontWeight: FontWeight.w500,
                 ),
@@ -117,7 +119,7 @@ class _GenerateStoryPageState extends State<GenerateStoryPage> {
                   bgSelected: colors.primary[50]!,
                   bgUnselected: colors.primary[100]!,
                   icon: Assets.icons.school.image(width: 40, height: 40),
-                  label: 'School',
+                  label: l10n.storyIdeaSchool,
                   labelColor: colors.primary[800]!,
                 ),
                 _storyOption(
@@ -132,7 +134,7 @@ class _GenerateStoryPageState extends State<GenerateStoryPage> {
                   bgSelected: colors.secondary[50]!,
                   bgUnselected: colors.secondary[100]!,
                   icon: Assets.icons.fantasy.image(width: 40, height: 40),
-                  label: 'Fantasy',
+                  label: l10n.storyIdeaFantasy,
                   labelColor: colors.secondary[800]!,
                 ),
                 _storyOption(
@@ -147,7 +149,7 @@ class _GenerateStoryPageState extends State<GenerateStoryPage> {
                   bgSelected: const Color(0xFFF8F7FB),
                   bgUnselected: const Color(0xFFEBEAEF),
                   icon: Assets.icons.shopping.image(width: 40, height: 40),
-                  label: 'Shopping',
+                  label: l10n.storyIdeaShopping,
                   labelColor: colors.darkAccent[800]!,
                 ),
                 _storyOption(
@@ -162,7 +164,7 @@ class _GenerateStoryPageState extends State<GenerateStoryPage> {
                   bgSelected: const Color(0xFFF0F8E8),
                   bgUnselected: const Color(0XFFDFF1D1),
                   icon: Assets.icons.explore.image(width: 40, height: 40),
-                  label: 'Explore',
+                  label: l10n.storyIdeaExplore,
                   labelColor: const Color(0XFF2F6C00),
                 ),
               ],
@@ -171,7 +173,7 @@ class _GenerateStoryPageState extends State<GenerateStoryPage> {
             Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                'Moral Value:',
+                l10n.moralValueText,
                 style: textTheme.lexendLargeBody.copyWith(
                   fontWeight: FontWeight.w500,
                 ),
@@ -195,7 +197,7 @@ class _GenerateStoryPageState extends State<GenerateStoryPage> {
                       bgSelected: colors.primary[50]!,
                       bgUnselected: colors.primary[100]!,
                       icon: Assets.icons.saving.image(width: 24, height: 24),
-                      label: 'Saving',
+                      label: l10n.moralValueSaving,
                       labelColor: colors.primary[800]!,
                     ),
                     10.vertical,
@@ -211,7 +213,7 @@ class _GenerateStoryPageState extends State<GenerateStoryPage> {
                       bgSelected: colors.secondary[50]!,
                       bgUnselected: colors.secondary[100]!,
                       icon: Assets.icons.honesty.image(width: 24, height: 24),
-                      label: 'Honesty',
+                      label: l10n.moralValueHonesty,
                       labelColor: colors.secondary[800]!,
                     ),
                   ],
@@ -228,7 +230,7 @@ class _GenerateStoryPageState extends State<GenerateStoryPage> {
                   bgSelected: const Color(0xFFF8F7FB),
                   bgUnselected: const Color(0xFFEBEAEF),
                   icon: Assets.icons.wise.image(width: 32, height: 32),
-                  label: 'Wisdom',
+                  label: l10n.moralValueWisdom,
                   labelColor: colors.darkAccent[800]!,
                 ),
                 _moralOptionVertical(
@@ -243,7 +245,7 @@ class _GenerateStoryPageState extends State<GenerateStoryPage> {
                   bgSelected: colors.support[50]!,
                   bgUnselected: colors.support[100]!,
                   icon: Assets.icons.sharing.image(width: 32, height: 32),
-                  label: 'Sharing',
+                  label: l10n.moralValueSharing,
                   labelColor: colors.support[800]!,
                 ),
               ],
@@ -267,7 +269,7 @@ class _GenerateStoryPageState extends State<GenerateStoryPage> {
                   height: 1.2,
                 ),
               ),
-              child: const Text('Create Story Now!'),
+              child: Text(l10n.createStoryButton),
             ),
           ],
         ),
@@ -393,7 +395,7 @@ class _GenerateStoryPageState extends State<GenerateStoryPage> {
         splashColor: Colors.grey.withOpacity(0.2),
         highlightColor: Colors.grey.withOpacity(0.1),
         child: Container(
-          constraints: const BoxConstraints(minWidth: 86, minHeight: 106),
+          constraints: const BoxConstraints(minWidth: 86, maxWidth: 86, minHeight: 106),
           padding: const EdgeInsets.symmetric(horizontal: 6),
           decoration: BoxDecoration(
             border: Border.all(color: borderColor, width: 2),

@@ -5,6 +5,7 @@ import 'package:kanca/data/data.dart';
 import 'package:kanca/features/story/bloc/story_bloc.dart';
 import 'package:kanca/features/story/story.dart';
 import 'package:kanca/gen/assets.gen.dart';
+import 'package:kanca/l10n/l10n.dart';
 import 'package:kanca/utils/utils.dart';
 
 class HomePage extends StatefulWidget {
@@ -160,6 +161,8 @@ class StoryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final textTheme = context.textTheme;
+    final l10n = context.l10n;
+
     return SizedBox(
       width: 181,
       child: Column(
@@ -318,7 +321,7 @@ class StoryCard extends StatelessWidget {
                         ),
                         8.horizontal,
                         Text(
-                          'Play',
+                          l10n.playButton,
                           style: textTheme.lexendCaption.copyWith(
                             color: Colors.white,
                             fontWeight: FontWeight.w500,

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:kanca/core/core.dart';
 import 'package:kanca/features/dashboard/dashboard.dart';
 import 'package:kanca/gen/assets.gen.dart';
+import 'package:kanca/l10n/l10n.dart';
 import 'package:kanca/utils/extensions/extensions.dart';
 import 'package:kanca/widgets/widgets.dart';
 
@@ -59,6 +60,8 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final textTheme = context.textTheme;
+    final l10n = context.l10n;
+
     return Scaffold(
       backgroundColor: colors.primary[500],
       body: Stack(
@@ -69,12 +72,13 @@ class _RegisterPageState extends State<RegisterPage> {
                 Expanded(
                   child: Center(
                     child: Text(
-                      'REGISTER',
+                      l10n.registerTitle,
                       style: textTheme.h1.copyWith(
                         color: Colors.white,
                         fontSize: 90,
                         fontWeight: FontWeight.w700,
                       ),
+                      textAlign: TextAlign.center
                     ),
                   ),
                 ),
@@ -96,43 +100,43 @@ class _RegisterPageState extends State<RegisterPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Email',
+                          l10n.emailText,
                           style: textTheme.caption,
                         ),
                         4.vertical,
                         KancaTextField(
                           controller: _emailController,
                           textInputType: TextInputType.emailAddress,
-                          label: 'example@mail.com',
+                          label: l10n.emailLabel,
                         ),
                         16.vertical,
                         Text(
-                          'Password',
+                          l10n.passwordText,
                           style: textTheme.caption,
                         ),
                         4.vertical,
                         KancaTextField(
                           controller: _passwordController,
                           textInputType: TextInputType.visiblePassword,
-                          label: 'Enter your password',
+                          label: l10n.passwordLabel,
                           isPassword: true,
                         ),
                         16.vertical,
                         Text(
-                          'Confirm Password',
+                          l10n.confirmPasswordText,
                           style: textTheme.caption,
                         ),
                         4.vertical,
                         KancaTextField(
                           controller: _confirmPasswordController,
                           textInputType: TextInputType.visiblePassword,
-                          label: 'Confirm your password',
+                          label: l10n.confirmPasswordLabel,
                           isPassword: true,
                         ),
                         32.vertical,
                         ElevatedButton(
                           onPressed: _register,
-                          child: const Text('Start Now'),
+                          child: Text(l10n.startNowButton),
                         ),
                         16.vertical,
                         Row(
@@ -148,7 +152,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 horizontal: 16,
                               ),
                               child: Text(
-                                'Or',
+                                l10n.orText,
                                 style: textTheme.caption,
                               ),
                             ),
@@ -182,7 +186,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 height: 24,
                               ),
                               10.horizontal,
-                              const Text('Continue with Google'),
+                              Text(l10n.continueWithGoogleButton),
                             ],
                           ),
                         ),
@@ -191,7 +195,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              'Already have an account?',
+                              l10n.alreadyHaveAccountText,
                               style: textTheme.lexendCaption.copyWith(
                                 fontSize: 14,
                               ),
@@ -200,7 +204,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             InkWell(
                               onTap: _goToLogin,
                               child: Text(
-                                'Login!',
+                                l10n.loginNowText,
                                 style: textTheme.lexendCaption.copyWith(
                                   color: colors.primary[500],
                                   fontSize: 14,
@@ -223,11 +227,11 @@ class _RegisterPageState extends State<RegisterPage> {
                                   fontSize: 14,
                                 ),
                                 children: [
-                                  const TextSpan(
-                                    text: 'By using Kanca, you agree to our ',
+                                  TextSpan(
+                                    text: l10n.ruleText1,
                                   ),
                                   TextSpan(
-                                    text: 'Terms of Service',
+                                    text: l10n.ruleText2,
                                     style: textTheme.lexendCaption.copyWith(
                                       fontWeight: FontWeight.w700,
                                       decoration: TextDecoration.underline,
@@ -238,11 +242,11 @@ class _RegisterPageState extends State<RegisterPage> {
                                         // TODO: Open Terms of Service link
                                       },
                                   ),
-                                  const TextSpan(
-                                    text: ' and ',
+                                  TextSpan(
+                                    text: l10n.ruleText3,
                                   ),
                                   TextSpan(
-                                    text: 'Privacy Policy',
+                                    text: l10n.ruleText4,
                                     style: textTheme.lexendCaption.copyWith(
                                       fontWeight: FontWeight.w700,
                                       decoration: TextDecoration.underline,
