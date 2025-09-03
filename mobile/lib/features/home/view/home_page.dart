@@ -29,58 +29,59 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: Padding(
         padding: EdgeInsets.only(
-          left: 24,
           top: MediaQuery.of(context).padding.top,
-          right: 24,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Stack(
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      width: 48,
-                      height: 48,
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: colors.primary[500]!.withOpacity(0.1),
-                        shape: BoxShape.circle,
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        width: 48,
+                        height: 48,
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: colors.primary[500]!.withOpacity(0.1),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Assets.icons.card.svg(
+                          width: 32,
+                          height: 32,
+                        ),
                       ),
-                      child: Assets.icons.card.svg(
-                        width: 32,
-                        height: 32,
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 8,
-                      ),
-                      decoration: BoxDecoration(
-                        color: colors.primary[500]!.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: Row(
-                        children: [
-                          Assets.icons.flash.svg(
-                            width: 24,
-                            height: 24,
-                          ),
-                          4.horizontal,
-                          Text(
-                            '12',
-                            style: textTheme.largeBody.copyWith(
-                              color: colors.primary[500],
-                              fontWeight: FontWeight.w500,
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
+                        decoration: BoxDecoration(
+                          color: colors.primary[500]!.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        child: Row(
+                          children: [
+                            Assets.icons.flash.svg(
+                              width: 24,
+                              height: 24,
                             ),
-                          ),
-                        ],
+                            4.horizontal,
+                            Text(
+                              '12',
+                              style: textTheme.largeBody.copyWith(
+                                color: colors.primary[500],
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
                 SizedBox(
                   height: 48,
@@ -104,10 +105,15 @@ class _HomePageState extends State<HomePage> {
                         width: 200,
                         height: 200,
                       ),
-                    ),
+                    ).withPadding(bottom: 90),
                     data: (data) {
                       return GridView.builder(
-                        padding: const EdgeInsets.only(top: 16, bottom: 24),
+                        padding: const EdgeInsets.only(
+                          left: 24,
+                          top: 16,
+                          right: 24,
+                          bottom: 140,
+                        ),
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 2,
@@ -137,17 +143,6 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          context.push(const GenerateStoryPage());
-        },
-        shape: const CircleBorder(),
-        backgroundColor: colors.primary[500],
-        child: Assets.icons.generate.image(
-          width: 47,
-          height: 47,
-        ),
-      ),
     );
   }
 }
@@ -175,12 +170,19 @@ class StoryCard extends StatelessWidget {
                 height: 242,
                 padding: const EdgeInsets.symmetric(vertical: 2),
                 child: Container(
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.only(
                       topRight: Radius.circular(10),
                       bottomRight: Radius.circular(10),
                     ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Color(0XFF373737).withOpacity(0.3),
+                        blurRadius: 4,
+                        offset: const Offset(3, 3),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -258,26 +260,32 @@ class StoryCard extends StatelessWidget {
             ),
           ),
           10.vertical,
-          Text(
-            story.title,
-            style: textTheme.body.copyWith(
-              color: colors.grey[500],
-              fontWeight: FontWeight.w600,
-              height: 1.2,
+          SizedBox(
+            width: 181,
+            child: Text(
+              story.title,
+              style: textTheme.body.copyWith(
+                color: colors.grey[500],
+                fontWeight: FontWeight.w600,
+                height: 1.2,
+              ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
             ),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
           ),
           4.vertical,
-          Text(
-            story.description,
-            style: textTheme.caption.copyWith(
-              color: colors.grey[400],
-              fontWeight: FontWeight.w500,
-              height: 1.2,
+          SizedBox(
+            width: 181,
+            child: Text(
+              story.description,
+              style: textTheme.caption.copyWith(
+                color: colors.grey[400],
+                fontWeight: FontWeight.w500,
+                height: 1.2,
+              ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
             ),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
           ),
           12.vertical,
           Row(

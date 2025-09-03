@@ -25,7 +25,7 @@ class AchievmentPage extends StatelessWidget {
       ),
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
+          padding: const EdgeInsets.only(left: 24, right: 24, bottom: 90),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

@@ -80,8 +80,8 @@ class _TypingIndicatorState extends State<TypingIndicator>
     );
     _animation =
         Tween<double>(
-          begin: 0.0,
-          end: 1.0,
+          begin: 0,
+          end: 1,
         ).animate(
           CurvedAnimation(
             parent: _animationController,

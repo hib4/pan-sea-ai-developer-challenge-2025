@@ -1,11 +1,14 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:kanca/core/core.dart';
 import 'package:kanca/features/achievment/achievment.dart';
 import 'package:kanca/features/home/home.dart';
 import 'package:kanca/features/profile/profile.dart';
 import 'package:kanca/features/progress/progress.dart';
+import 'package:kanca/features/story/story.dart';
 import 'package:kanca/gen/assets.gen.dart';
 import 'package:kanca/l10n/l10n.dart';
+import 'package:kanca/utils/utils.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -43,77 +46,170 @@ class _DashboardPageState extends State<DashboardPage> {
     final textTheme = context.textTheme;
     final l10n = context.l10n;
 
-    BottomNavigationBarItem buildItem({
+    Widget buildItem({
       required Widget icon,
       required String label,
       required bool isActive,
+      VoidCallback? onTap,
     }) {
-      return BottomNavigationBarItem(
-        icon: icon,
-        label: label,
+      return InkWell(
+        onTap: onTap,
+        child: Column(
+          children: [
+            icon,
+            4.vertical,
+            Text(
+              label,
+              style: textTheme.lexendCaption.copyWith(
+                color: isActive ? colors.primary[500] : colors.grey[200],
+                fontWeight: isActive ? FontWeight.w600 : FontWeight.w500,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
+        ),
       );
     }
 
     return Scaffold(
       body: PageView(
         controller: _pageController,
-        physics: const NeverScrollableScrollPhysics(), // Disable swipe
+        physics: const NeverScrollableScrollPhysics(),
         children: _pages,
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        onTap: (index) {
-          setState(() {
-            _selectedIndex = index;
-            _pageController.jumpToPage(index);
-          });
-        },
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: colors.primary[500],
-        unselectedItemColor: colors.grey[500],
-        showSelectedLabels: true,
-        showUnselectedLabels: true,
-        selectedLabelStyle: textTheme.lexendCaption.copyWith(
-          color: colors.primary[500],
-          fontWeight: FontWeight.w500,
-        ),
-        unselectedLabelStyle: textTheme.lexendCaption.copyWith(
-          color: colors.grey[200],
-          fontWeight: FontWeight.w500,
-        ),
-        selectedFontSize: 12,
-        items: [
-          buildItem(
-            icon: Assets.icons.home.image(
-              width: 32,
-              height: 32,
+      extendBody: true,
+      bottomNavigationBar: Stack(
+        children: [
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: ClipRRect(
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(100),
+                topRight: Radius.circular(100),
+              ),
+              child: BackdropFilter(
+                blendMode: BlendMode.screen,
+                filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+                child: Container(
+                  width: double.infinity,
+                  height: 115,
+                  decoration: BoxDecoration(
+                    color: const Color(0XFFFFF9ED).withOpacity(0.7),
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(100),
+                      topRight: Radius.circular(100),
+                    ),
+                  ),
+                ),
+              ),
             ),
-            label: l10n.bottomNavHomeTitle,
-            isActive: _selectedIndex == 0,
           ),
-          buildItem(
-            icon: Assets.icons.achievment.image(
-              width: 32,
-              height: 32,
+          Positioned(
+            bottom: MediaQuery.of(context).viewPadding.bottom,
+            left: 0,
+            right: 0,
+            child: Assets.images.bottomNavigation.svg(
+              width: double.infinity,
+              height: 85,
             ),
-            label: l10n.bottomNavAchievementTitle,
-            isActive: _selectedIndex == 1,
           ),
-          buildItem(
-            icon: Assets.icons.progress.image(
-              width: 32,
-              height: 32,
+          Positioned(
+            bottom: MediaQuery.of(context).viewPadding.bottom + 40,
+            left: 0,
+            right: 0,
+            child: InkWell(
+              onTap: () {
+                context.push(const GenerateStoryPage());
+              },
+              child: Center(
+                child: Assets.images.generateStory.image(
+                  width: 65,
+                  height: 65,
+                ),
+              ),
             ),
-            label: l10n.bottomNavProgressTitle,
-            isActive: _selectedIndex == 2,
           ),
-          buildItem(
-            icon: Assets.icons.profile.image(
-              width: 32,
-              height: 32,
+          Positioned(
+            bottom: MediaQuery.of(context).viewPadding.bottom + 8,
+            left: 0,
+            right: 0,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: buildItem(
+                      icon: Assets.icons.home.image(
+                        width: 36,
+                        height: 36,
+                      ),
+                      label: l10n.bottomNavHomeTitle,
+                      isActive: _selectedIndex == 0,
+                      onTap: () {
+                        setState(() {
+                          _selectedIndex = 0;
+                          _pageController.jumpToPage(0);
+                        });
+                      },
+                    ),
+                  ),
+                  Expanded(
+                    child: buildItem(
+                      icon: Assets.icons.achievment.image(
+                        width: 36,
+                        height: 36,
+                      ),
+                      label: l10n.bottomNavAchievementTitle,
+                      isActive: _selectedIndex == 1,
+                      onTap: () {
+                        setState(() {
+                          _selectedIndex = 1;
+                          _pageController.jumpToPage(1);
+                        });
+                      },
+                    ),
+                  ),
+                  const Expanded(
+                    child: SizedBox(), // Space for the center button
+                  ),
+                  Expanded(
+                    child: buildItem(
+                      icon: Assets.icons.progress.image(
+                        width: 36,
+                        height: 36,
+                      ),
+                      label: l10n.bottomNavProgressTitle,
+                      isActive: _selectedIndex == 2,
+                      onTap: () {
+                        setState(() {
+                          _selectedIndex = 2;
+                          _pageController.jumpToPage(2);
+                        });
+                      },
+                    ),
+                  ),
+                  Expanded(
+                    child: buildItem(
+                      icon: Assets.icons.profile.image(
+                        width: 36,
+                        height: 36,
+                      ),
+                      label: l10n.bottomNavProfileTitle,
+                      isActive: _selectedIndex == 3,
+                      onTap: () {
+                        setState(() {
+                          _selectedIndex = 3;
+                          _pageController.jumpToPage(3);
+                        });
+                      },
+                    ),
+                  ),
+                ],
+              ),
             ),
-            label: l10n.bottomNavProfileTitle,
-            isActive: _selectedIndex == 3,
           ),
         ],
       ),

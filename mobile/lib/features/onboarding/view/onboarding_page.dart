@@ -289,7 +289,7 @@ class __OnBoardingLoadingState extends State<_OnBoardingLoading> {
     super.initState();
     Future.delayed(const Duration(seconds: 3), () {
       if (mounted) {
-        context.pushAndRemoveUntil(const LoginPage(), (route) => false);
+        context.pushAndRemoveUntil(const DashboardPage(), (route) => false);
       }
     });
   }
