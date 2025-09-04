@@ -13,8 +13,8 @@ IMAGE_FOLDER_NAME = "images"
 VERTEX_AI_REGION = "asia-southeast1"
 IMAGE_ASPECT_RATIO = "16:9"
 
-file_dir = os.path.dirname(os.path.abspath(__file__))
-BASE_DIR = os.path.dirname(os.path.dirname(file_dir))
+FILE_DIR = os.path.dirname(os.path.abspath(__file__))
+BASE_DIR = os.path.dirname(os.path.dirname(FILE_DIR))
 KEYS_PATH = os.path.join(BASE_DIR, "keys")
 
 CREDENTIALS_FILE_PATH = os.path.join(

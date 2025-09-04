@@ -11,9 +11,9 @@ from utils.storage.google_bucket_storage import upload_file_to_gcs
 
 folder_name = "voices"
 TEXT_CONTENT_THRESHOLD = 2000
-
-file_dir = os.path.dirname(os.path.abspath(__file__))
-BASE_DIR = os.path.dirname(os.path.dirname(file_dir))
+API_ENDPOINT_REGION = "asia-southeast1-texttospeech.googleapis.com"
+FILE_DIR = os.path.dirname(os.path.abspath(__file__))
+BASE_DIR = os.path.dirname(os.path.dirname(FILE_DIR))
 KEYS_PATH = os.path.join(BASE_DIR, "keys")
 VOICE_AVAILABILITY_PATH = os.path.join(BASE_DIR, "setting")
 VOICE_AVAILABILITY_JSON_FILENAME = "voice_availability.json"
@@ -65,7 +65,8 @@ def _synthesize_speech(request) -> dict:
             detail=f"Invalid voice code '{voice_code}' for language code '{language_code}'."
         )
 
-    client = texttospeech.TextToSpeechClient(credentials=CHRIP_CREDENTIAL)
+    client_options = {"api_endpoint": API_ENDPOINT_REGION}
+    client = texttospeech.TextToSpeechClient(credentials=CHRIP_CREDENTIAL, client_options=client_options)
     synthesis_input = texttospeech.SynthesisInput(text=text_content)
     
     voice_params = texttospeech.VoiceSelectionParams(
