@@ -4,6 +4,7 @@ import 'package:kanca/core/core.dart';
 import 'package:kanca/features/story/bloc/story_bloc.dart';
 import 'package:kanca/features/story/story.dart';
 import 'package:kanca/gen/assets.gen.dart';
+import 'package:kanca/l10n/l10n.dart';
 import 'package:kanca/utils/utils.dart';
 
 class StoryLoadingPage extends StatefulWidget {
@@ -40,6 +41,7 @@ class _StoryLoadingPageState extends State<StoryLoadingPage>
   Widget build(BuildContext context) {
     final colors = context.colors;
     final textTheme = context.textTheme;
+    final l10n = context.l10n;
 
     return BlocListener<StoryBloc, StoryState>(
       listener: (context, state) {
@@ -117,10 +119,10 @@ class _StoryLoadingPageState extends State<StoryLoadingPage>
                         fontWeight: FontWeight.w600,
                         height: 1.4,
                       ),
-                      text: 'Please wait... ',
+                      text: l10n.storyLoadingTitle1,
                       children: [
                         TextSpan(
-                          text: 'Get ready for an exciting adventure!',
+                          text: l10n.storyLoadingTitle2,
                           style: TextStyle(
                             color: colors.primary[500],
                             fontWeight: FontWeight.w700,
