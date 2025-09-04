@@ -1,216 +1,245 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:kanca/core/theme/app_theme.dart';
+import 'package:kanca/features/achievment/widgets/mission_item_widget.dart';
+import 'package:kanca/gen/assets.gen.dart';
+import 'package:kanca/l10n/l10n.dart';
+import 'package:kanca/utils/utils.dart';
 
-class AchievmentPage extends StatelessWidget {
+class AchievmentPage extends StatefulWidget {
   const AchievmentPage({super.key});
 
   @override
+  State<AchievmentPage> createState() => _AchievmentPageState();
+}
+
+class _AchievmentPageState extends State<AchievmentPage> {
+  // Sample mission data
+  final List<Map<String, dynamic>> missions = const [
+    {
+      'title': 'Make a story',
+      'xpReward': '+50 XP',
+      'currentProgress': 1,
+      'totalProgress': 1,
+      'isCompleted': true,
+    },
+    {
+      'title': 'Read 3 books',
+      'xpReward': '+30 XP',
+      'currentProgress': 2,
+      'totalProgress': 3,
+      'isCompleted': false,
+    },
+    {
+      'title': 'Complete daily quiz',
+      'xpReward': '+20 XP',
+      'currentProgress': 0,
+      'totalProgress': 1,
+      'isCompleted': false,
+    },
+    {
+      'title': 'Share a story',
+      'xpReward': '+40 XP',
+      'currentProgress': 1,
+      'totalProgress': 1,
+      'isCompleted': true,
+    },
+  ];
+
+  @override
   Widget build(BuildContext context) {
+    final colors = context.colors;
+    final l10n = context.l10n;
+
     return Scaffold(
-      backgroundColor: context.colors.neutral[500],
-      appBar: AppBar(
-        title: Text(
-          'Achievements',
-          style: context.textTheme.lexendLargeBody.copyWith(
-            color: context.colors.darkAccent[500],
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        backgroundColor: context.colors.neutral[500],
-        elevation: 0,
-        centerTitle: true,
-        iconTheme: IconThemeData(
-          color: context.colors.darkAccent[500],
-        ),
-      ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.only(left: 24, right: 24, bottom: 90),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // Animated progress indicator
-              Container(
-                width: 120,
-                height: 120,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: LinearGradient(
-                    colors: [
-                      context.colors.primary[300]!,
-                      context.colors.secondary[300]!,
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: context.colors.primary[200]!.withOpacity(0.3),
-                      blurRadius: 20,
-                      offset: const Offset(0, 8),
-                    ),
-                  ],
-                ),
-                child: Center(
-                  child: Container(
-                    width: 90,
-                    height: 90,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: context.colors.neutral[500],
-                    ),
-                    child: Icon(
-                      Icons.construction_rounded,
-                      size: 48,
-                      color: context.colors.primary[500],
-                    ),
+      backgroundColor: colors.neutral[500],
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.only(bottom: 150),
+        child: Column(
+          children: [
+            Container(
+              padding: EdgeInsets.only(
+                top: MediaQuery.of(context).viewPadding.top + 24,
+                bottom: 24,
+              ),
+              decoration: BoxDecoration(
+                color: colors.neutral[500],
+                border: Border(
+                  bottom: BorderSide(
+                    color: colors.secondary[800]!,
+                    width: 4,
                   ),
                 ),
-              ),
-
-              const SizedBox(height: 32),
-
-              // Title
-              Text(
-                'Achievements',
-                style: context.textTheme.h4.copyWith(
-                  color: context.colors.darkAccent[500],
-                  fontWeight: FontWeight.w600,
+                borderRadius: const BorderRadius.only(
+                  bottomLeft: Radius.circular(24),
+                  bottomRight: Radius.circular(24),
                 ),
-                textAlign: TextAlign.center,
               ),
-
-              const SizedBox(height: 16),
-
-              // Subtitle
-              Text(
-                'Coming Soon',
-                style: context.textTheme.lexendLargeBody.copyWith(
-                  color: context.colors.primary[500],
-                  fontWeight: FontWeight.w600,
-                ),
-                textAlign: TextAlign.center,
-              ),
-
-              const SizedBox(height: 16),
-
-              // Description
-              Text(
-                "We're working hard to bring you an amazing achievement system. Track your progress, unlock rewards, and celebrate your learning milestones!",
-                style: context.textTheme.lexendBody.copyWith(
-                  color: context.colors.grey[600],
-                  height: 1.6,
-                ),
-                textAlign: TextAlign.center,
-              ),
-
-              const SizedBox(height: 40),
-
-              // Progress indicator with text
-              Container(
-                padding: const EdgeInsets.all(24),
-                decoration: BoxDecoration(
-                  color: context.colors.neutral[400],
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(
-                    color: context.colors.primary[200]!,
-                    width: 1.5,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: context.colors.grey[200]!.withOpacity(0.1),
-                      blurRadius: 10,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  children: [
-                    Row(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 34),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        Icon(
-                          Icons.timeline_rounded,
-                          color: context.colors.primary[500],
-                          size: 24,
+                        Assets.icons.throphyBronze.image(
+                          width: 94,
+                          height: 94,
                         ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Text(
-                            'Development Progress',
-                            style: context.textTheme.lexendBody.copyWith(
-                              color: context.colors.darkAccent[500],
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
+                        Assets.icons.throphySilver.image(
+                          width: 72,
+                          height: 72,
                         ),
-                        Text(
-                          '75%',
-                          style: context.textTheme.lexendBody.copyWith(
-                            color: context.colors.primary[500],
-                            fontWeight: FontWeight.w600,
-                          ),
+                        Assets.icons.throphyGold.image(
+                          width: 72,
+                          height: 72,
+                        ),
+                        Assets.icons.throphyPlatinum.image(
+                          width: 72,
+                          height: 72,
                         ),
                       ],
                     ),
-                    const SizedBox(height: 16),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: LinearProgressIndicator(
-                        value: 0.75,
-                        backgroundColor: context.colors.grey[200],
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                          context.colors.primary[500]!,
-                        ),
-                        minHeight: 8,
+                  ),
+                  32.vertical,
+                  Divider(
+                    color: colors.primary[100],
+                    thickness: 1,
+                    height: 1,
+                  ),
+                  24.vertical,
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 40),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: const Color(0XFFC45F19),
+                              ),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Text(
+                              l10n.achievementBeginner,
+                              style: GoogleFonts.fredoka(
+                                color: const Color(0XFFC45F19),
+                                fontSize: 21,
+                                fontWeight: FontWeight.w500,
+                                height: 1.2,
+                              ),
+                            ),
+                          ),
+                          Text(
+                            l10n.achievementLevel(1),
+                            style: GoogleFonts.fredoka(
+                              color: const Color(0XFFC45F19),
+                              fontSize: 47,
+                              fontWeight: FontWeight.w600,
+                              height: 1.5,
+                            ),
+                          ),
+                          8.vertical,
+                          Container(
+                            width: 247,
+                            height: 20,
+                            decoration: BoxDecoration(
+                              color: colors.grey[50],
+                              borderRadius: BorderRadius.circular(24),
+                            ),
+                            child: FractionallySizedBox(
+                              alignment: Alignment.centerLeft,
+                              widthFactor: 0.6,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: const Color(0XFFC45F19),
+                                  borderRadius: BorderRadius.circular(24),
+                                ),
+                              ),
+                            ),
+                          ),
+                          8.vertical,
+                          Text(
+                            l10n.achievementXP(110, 400),
+                            style: GoogleFonts.fredoka(
+                              color: const Color(0XFFC45F19),
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              height: 1.5,
+                            ),
+                          ),
+                        ],
+                      ),
+                      4.horizontal,
+                      Assets.icons.kanca.image(
+                        width: 140,
+                        height: 140,
+                      ),
+                    ],
+                  ).withPadding(left: 24),
+                ],
+              ),
+            ),
+            24.vertical,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  l10n.achievementDailyMission,
+                  style: GoogleFonts.fredoka(
+                    color: Colors.black,
+                    fontSize: 27,
+                    fontWeight: FontWeight.w500,
+                    height: 1.5,
+                  ),
+                ),
+                Row(
+                  children: [
+                    Assets.icons.clock.svg(
+                      width: 16,
+                      height: 16,
+                    ),
+                    4.horizontal,
+                    Text(
+                      l10n.achievementTimeRemaining(10),
+                      style: GoogleFonts.fredoka(
+                        color: colors.primary[500],
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        height: 1.5,
                       ),
                     ),
                   ],
                 ),
-              ),
-
-              const SizedBox(height: 32),
-
-              // Action button
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          "We'll notify you when achievements are ready!",
-                          style: context.textTheme.lexendBody.copyWith(
-                            color: Colors.white,
-                          ),
-                        ),
-                        backgroundColor: context.colors.primary[500],
-                        behavior: SnackBarBehavior.floating,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: context.colors.primary[500],
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(24),
-                    ),
-                    elevation: 2,
+              ],
+            ).withPadding(horizontal: 24),
+            16.vertical,
+            ListView.builder(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: missions.length,
+              itemBuilder: (context, index) {
+                final mission = missions[index];
+                return Padding(
+                  padding: EdgeInsets.only(
+                    bottom: missions.length - 1 == index ? 0 : 8,
                   ),
-                  child: Text(
-                    'Notify Me When Ready',
-                    style: context.textTheme.lexendBody.copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                    ),
+                  child: MissionItemWidget(
+                    title: mission['title'] as String,
+                    xpReward: mission['xpReward'] as String,
+                    currentProgress: mission['currentProgress'] as int,
+                    totalProgress: mission['totalProgress'] as int,
+                    isCompleted: mission['isCompleted'] as bool,
                   ),
-                ),
-              ),
-            ],
-          ),
+                );
+              },
+            ),
+          ],
         ),
       ),
     );

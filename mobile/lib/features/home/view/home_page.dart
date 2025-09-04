@@ -26,6 +26,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final textTheme = context.textTheme;
+    
     return Scaffold(
       body: Padding(
         padding: EdgeInsets.only(
@@ -172,13 +173,13 @@ class StoryCard extends StatelessWidget {
                 child: Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.only(
+                    borderRadius: const BorderRadius.only(
                       topRight: Radius.circular(10),
                       bottomRight: Radius.circular(10),
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: Color(0XFF373737).withOpacity(0.3),
+                        color: const Color(0XFF373737).withOpacity(0.3),
                         blurRadius: 4,
                         offset: const Offset(3, 3),
                       ),
