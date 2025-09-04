@@ -1,5 +1,5 @@
 import azure.cognitiveservices.speech as speechsdk
-from utils.azure_blob_storage import upload_file_to_blob
+from utils.storage.google_bucket_storage import upload_file_to_gcs
 from fastapi.concurrency import run_in_threadpool
 from fastapi import HTTPException
 from setting.settings import settings
@@ -148,7 +148,7 @@ def _synthesize_speech(request) -> str:
         base64_audio = base64.b64encode(audio_data).decode("utf-8")
         filename = f"{uuid4()}.wav"
 
-        blob_url = upload_file_to_blob(
+        blob_url = upload_file_to_gcs(
             base64_string=base64_audio, 
             folder_name=folder_name,
             blob_filename=filename
