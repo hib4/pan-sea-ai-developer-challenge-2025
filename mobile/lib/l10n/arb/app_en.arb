@@ -83,5 +83,10 @@
   "meaningTitle": "Meaning",
   "reallifeTitle": "Real-life Example",
   "homeButton": "Home",
-  "newStoryButton": "New Story"
+  "newStoryButton": "New Story",
+  "achievementBeginner": "Beginner",
+  "achievementLevel": "Level {level}",
+  "achievementXP": "{current}/{total} XP",
+  "achievementDailyMission": "Daily Mission",
+  "achievementTimeRemaining": "{hours} HOURS"
 }

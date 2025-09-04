@@ -5,7 +5,6 @@ import 'package:kanca/core/theme/app_theme.dart';
 import 'package:kanca/features/dashboard/dashboard.dart';
 import 'package:kanca/features/onboarding/onboarding.dart';
 import 'package:kanca/features/story/bloc/story_bloc.dart';
-import 'package:kanca/features/test_page.dart';
 import 'package:kanca/injector/injector.dart';
 import 'package:kanca/l10n/l10n.dart';
 

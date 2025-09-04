@@ -4,8 +4,10 @@ import 'package:flutter/widgets.dart';
 extension WidgetPaddingExtension on Widget {
   /// Adds padding to the widget.
   ///
-  /// [left], [top], [right], [bottom] and [all] are optional parameters to specify the padding values.
+  /// [left], [top], [right], [bottom], [all], [horizontal], and [vertical] are optional parameters to specify the padding values.
   /// If [padding] is provided, it will be used instead of individual values.
+  /// [horizontal] applies to both left and right padding.
+  /// [vertical] applies to both top and bottom padding.
   ///
   /// Returns a [Padding] widget with the specified padding and the original widget as its child.
   Widget withPadding({
@@ -14,14 +16,17 @@ extension WidgetPaddingExtension on Widget {
     double? right,
     double? bottom,
     double? all,
+    double? horizontal,
+    double? vertical,
     EdgeInsetsGeometry? padding,
   }) {
-    final finalPadding = padding ??
+    final finalPadding =
+        padding ??
         EdgeInsets.fromLTRB(
-          left ?? all ?? 0.0,
-          top ?? all ?? 0.0,
-          right ?? all ?? 0.0,
-          bottom ?? all ?? 0.0,
+          left ?? horizontal ?? all ?? 0.0,
+          top ?? vertical ?? all ?? 0.0,
+          right ?? horizontal ?? all ?? 0.0,
+          bottom ?? vertical ?? all ?? 0.0,
         );
 
     return Padding(
@@ -32,8 +37,10 @@ extension WidgetPaddingExtension on Widget {
 
   /// Adds margin to the widget.
   ///
-  /// [left], [top], [right], [bottom] and [all] are optional parameters to specify the margin values.
+  /// [left], [top], [right], [bottom], [all], [horizontal], and [vertical] are optional parameters to specify the margin values.
   /// If [margin] is provided, it will be used instead of individual values.
+  /// [horizontal] applies to both left and right margin.
+  /// [vertical] applies to both top and bottom margin.
   ///
   /// Returns a [Container] widget with the specified margin and the original widget as its child.
   Widget withMargin({
@@ -42,14 +49,17 @@ extension WidgetPaddingExtension on Widget {
     double? right,
     double? bottom,
     double? all,
+    double? horizontal,
+    double? vertical,
     EdgeInsetsGeometry? margin,
   }) {
-    final finalMargin = margin ??
+    final finalMargin =
+        margin ??
         EdgeInsets.fromLTRB(
-          left ?? all ?? 0.0,
-          top ?? all ?? 0.0,
-          right ?? all ?? 0.0,
-          bottom ?? all ?? 0.0,
+          left ?? horizontal ?? all ?? 0.0,
+          top ?? vertical ?? all ?? 0.0,
+          right ?? horizontal ?? all ?? 0.0,
+          bottom ?? vertical ?? all ?? 0.0,
         );
 
     return Container(

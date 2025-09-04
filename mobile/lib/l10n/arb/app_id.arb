@@ -83,5 +83,10 @@
   "meaningTitle": "Makna",
   "reallifeTitle": "Contoh Nyata",
   "homeButton": "Beranda",
-  "newStoryButton": "Cerita Baru"
+  "newStoryButton": "Cerita Baru",
+  "achievementBeginner": "Pemula",
+  "achievementLevel": "Level {level}",
+  "achievementXP": "{current}/{total} XP",
+  "achievementDailyMission": "Misi Harian",
+  "achievementTimeRemaining": "{hours} JAM"
 }

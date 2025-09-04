@@ -87,8 +87,8 @@ class _DashboardPageState extends State<DashboardPage> {
             right: 0,
             child: ClipRRect(
               borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(100),
-                topRight: Radius.circular(100),
+                topLeft: Radius.circular(110),
+                topRight: Radius.circular(110),
               ),
               child: BackdropFilter(
                 blendMode: BlendMode.screen,
@@ -117,7 +117,7 @@ class _DashboardPageState extends State<DashboardPage> {
             ),
           ),
           Positioned(
-            bottom: MediaQuery.of(context).viewPadding.bottom + 40,
+            bottom: MediaQuery.of(context).viewPadding.bottom + 37,
             left: 0,
             right: 0,
             child: InkWell(
@@ -126,8 +126,8 @@ class _DashboardPageState extends State<DashboardPage> {
               },
               child: Center(
                 child: Assets.images.generateStory.image(
-                  width: 65,
-                  height: 65,
+                  width: 67,
+                  height: 67,
                 ),
               ),
             ),
