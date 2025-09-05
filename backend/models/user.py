@@ -11,7 +11,7 @@ class AuthProvider(str, Enum):
 class User(Document):
     name: str
     email: str
-    password: str
+    password: Optional[str] = None
     auth: AuthProvider
     google_id: Optional[str] = None
     created_at: datetime = Field(default_factory=datetime.utcnow)
