@@ -1,12 +1,17 @@
+import httpx
 from fastapi import HTTPException
-from schema.request.auth_schema import login_schema,register_schema,google_login_schema
+from fastapi.responses import RedirectResponse
+from schema.request.auth_schema import login_schema,register_schema
 from models.user import User, AuthProvider
 from utils.hash import hash,compare
 from datetime import datetime
 from utils.jwt import create_access_token
-from google.auth.transport import requests
-from google.oauth2 import id_token
 from setting.settings import settings
+
+GOOGLE_CLIENT_ID = settings.GOOGLE_CLIENT_ID
+GOOGLE_CLIENT_SECRET = settings.GOOGLE_CLIENT_SECRET
+GOOGLE_REDIRECT_URI = settings.GOOGLE_REDIRECT_URI
+GOOGLE_OAUTH2_URL =  "https://oauth2.googleapis.com/token"
 
 async def register(body: register_schema):
     user = await User.find_one(User.email == body.email)
@@ -47,39 +52,54 @@ async def login(body: login_schema):
         "token": token
     }
 
-async def google_login(body: google_login_schema):
-    id_info = id_token.verify_oauth2_token(
-        body.id_token,
-        requests.Request(),
-        settings.GOOGLE_CLIENT_ID
-    )
+async def google_login(code):
+    data = {
+        "code": code,
+        "client_id": GOOGLE_CLIENT_ID,
+        "client_secret": GOOGLE_CLIENT_SECRET,
+        "redirect_uri": GOOGLE_REDIRECT_URI,
+        "grant_type": "authorization_code",
+    }
 
-    if id_info['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
-        raise ValueError('Wrong issuer.')
+    async with httpx.AsyncClient() as client:
+        token_resp = await client.post(GOOGLE_OAUTH2_URL, data=data)
 
-    google_user_id = id_info['sub']
-    email = id_info['email']
-    name = id_info.get('name', '')
+    if token_resp.status_code != 200:
+        raise HTTPException(status_code=400, detail=token_resp.text)
 
-    user = await User.find_one(User.email == email)
+    token_data = token_resp.json()
+    id_token = token_data.get("id_token")
+    access_token = token_data.get("access_token")
 
-    if user:
-        user.name = name
-        user.google_id = google_user_id
-        user.updated_at = datetime.utcnow()
-        await user.save()
-    else:
+    if not id_token:
+        raise HTTPException(status_code=400, detail="No ID token returned by Google")
+
+    async with httpx.AsyncClient() as client:
+        userinfo_resp = await client.get(
+            "https://www.googleapis.com/oauth2/v3/userinfo",
+            headers={"Authorization": f"Bearer {access_token}"}
+        )
+
+    if userinfo_resp.status_code != 200:
+        raise HTTPException(status_code=400, detail="Failed to fetch user info")
+
+    profile = userinfo_resp.json()
+    google_id = profile["sub"]
+    email = profile.get("email")
+    name = profile.get("name")
+
+    user = await User.find_one(User.google_id == google_id)
+
+    if not user:
         user = User(
             name=name,
             email=email,
-            password="",
-            auth=AuthProvider.google,
-            google_id=google_user_id,
+            auth="google",
+            google_id=google_id
         )
-        await user.insert()
+        await user.insert()   # Beanie requires insert()
 
-    access_token = create_access_token(user)
+    jwt_token = create_access_token(user)
 
-    return {
-        "token": access_token
-    }
+    frontend_redirect = f"{settings.FRONTEND_REDIRECT_URL}?token={jwt_token}"
+    return RedirectResponse(url=frontend_redirect)

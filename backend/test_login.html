@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Google Login Test</title>
+</head>
+<body>
+  <h2>Google OAuth2 Login Test</h2>
+  <button id="loginBtn">Login with Google</button>
+
+  <pre id="result"></pre>
+
+  <script>
+    const CLIENT_ID = "158781531943-t50lb7cla9t0c5uesjanj7506vku7n44.apps.googleusercontent.com";
+    const BACKEND_AUTH_URL = "http://localhost:8000/api/v1/auth/google";
+    const BACKEND_USER_URL = "http://localhost:8000/api/v1/user";
+
+    document.getElementById("loginBtn").onclick = () => {
+      const authUrl = new URL("https://accounts.google.com/o/oauth2/v2/auth");
+      authUrl.searchParams.set("client_id", CLIENT_ID);
+      // redirect_uri must match backend GOOGLE_REDIRECT_URI
+      authUrl.searchParams.set("redirect_uri", BACKEND_AUTH_URL);
+      authUrl.searchParams.set("response_type", "code");
+      authUrl.searchParams.set("scope", "openid email profile");
+      authUrl.searchParams.set("access_type", "offline");
+
+      window.location.href = authUrl.toString();
+    };
+
+    window.onload = async () => {
+      const params = new URLSearchParams(window.location.search);
+      const token = params.get("token");
+
+      if (token) {
+        // Show the raw JWT first
+        document.getElementById("result").textContent = "JWT from backend:\n" + token + "\n\nFetching user...";
+
+        try {
+          const resp = await fetch(BACKEND_USER_URL, {
+            headers: {
+              "Authorization": "Bearer " + token
+            }
+          });
+
+          if (!resp.ok) {
+            const errText = await resp.text();
+            document.getElementById("result").textContent += "\n\nError fetching user:\n" + errText;
+            return;
+          }
+
+          const data = await resp.json();
+          document.getElementById("result").textContent = JSON.stringify(data, null, 2);
+        } catch (err) {
+          document.getElementById("result").textContent += "\n\nFetch failed:\n" + err;
+        }
+      }
+    };
+  </script>
+</body>
+</html>
