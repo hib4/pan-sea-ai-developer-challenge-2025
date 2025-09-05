@@ -1,4 +1,4 @@
-from utils.ai.concurrent import generate_multiple_image_and_voice_concurrently
+from utils.concurrent import generate_multiple_image_and_voice_concurrently
 from utils.api_request import post
 from fastapi import HTTPException
 from setting.settings import settings
@@ -6,7 +6,7 @@ from schema.request import book_schema
 from schema.response.book_card import Book_Card
 from collections import defaultdict
 from models.book import Book
-from utils.ai.text_to_speech import AVAILABLE_VOICES
+from utils.ai import AVAILABLE_VOICES
 import json
 
 dummy_scene_json = None
@@ -16,8 +16,12 @@ with open("./handler/scene_sample.json", "r", encoding="utf-8") as f:
 book_stort_generation_url = settings.BOOK_STORY_GENERATION_URL
 
 LANGUAGE_NORMALIZATION = {
-    "english": "en",
-    "indonesian": "id"
+    "en": "en-US",
+    "id": "id-ID",
+    "vi": "vi-VN",
+    "th": "th-TH",
+    "cmn": "cmn-CH",
+    "ta": "ta-IN",
 }
 
 async def create_book(body: book_schema.create_book_schema, current_user):
@@ -25,11 +29,11 @@ async def create_book(body: book_schema.create_book_schema, current_user):
     age = body.age
     voice_name_code = body.voice_name_code
     language = body.language
+    country = body.country
 
-    if not voice_name_code in AVAILABLE_VOICES.keys():
-        raise HTTPException(status_code= 400, detail= f"invalid language_code")
+    _is_voice_name_code_invalid(language,voice_name_code)
 
-    language_normalization = LANGUAGE_NORMALIZATION.get(language)
+    language_code = LANGUAGE_NORMALIZATION.get(language)
 
     # fetch to book_stort_generation_url
     book = await post(
@@ -38,7 +42,8 @@ async def create_book(body: book_schema.create_book_schema, current_user):
             "query": query,
             "user_id": current_user.get("id"),
             "age": age,
-            "lang_code": language_normalization
+            "lang_code": language,
+            "country_code": country,
         }
     )
 
@@ -82,7 +87,7 @@ async def create_book(body: book_schema.create_book_schema, current_user):
             "scene_id": extracted_scene.get("scene_id"),
             "type": "voice",
             "voice_name_code": voice_name_code,
-            "language": language,
+            "language_code": language_code,
             "prompt": extracted_scene.get("content")
         })
 
@@ -137,6 +142,18 @@ async def create_book(body: book_schema.create_book_schema, current_user):
             "id": str(new_book.id)
         }
     }
+
+def _is_voice_name_code_invalid(language: str, target_voice_name_code: str) -> bool:
+    language_country_code = LANGUAGE_NORMALIZATION.get(language,None)
+    if not language_country_code:
+        raise HTTPException(status_code= 400, detail= f"invalid language_code")
+    voice_name_codes = AVAILABLE_VOICES.get(language_country_code)
+    for voice_name_code in voice_name_codes:
+        voice_name_code = voice_name_code.get("voice_code",None)
+        if voice_name_code == target_voice_name_code:
+            return
+
+    raise HTTPException(status_code= 400, detail= f"voice code is not found")
 
 async def get_books(current_user):
     books = await Book.find(Book.user_id == current_user.get("id")).to_list()

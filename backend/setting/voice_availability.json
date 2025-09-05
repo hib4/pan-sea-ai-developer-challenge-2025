@@ -1,0 +1,914 @@
+{
+    "id-ID": [
+        {
+            "name": "Chirp 3 HD Achernar (Female)",
+            "voice_code": "id-ID-Chirp3-HD-Achernar",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Achird (Male)",
+            "voice_code": "id-ID-Chirp3-HD-Achird",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Algenib (Male)",
+            "voice_code": "id-ID-Chirp3-HD-Algenib",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Algieba (Male)",
+            "voice_code": "id-ID-Chirp3-HD-Algieba",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Alnilam (Male)",
+            "voice_code": "id-ID-Chirp3-HD-Alnilam",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Aoede (Female)",
+            "voice_code": "id-ID-Chirp3-HD-Aoede",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Autonoe (Female)",
+            "voice_code": "id-ID-Chirp3-HD-Autonoe",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Callirrhoe (Female)",
+            "voice_code": "id-ID-Chirp3-HD-Callirrhoe",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Charon (Male)",
+            "voice_code": "id-ID-Chirp3-HD-Charon",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Despina (Female)",
+            "voice_code": "id-ID-Chirp3-HD-Despina",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Enceladus (Male)",
+            "voice_code": "id-ID-Chirp3-HD-Enceladus",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Erinome (Female)",
+            "voice_code": "id-ID-Chirp3-HD-Erinome",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Fenrir (Male)",
+            "voice_code": "id-ID-Chirp3-HD-Fenrir",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Gacrux (Female)",
+            "voice_code": "id-ID-Chirp3-HD-Gacrux",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Iapetus (Male)",
+            "voice_code": "id-ID-Chirp3-HD-Iapetus",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Kore (Female)",
+            "voice_code": "id-ID-Chirp3-HD-Kore",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Laomedeia (Female)",
+            "voice_code": "id-ID-Chirp3-HD-Laomedeia",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Leda (Female)",
+            "voice_code": "id-ID-Chirp3-HD-Leda",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Orus (Male)",
+            "voice_code": "id-ID-Chirp3-HD-Orus",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Pulcherrima (Female)",
+            "voice_code": "id-ID-Chirp3-HD-Pulcherrima",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Puck (Male)",
+            "voice_code": "id-ID-Chirp3-HD-Puck",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Rasalgethi (Male)",
+            "voice_code": "id-ID-Chirp3-HD-Rasalgethi",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Sadachbia (Male)",
+            "voice_code": "id-ID-Chirp3-HD-Sadachbia",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Sadaltager (Male)",
+            "voice_code": "id-ID-Chirp3-HD-Sadaltager",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Schedar (Male)",
+            "voice_code": "id-ID-Chirp3-HD-Schedar",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Sulafat (Female)",
+            "voice_code": "id-ID-Chirp3-HD-Sulafat",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Umbriel (Male)",
+            "voice_code": "id-ID-Chirp3-HD-Umbriel",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Vindemiatrix (Female)",
+            "voice_code": "id-ID-Chirp3-HD-Vindemiatrix",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Zephyr (Female)",
+            "voice_code": "id-ID-Chirp3-HD-Zephyr",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Zubenelgenubi (Male)",
+            "voice_code": "id-ID-Chirp3-HD-Zubenelgenubi",
+            "gender": "male"
+        }
+    ],
+    "en-US": [
+        {
+            "name": "Chirp 3 HD Achernar (Female)",
+            "voice_code": "en-US-Chirp3-HD-Achernar",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Achird (Male)",
+            "voice_code": "en-US-Chirp3-HD-Achird",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Algenib (Male)",
+            "voice_code": "en-US-Chirp3-HD-Algenib",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Algieba (Male)",
+            "voice_code": "en-US-Chirp3-HD-Algieba",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Alnilam (Male)",
+            "voice_code": "en-US-Chirp3-HD-Alnilam",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Aoede (Female)",
+            "voice_code": "en-US-Chirp3-HD-Aoede",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Autonoe (Female)",
+            "voice_code": "en-US-Chirp3-HD-Autonoe",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Callirrhoe (Female)",
+            "voice_code": "en-US-Chirp3-HD-Callirrhoe",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Charon (Male)",
+            "voice_code": "en-US-Chirp3-HD-Charon",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Despina (Female)",
+            "voice_code": "en-US-Chirp3-HD-Despina",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Enceladus (Male)",
+            "voice_code": "en-US-Chirp3-HD-Enceladus",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Erinome (Female)",
+            "voice_code": "en-US-Chirp3-HD-Erinome",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Fenrir (Male)",
+            "voice_code": "en-US-Chirp3-HD-Fenrir",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Gacrux (Female)",
+            "voice_code": "en-US-Chirp3-HD-Gacrux",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Iapetus (Male)",
+            "voice_code": "en-US-Chirp3-HD-Iapetus",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Kore (Female)",
+            "voice_code": "en-US-Chirp3-HD-Kore",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Laomedeia (Female)",
+            "voice_code": "en-US-Chirp3-HD-Laomedeia",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Leda (Female)",
+            "voice_code": "en-US-Chirp3-HD-Leda",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Orus (Male)",
+            "voice_code": "en-US-Chirp3-HD-Orus",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Pulcherrima (Female)",
+            "voice_code": "en-US-Chirp3-HD-Pulcherrima",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Puck (Male)",
+            "voice_code": "en-US-Chirp3-HD-Puck",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Rasalgethi (Male)",
+            "voice_code": "en-US-Chirp3-HD-Rasalgethi",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Sadachbia (Male)",
+            "voice_code": "en-US-Chirp3-HD-Sadachbia",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Sadaltager (Male)",
+            "voice_code": "en-US-Chirp3-HD-Sadaltager",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Schedar (Male)",
+            "voice_code": "en-US-Chirp3-HD-Schedar",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Sulafat (Female)",
+            "voice_code": "en-US-Chirp3-HD-Sulafat",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Umbriel (Male)",
+            "voice_code": "en-US-Chirp3-HD-Umbriel",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Vindemiatrix (Female)",
+            "voice_code": "en-US-Chirp3-HD-Vindemiatrix",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Zephyr (Female)",
+            "voice_code": "en-US-Chirp3-HD-Zephyr",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Zubenelgenubi (Male)",
+            "voice_code": "en-US-Chirp3-HD-Zubenelgenubi",
+            "gender": "male"
+        }
+    ],
+    "vi-VN": [
+        {
+            "name": "Chirp 3 HD Achernar (Female)",
+            "voice_code": "vi-VN-Chirp3-HD-Achernar",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Achird (Male)",
+            "voice_code": "vi-VN-Chirp3-HD-Achird",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Algenib (Male)",
+            "voice_code": "vi-VN-Chirp3-HD-Algenib",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Algieba (Male)",
+            "voice_code": "vi-VN-Chirp3-HD-Algieba",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Alnilam (Male)",
+            "voice_code": "vi-VN-Chirp3-HD-Alnilam",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Aoede (Female)",
+            "voice_code": "vi-VN-Chirp3-HD-Aoede",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Autonoe (Female)",
+            "voice_code": "vi-VN-Chirp3-HD-Autonoe",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Callirrhoe (Female)",
+            "voice_code": "vi-VN-Chirp3-HD-Callirrhoe",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Charon (Male)",
+            "voice_code": "vi-VN-Chirp3-HD-Charon",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Despina (Female)",
+            "voice_code": "vi-VN-Chirp3-HD-Despina",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Enceladus (Male)",
+            "voice_code": "vi-VN-Chirp3-HD-Enceladus",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Erinome (Female)",
+            "voice_code": "vi-VN-Chirp3-HD-Erinome",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Fenrir (Male)",
+            "voice_code": "vi-VN-Chirp3-HD-Fenrir",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Gacrux (Female)",
+            "voice_code": "vi-VN-Chirp3-HD-Gacrux",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Iapetus (Male)",
+            "voice_code": "vi-VN-Chirp3-HD-Iapetus",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Kore (Female)",
+            "voice_code": "vi-VN-Chirp3-HD-Kore",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Laomedeia (Female)",
+            "voice_code": "vi-VN-Chirp3-HD-Laomedeia",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Leda (Female)",
+            "voice_code": "vi-VN-Chirp3-HD-Leda",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Orus (Male)",
+            "voice_code": "vi-VN-Chirp3-HD-Orus",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Pulcherrima (Female)",
+            "voice_code": "vi-VN-Chirp3-HD-Pulcherrima",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Puck (Male)",
+            "voice_code": "vi-VN-Chirp3-HD-Puck",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Rasalgethi (Male)",
+            "voice_code": "vi-VN-Chirp3-HD-Rasalgethi",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Sadachbia (Male)",
+            "voice_code": "vi-VN-Chirp3-HD-Sadachbia",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Sadaltager (Male)",
+            "voice_code": "vi-VN-Chirp3-HD-Sadaltager",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Schedar (Male)",
+            "voice_code": "vi-VN-Chirp3-HD-Schedar",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Sulafat (Female)",
+            "voice_code": "vi-VN-Chirp3-HD-Sulafat",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Umbriel (Male)",
+            "voice_code": "vi-VN-Chirp3-HD-Umbriel",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Vindemiatrix (Female)",
+            "voice_code": "vi-VN-Chirp3-HD-Vindemiatrix",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Zephyr (Female)",
+            "voice_code": "vi-VN-Chirp3-HD-Zephyr",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Zubenelgenubi (Male)",
+            "voice_code": "vi-VN-Chirp3-HD-Zubenelgenubi",
+            "gender": "male"
+        }
+    ],
+    "th-TH": [
+        {
+            "name": "Chirp 3 HD Achernar (Female)",
+            "voice_code": "th-TH-Chirp3-HD-Achernar",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Achird (Male)",
+            "voice_code": "th-TH-Chirp3-HD-Achird",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Algenib (Male)",
+            "voice_code": "th-TH-Chirp3-HD-Algenib",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Algieba (Male)",
+            "voice_code": "th-TH-Chirp3-HD-Algieba",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Alnilam (Male)",
+            "voice_code": "th-TH-Chirp3-HD-Alnilam",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Aoede (Female)",
+            "voice_code": "th-TH-Chirp3-HD-Aoede",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Autonoe (Female)",
+            "voice_code": "th-TH-Chirp3-HD-Autonoe",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Callirrhoe (Female)",
+            "voice_code": "th-TH-Chirp3-HD-Callirrhoe",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Charon (Male)",
+            "voice_code": "th-TH-Chirp3-HD-Charon",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Despina (Female)",
+            "voice_code": "th-TH-Chirp3-HD-Despina",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Enceladus (Male)",
+            "voice_code": "th-TH-Chirp3-HD-Enceladus",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Erinome (Female)",
+            "voice_code": "th-TH-Chirp3-HD-Erinome",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Fenrir (Male)",
+            "voice_code": "th-TH-Chirp3-HD-Fenrir",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Gacrux (Female)",
+            "voice_code": "th-TH-Chirp3-HD-Gacrux",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Iapetus (Male)",
+            "voice_code": "th-TH-Chirp3-HD-Iapetus",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Kore (Female)",
+            "voice_code": "th-TH-Chirp3-HD-Kore",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Laomedeia (Female)",
+            "voice_code": "th-TH-Chirp3-HD-Laomedeia",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Leda (Female)",
+            "voice_code": "th-TH-Chirp3-HD-Leda",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Orus (Male)",
+            "voice_code": "th-TH-Chirp3-HD-Orus",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Pulcherrima (Female)",
+            "voice_code": "th-TH-Chirp3-HD-Pulcherrima",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Puck (Male)",
+            "voice_code": "th-TH-Chirp3-HD-Puck",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Rasalgethi (Male)",
+            "voice_code": "th-TH-Chirp3-HD-Rasalgethi",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Sadachbia (Male)",
+            "voice_code": "th-TH-Chirp3-HD-Sadachbia",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Sadaltager (Male)",
+            "voice_code": "th-TH-Chirp3-HD-Sadaltager",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Schedar (Male)",
+            "voice_code": "th-TH-Chirp3-HD-Schedar",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Sulafat (Female)",
+            "voice_code": "th-TH-Chirp3-HD-Sulafat",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Umbriel (Male)",
+            "voice_code": "th-TH-Chirp3-HD-Umbriel",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Vindemiatrix (Female)",
+            "voice_code": "th-TH-Chirp3-HD-Vindemiatrix",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Zephyr (Female)",
+            "voice_code": "th-TH-Chirp3-HD-Zephyr",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Zubenelgenubi (Male)",
+            "voice_code": "th-TH-Chirp3-HD-Zubenelgenubi",
+            "gender": "male"
+        }
+    ],
+    "cmn-CN": [
+        {
+            "name": "Chirp 3 HD Achernar (Female)",
+            "voice_code": "cmn-CN-Chirp3-HD-Achernar",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Achird (Male)",
+            "voice_code": "cmn-CN-Chirp3-HD-Achird",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Algenib (Male)",
+            "voice_code": "cmn-CN-Chirp3-HD-Algenib",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Algieba (Male)",
+            "voice_code": "cmn-CN-Chirp3-HD-Algieba",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Alnilam (Male)",
+            "voice_code": "cmn-CN-Chirp3-HD-Alnilam",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Aoede (Female)",
+            "voice_code": "cmn-CN-Chirp3-HD-Aoede",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Autonoe (Female)",
+            "voice_code": "cmn-CN-Chirp3-HD-Autonoe",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Callirrhoe (Female)",
+            "voice_code": "cmn-CN-Chirp3-HD-Callirrhoe",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Charon (Male)",
+            "voice_code": "cmn-CN-Chirp3-HD-Charon",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Despina (Female)",
+            "voice_code": "cmn-CN-Chirp3-HD-Despina",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Enceladus (Male)",
+            "voice_code": "cmn-CN-Chirp3-HD-Enceladus",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Erinome (Female)",
+            "voice_code": "cmn-CN-Chirp3-HD-Erinome",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Fenrir (Male)",
+            "voice_code": "cmn-CN-Chirp3-HD-Fenrir",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Gacrux (Female)",
+            "voice_code": "cmn-CN-Chirp3-HD-Gacrux",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Iapetus (Male)",
+            "voice_code": "cmn-CN-Chirp3-HD-Iapetus",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Kore (Female)",
+            "voice_code": "cmn-CN-Chirp3-HD-Kore",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Laomedeia (Female)",
+            "voice_code": "cmn-CN-Chirp3-HD-Laomedeia",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Leda (Female)",
+            "voice_code": "cmn-CN-Chirp3-HD-Leda",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Orus (Male)",
+            "voice_code": "cmn-CN-Chirp3-HD-Orus",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Pulcherrima (Female)",
+            "voice_code": "cmn-CN-Chirp3-HD-Pulcherrima",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Puck (Male)",
+            "voice_code": "cmn-CN-Chirp3-HD-Puck",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Rasalgethi (Male)",
+            "voice_code": "cmn-CN-Chirp3-HD-Rasalgethi",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Sadachbia (Male)",
+            "voice_code": "cmn-CN-Chirp3-HD-Sadachbia",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Sadaltager (Male)",
+            "voice_code": "cmn-CN-Chirp3-HD-Sadaltager",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Schedar (Male)",
+            "voice_code": "cmn-CN-Chirp3-HD-Schedar",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Sulafat (Female)",
+            "voice_code": "cmn-CN-Chirp3-HD-Sulafat",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Umbriel (Male)",
+            "voice_code": "cmn-CN-Chirp3-HD-Umbriel",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Vindemiatrix (Female)",
+            "voice_code": "cmn-CN-Chirp3-HD-Vindemiatrix",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Zephyr (Female)",
+            "voice_code": "cmn-CN-Chirp3-HD-Zephyr",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Zubenelgenubi (Male)",
+            "voice_code": "cmn-CN-Chirp3-HD-Zubenelgenubi",
+            "gender": "male"
+        }
+    ],
+    "ta-IN": [
+        {
+            "name": "Chirp 3 HD Achernar (Female)",
+            "voice_code": "ta-IN-Chirp3-HD-Achernar",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Achird (Male)",
+            "voice_code": "ta-IN-Chirp3-HD-Achird",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Algenib (Male)",
+            "voice_code": "ta-IN-Chirp3-HD-Algenib",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Algieba (Male)",
+            "voice_code": "ta-IN-Chirp3-HD-Algieba",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Alnilam (Male)",
+            "voice_code": "ta-IN-Chirp3-HD-Alnilam",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Aoede (Female)",
+            "voice_code": "ta-IN-Chirp3-HD-Aoede",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Autonoe (Female)",
+            "voice_code": "ta-IN-Chirp3-HD-Autonoe",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Callirrhoe (Female)",
+            "voice_code": "ta-IN-Chirp3-HD-Callirrhoe",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Charon (Male)",
+            "voice_code": "ta-IN-Chirp3-HD-Charon",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Despina (Female)",
+            "voice_code": "ta-IN-Chirp3-HD-Despina",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Enceladus (Male)",
+            "voice_code": "ta-IN-Chirp3-HD-Enceladus",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Erinome (Female)",
+            "voice_code": "ta-IN-Chirp3-HD-Erinome",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Fenrir (Male)",
+            "voice_code": "ta-IN-Chirp3-HD-Fenrir",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Gacrux (Female)",
+            "voice_code": "ta-IN-Chirp3-HD-Gacrux",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Iapetus (Male)",
+            "voice_code": "ta-IN-Chirp3-HD-Iapetus",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Kore (Female)",
+            "voice_code": "ta-IN-Chirp3-HD-Kore",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Laomedeia (Female)",
+            "voice_code": "ta-IN-Chirp3-HD-Laomedeia",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Leda (Female)",
+            "voice_code": "ta-IN-Chirp3-HD-Leda",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Orus (Male)",
+            "voice_code": "ta-IN-Chirp3-HD-Orus",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Pulcherrima (Female)",
+            "voice_code": "ta-IN-Chirp3-HD-Pulcherrima",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Puck (Male)",
+            "voice_code": "ta-IN-Chirp3-HD-Puck",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Rasalgethi (Male)",
+            "voice_code": "ta-IN-Chirp3-HD-Rasalgethi",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Sadachbia (Male)",
+            "voice_code": "ta-IN-Chirp3-HD-Sadachbia",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Sadaltager (Male)",
+            "voice_code": "ta-IN-Chirp3-HD-Sadaltager",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Schedar (Male)",
+            "voice_code": "ta-IN-Chirp3-HD-Schedar",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Sulafat (Female)",
+            "voice_code": "ta-IN-Chirp3-HD-Sulafat",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Umbriel (Male)",
+            "voice_code": "ta-IN-Chirp3-HD-Umbriel",
+            "gender": "male"
+        },
+        {
+            "name": "Chirp 3 HD Vindemiatrix (Female)",
+            "voice_code": "ta-IN-Chirp3-HD-Vindemiatrix",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Zephyr (Female)",
+            "voice_code": "ta-IN-Chirp3-HD-Zephyr",
+            "gender": "female"
+        },
+        {
+            "name": "Chirp 3 HD Zubenelgenubi (Male)",
+            "voice_code": "ta-IN-Chirp3-HD-Zubenelgenubi",
+            "gender": "male"
+        }
+    ]
+}

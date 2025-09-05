@@ -1,5 +1,5 @@
 import azure.cognitiveservices.speech as speechsdk
-from utils.azure_blob_storage import upload_file_to_blob
+from utils.storage import upload_file
 from fastapi.concurrency import run_in_threadpool
 from fastapi import HTTPException
 from setting.settings import settings
@@ -66,7 +66,7 @@ CLIENT_TIMEOUT = 3000000
 SERVICE_TIMEOUT_THRESHOLD = 3000000
 TEXT_CONTENT_THRESHOLD = 1500
 
-def _synthesize_speech(request) -> str:
+def _synthesize_speech(request: any) -> dict:
     scene_id = request.get("scene_id")
     text_content = request.get("prompt")
     voice_name_code = request.get("voice_name_code")
@@ -148,7 +148,7 @@ def _synthesize_speech(request) -> str:
         base64_audio = base64.b64encode(audio_data).decode("utf-8")
         filename = f"{uuid4()}.wav"
 
-        blob_url = upload_file_to_blob(
+        blob_url = upload_file(
             base64_string=base64_audio, 
             folder_name=folder_name,
             blob_filename=filename
@@ -179,5 +179,5 @@ def _synthesize_speech(request) -> str:
             detail="Speech synthesis was canceled by the service"
         )
 
-async def synthesize_speech(request):
+async def synthesize_speech(request: any) -> dict:
     return await run_in_threadpool(_synthesize_speech, request)

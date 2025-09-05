@@ -40,8 +40,8 @@ app.add_exception_handler(StarletteHTTPException, exception_handler.starlette_ht
 app.add_exception_handler(Exception, exception_handler.internal_server_error_handler)
 
 if __name__ == "__main__":
-    for setting in settings:
-        print(setting)
+    for key, value in settings:
+        print(f"{key}: \033[92m{value}\033[0m")
 
     uvicorn.run(
         "main:app",
