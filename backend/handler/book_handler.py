@@ -29,6 +29,7 @@ async def create_book(body: book_schema.create_book_schema, current_user):
     age = body.age
     voice_name_code = body.voice_name_code
     language = body.language
+    country = body.country
 
     _is_voice_name_code_invalid(language,voice_name_code)
 
@@ -41,7 +42,8 @@ async def create_book(body: book_schema.create_book_schema, current_user):
             "query": query,
             "user_id": current_user.get("id"),
             "age": age,
-            "lang_code": language
+            "lang_code": language,
+            "country_code": country,
         }
     )
 

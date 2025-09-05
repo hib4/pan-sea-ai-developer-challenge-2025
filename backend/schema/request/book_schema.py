@@ -27,6 +27,7 @@ class create_book_schema(BaseModel):
     age: int
     voice_name_code: str = "en-US-Chirp3-HD-Achernar"
     language: language_enum = language_enum.ENGLISH
+    country: language_enum
 
 class get_book_by_id_schema(BaseModel):
     id: str
