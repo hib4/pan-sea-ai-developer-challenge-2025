@@ -4,7 +4,7 @@ import vertexai
 from uuid import uuid4
 from fastapi.concurrency import run_in_threadpool
 from vertexai.preview.vision_models import ImageGenerationModel
-from utils.storage.google_bucket_storage import upload_file_to_gcs
+from utils.storage import upload_file
 from google.oauth2 import service_account
 from setting.settings import settings
 
@@ -45,14 +45,15 @@ def _generate_image(image_prompt):
     image_result = response.images[0]
     b64_string = base64.b64encode(image_result._image_bytes).decode('utf-8')
     url = None
-
+  
     if b64_string:
         unique_id = str(uuid4())
-        url = upload_file_to_gcs(
+        url = upload_file(
             base64_string=b64_string,
             folder_name=IMAGE_FOLDER_NAME,
             blob_filename=f"{unique_id}.webp"
         )
+
     if image_type == "cover_image":
         return {
             "scene_id": scene_id,

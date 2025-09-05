@@ -13,8 +13,7 @@ CREDENTIALS_FILE_PATH = os.path.join(
     KEYS_PATH, settings.BUCKET_STORAGE_SERVICE_ACCOUNT_JSON_NAME
 )
 
-def upload_file_to_gcs(base64_string, folder_name, blob_filename):
-
+def upload_file_to_google_cloud_storage(base64_string: str, folder_name: str, blob_filename: str) -> str:
     try:
         gcs_credentials = service_account.Credentials.from_service_account_file(CREDENTIALS_FILE_PATH)
     except FileNotFoundError:

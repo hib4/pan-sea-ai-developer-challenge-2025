@@ -7,7 +7,7 @@ from fastapi import HTTPException
 from google.cloud import texttospeech_v1beta1 as texttospeech
 from google.oauth2 import service_account
 from setting.settings import settings
-from utils.storage.google_bucket_storage import upload_file_to_gcs
+from utils.storage import upload_file
 
 folder_name = "voices"
 TEXT_CONTENT_THRESHOLD = 2000
@@ -25,13 +25,7 @@ def load_available_voices():
     available_voices = {}
     try:
         with open(os.path.join(VOICE_AVAILABILITY_PATH, VOICE_AVAILABILITY_JSON_FILENAME), 'r') as f:
-            voice_data = json.load(f)
-            for language_code, voices in voice_data.items():
-                for voice in voices:
-                    available_voices[voice['voice_code']] = {
-                        "name": voice['name'],
-                        "language_code": language_code,
-                    }
+            available_voices = json.load(f)
     except FileNotFoundError:
         print(f"WARNING: Voice availability JSON file not found at {VOICE_AVAILABILITY_PATH}. Using an empty voice list.")
     return available_voices
@@ -49,20 +43,13 @@ AVAILABLE_VOICES = load_available_voices()
 def _synthesize_speech(request) -> dict:
     scene_id = request.get("scene_id")
     text_content = request.get("prompt")
-    voice_code = request.get("voice_code")
+    voice_code = request.get("voice_name_code")
     language_code = request.get("language_code")
 
     if len(text_content) > TEXT_CONTENT_THRESHOLD:
         raise HTTPException(
             status_code=400,
             detail=f"Text too long. Please limit to {TEXT_CONTENT_THRESHOLD} characters per request."
-        )
-
-    voice_info = AVAILABLE_VOICES.get(voice_code)
-    if not voice_info or voice_info["language_code"] != language_code:
-        raise HTTPException(
-            status_code=400,
-            detail=f"Invalid voice code '{voice_code}' for language code '{language_code}'."
         )
 
     client_options = {"api_endpoint": API_ENDPOINT_REGION}
@@ -93,8 +80,7 @@ def _synthesize_speech(request) -> dict:
     audio_data = response.audio_content
     base64_audio = base64.b64encode(audio_data).decode("utf-8")
     filename = f"{uuid4()}.mp3"
-
-    blob_url = upload_file_to_gcs(
+    blob_url = upload_file(
         base64_string=base64_audio,
         folder_name=folder_name,
         blob_filename=filename
@@ -106,5 +92,5 @@ def _synthesize_speech(request) -> dict:
         "voice": blob_url
     }
 
-async def synthesize_speech(request):
+async def synthesize_speech(request: any) -> dict:
     return await run_in_threadpool(_synthesize_speech, request)

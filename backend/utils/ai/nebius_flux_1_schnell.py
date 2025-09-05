@@ -1,5 +1,5 @@
 from fastapi.concurrency import run_in_threadpool
-from utils.storage.google_bucket_storage import upload_file_to_gcs
+from utils.storage import upload_file
 from openai import OpenAI
 from setting.settings import settings
 from uuid import uuid4
@@ -41,7 +41,7 @@ def _generate_image(image_prompt):
 
     if b64_string:
         unique_id =  str(uuid4())
-        url = upload_file_to_gcs(
+        url = upload_file(
             base64_string=b64_string,
             folder_name=IMAGE_FOLDER_NAME,
             blob_filename= f"{unique_id}.webp"

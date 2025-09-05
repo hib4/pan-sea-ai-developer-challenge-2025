@@ -6,7 +6,7 @@ STORAGE_ACCOUNT_NAME = "bihackathon"
 CONTAINER_NAME = "storage"
 SAS_TOKEN = settings.MICROSOFT_AZURE_BLOB_SAS_TOKEN
 
-def upload_file_to_blob(base64_string: str, folder_name: str,blob_filename: str) -> str:
+def upload_file_azure_blob_storage(base64_string: str, folder_name: str, blob_filename: str) -> str:
     blob_path = f"{folder_name}/{blob_filename}"
     blob_url = f"https://{STORAGE_ACCOUNT_NAME}.blob.core.windows.net/{CONTAINER_NAME}/{blob_path}?{SAS_TOKEN}"
 
