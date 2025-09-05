@@ -26,8 +26,8 @@ services:
   libretranslate:
     image: libretranslate/libretranslate:latest
     ports:
-      - "8003:8003"             # host:container
-    command: >
+      - "8003:8003"
+    command:
       --host 0.0.0.0
       --port 8003
       --load-only en,id
@@ -53,17 +53,9 @@ services:
     networks:
       - ai-network
 
-  mongo:
-    image: mongo:latest
-    ports:
-      - "27017:27017"
-    restart: always
-    networks:
-      - ai-network
-
   cloudflared:
     image: cloudflare/cloudflared:latest
-    command: tunnel --no-autoupdate run --token eyJhIjoiNDk3NzQyYmMzOGU4ZTEwYzI3YmU3NzNkZjEyZmNkZGIiLCJ0IjoiNDE5Y2MyY2QtMDVkYS00MzQ5LTgzYTMtODVmODJiYTZkNTFlIiwicyI6Ik9USTFZV05oWWpVdE5tWm1OaTAwTUdFMkxXSm1OamN0TmpGaE1qTXpNMkU0TTJZMiJ9
+    command: tunnel --no-autoupdate run --token x
     restart: unless-stopped
     depends_on:
       - backend
