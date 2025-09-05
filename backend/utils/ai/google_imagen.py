@@ -11,7 +11,7 @@ from setting.settings import settings
 IMAGEN_MODEL = "imagen-4.0-fast-generate-001"
 IMAGE_FOLDER_NAME = "images"
 VERTEX_AI_REGION = "asia-southeast1"
-IMAGE_ASPECT_RATIO = "16:9"
+IMAGE_ASPECT_RATIO = "9:16"
 
 FILE_DIR = os.path.dirname(os.path.abspath(__file__))
 BASE_DIR = os.path.dirname(os.path.dirname(FILE_DIR))
@@ -36,7 +36,7 @@ def _generate_image(image_prompt):
     response = client.generate_images(
         prompt=prompt,
         number_of_images=1,
-        negative_prompt="unproportional, blur, distorted.",
+        negative_prompt="unproportional, blur, distorted, text dialog.",
         aspect_ratio=IMAGE_ASPECT_RATIO,
         person_generation="allow_all",
         safety_filter_level="block_most",

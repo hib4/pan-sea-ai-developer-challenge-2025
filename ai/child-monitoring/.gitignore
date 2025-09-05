@@ -3,3 +3,5 @@ test.ipynb
 .venv/
 chroma_db
 __pycache__
+production.env
+.dev.env

@@ -175,7 +175,7 @@ async def get_book_by_id(id: str, current_user):
     }
 
 def _add_character_description(characters: list, img_description: str) -> str:
-    prompt = f"description: {img_description}, cartoon style, this image is for kids, used for interactive book, be family friendly."
+    prompt = f"description: {img_description}, cartoon style, this image is for kids, used for interactive book, be family friendly, dont add text dialog on the image."
 
     names = [item["name"] for item in characters]
     descriptions = [item["description"] for item in characters]
