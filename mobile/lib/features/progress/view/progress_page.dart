@@ -20,6 +20,8 @@ class _ProgressPageState extends State<ProgressPage>
   late AnimationController _fabAnimationController;
   late Animation<double> _fabAnimation;
   Timer? _scrollTimer;
+  TimePeriod _selectedTimePeriodPlayingMinutes = TimePeriod.day;
+  TimePeriod _selectedTimePeriodSuccessRate = TimePeriod.day;
 
   // Dummy data for moral values
   final List<Map<String, String>> moralValuesData = const [
@@ -92,6 +94,62 @@ class _ProgressPageState extends State<ProgressPage>
     });
   }
 
+  void _onTimePeriodChangedPlayingMinutes(TimePeriod period) {
+    setState(() {
+      _selectedTimePeriodPlayingMinutes = period;
+    });
+  }
+
+  void _onTimePeriodChangedSuccessRate(TimePeriod period) {
+    setState(() {
+      _selectedTimePeriodSuccessRate = period;
+    });
+  }
+
+  String _getDateTextPlayingMinutes() {
+    switch (_selectedTimePeriodPlayingMinutes) {
+      case TimePeriod.day:
+        return 'Hari ini, 19 Juli';
+      case TimePeriod.week:
+        return 'Minggu ini, 15-21 Juli';
+      case TimePeriod.month:
+        return 'Bulan ini, Juli 2024';
+    }
+  }
+
+  String _getDateTextSuccessRate() {
+    switch (_selectedTimePeriodSuccessRate) {
+      case TimePeriod.day:
+        return 'Hari ini, 19 Juli';
+      case TimePeriod.week:
+        return 'Minggu ini, 15-21 Juli';
+      case TimePeriod.month:
+        return 'Bulan ini, Juli 2024';
+    }
+  }
+
+  String _getDurationText() {
+    switch (_selectedTimePeriodPlayingMinutes) {
+      case TimePeriod.day:
+        return '30m';
+      case TimePeriod.week:
+        return '3h 45m';
+      case TimePeriod.month:
+        return '15h 20m';
+    }
+  }
+
+  String _getSuccessRateText() {
+    switch (_selectedTimePeriodSuccessRate) {
+      case TimePeriod.day:
+        return '90%';
+      case TimePeriod.week:
+        return '85%';
+      case TimePeriod.month:
+        return '80%';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
@@ -158,10 +216,24 @@ class _ProgressPageState extends State<ProgressPage>
             8.vertical,
             Container(
               width: double.infinity,
-              height: 200,
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20,
+                vertical: 16,
+              ),
               decoration: BoxDecoration(
                 color: colors.neutral[100],
                 borderRadius: BorderRadius.circular(24),
+              ),
+              child: Column(
+                children: [
+                  ProgressChartCardWidget(
+                    date: _getDateTextPlayingMinutes(),
+                    data: _getDurationText(),
+                    selectedPeriod: _selectedTimePeriodPlayingMinutes,
+                    onPeriodChanged: _onTimePeriodChangedPlayingMinutes,
+                    chartType: ProgressChartType.playingMinutes,
+                  ),
+                ],
               ),
             ),
             16.vertical,
@@ -174,10 +246,24 @@ class _ProgressPageState extends State<ProgressPage>
             8.vertical,
             Container(
               width: double.infinity,
-              height: 200,
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20,
+                vertical: 16,
+              ),
               decoration: BoxDecoration(
                 color: colors.neutral[100],
                 borderRadius: BorderRadius.circular(24),
+              ),
+              child: Column(
+                children: [
+                  ProgressChartCardWidget(
+                    date: _getDateTextSuccessRate(),
+                    data: _getSuccessRateText(),
+                    selectedPeriod: _selectedTimePeriodSuccessRate,
+                    onPeriodChanged: _onTimePeriodChangedSuccessRate,
+                    chartType: ProgressChartType.successRate,
+                  ),
+                ],
               ),
             ),
             16.vertical,
