@@ -36,7 +36,7 @@ class _AppState extends State<App> {
         colorTheme: AppColors.colors(),
         textTheme: AppTextStyles.textStyles(),
         child: MaterialApp(
-          title: 'Kanca',
+          title: 'KANCA',
           theme: AppThemeData.themeData().themeData,
           darkTheme: AppThemeData.themeData().themeData,
           localizationsDelegates: AppLocalizations.localizationsDelegates,

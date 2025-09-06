@@ -5,6 +5,7 @@ import 'package:kanca/core/core.dart';
 import 'package:kanca/features/chat/chat.dart';
 import 'package:kanca/features/progress/progress.dart';
 import 'package:kanca/gen/assets.gen.dart';
+import 'package:kanca/l10n/l10n.dart';
 import 'package:kanca/utils/utils.dart';
 
 class ProgressPage extends StatefulWidget {
@@ -20,6 +21,8 @@ class _ProgressPageState extends State<ProgressPage>
   late AnimationController _fabAnimationController;
   late Animation<double> _fabAnimation;
   Timer? _scrollTimer;
+  TimePeriod _selectedTimePeriodPlayingMinutes = TimePeriod.day;
+  TimePeriod _selectedTimePeriodSuccessRate = TimePeriod.day;
 
   // Dummy data for moral values
   final List<Map<String, String>> moralValuesData = const [
@@ -92,10 +95,69 @@ class _ProgressPageState extends State<ProgressPage>
     });
   }
 
+  void _onTimePeriodChangedPlayingMinutes(TimePeriod period) {
+    setState(() {
+      _selectedTimePeriodPlayingMinutes = period;
+    });
+  }
+
+  void _onTimePeriodChangedSuccessRate(TimePeriod period) {
+    setState(() {
+      _selectedTimePeriodSuccessRate = period;
+    });
+  }
+
+  String _getDateTextPlayingMinutes() {
+    final l10n = context.l10n;
+    switch (_selectedTimePeriodPlayingMinutes) {
+      case TimePeriod.day:
+        return l10n.progressDateToday;
+      case TimePeriod.week:
+        return l10n.progressDateThisWeek;
+      case TimePeriod.month:
+        return l10n.progressDateThisMonth;
+    }
+  }
+
+  String _getDateTextSuccessRate() {
+    final l10n = context.l10n;
+    switch (_selectedTimePeriodSuccessRate) {
+      case TimePeriod.day:
+        return l10n.progressDateToday;
+      case TimePeriod.week:
+        return l10n.progressDateThisWeek;
+      case TimePeriod.month:
+        return l10n.progressDateThisMonth;
+    }
+  }
+
+  String _getDurationText() {
+    switch (_selectedTimePeriodPlayingMinutes) {
+      case TimePeriod.day:
+        return '30m';
+      case TimePeriod.week:
+        return '3h 45m';
+      case TimePeriod.month:
+        return '15h 20m';
+    }
+  }
+
+  String _getSuccessRateText() {
+    switch (_selectedTimePeriodSuccessRate) {
+      case TimePeriod.day:
+        return '90%';
+      case TimePeriod.week:
+        return '85%';
+      case TimePeriod.month:
+        return '80%';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
     final textTheme = context.textTheme;
+    final l10n = context.l10n;
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -121,7 +183,7 @@ class _ProgressPageState extends State<ProgressPage>
                       height: 40,
                     ),
                     value: '30m',
-                    label: 'Playing\nDuration',
+                    label: l10n.progressPlayingDuration,
                   ),
                 ),
                 12.horizontal,
@@ -132,7 +194,7 @@ class _ProgressPageState extends State<ProgressPage>
                       height: 40,
                     ),
                     value: '12',
-                    label: 'Completed\nStory',
+                    label: l10n.progressCompletedStory,
                   ),
                 ),
                 12.horizontal,
@@ -143,14 +205,14 @@ class _ProgressPageState extends State<ProgressPage>
                       height: 40,
                     ),
                     value: '90%',
-                    label: 'Success\nRate',
+                    label: l10n.progressSuccessRate,
                   ),
                 ),
               ],
             ),
             16.vertical,
             Text(
-              'Playing Minutes',
+              l10n.progressPlayingMinutes,
               style: textTheme.h5.copyWith(
                 color: colors.grey[700],
               ),
@@ -158,15 +220,29 @@ class _ProgressPageState extends State<ProgressPage>
             8.vertical,
             Container(
               width: double.infinity,
-              height: 200,
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20,
+                vertical: 16,
+              ),
               decoration: BoxDecoration(
                 color: colors.neutral[100],
                 borderRadius: BorderRadius.circular(24),
               ),
+              child: Column(
+                children: [
+                  ProgressChartCardWidget(
+                    date: _getDateTextPlayingMinutes(),
+                    data: _getDurationText(),
+                    selectedPeriod: _selectedTimePeriodPlayingMinutes,
+                    onPeriodChanged: _onTimePeriodChangedPlayingMinutes,
+                    chartType: ProgressChartType.playingMinutes,
+                  ),
+                ],
+              ),
             ),
             16.vertical,
             Text(
-              'Success Rate',
+              l10n.progressSuccessRate,
               style: textTheme.h5.copyWith(
                 color: colors.grey[700],
               ),
@@ -174,15 +250,29 @@ class _ProgressPageState extends State<ProgressPage>
             8.vertical,
             Container(
               width: double.infinity,
-              height: 200,
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20,
+                vertical: 16,
+              ),
               decoration: BoxDecoration(
                 color: colors.neutral[100],
                 borderRadius: BorderRadius.circular(24),
               ),
+              child: Column(
+                children: [
+                  ProgressChartCardWidget(
+                    date: _getDateTextSuccessRate(),
+                    data: _getSuccessRateText(),
+                    selectedPeriod: _selectedTimePeriodSuccessRate,
+                    onPeriodChanged: _onTimePeriodChangedSuccessRate,
+                    chartType: ProgressChartType.successRate,
+                  ),
+                ],
+              ),
             ),
             16.vertical,
             Text(
-              'Moral Values',
+              l10n.progressMoralValues,
               style: textTheme.h5.copyWith(
                 color: colors.grey[700],
               ),
