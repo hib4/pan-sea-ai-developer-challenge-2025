@@ -36,7 +36,6 @@ You can use the following story contexts and examples as inspiration for your st
 {output_format}
 """
 
-
 class StoryInstructions:
     @staticmethod
     def build_output_format_template(user_id, age_group, language):
