@@ -5,6 +5,7 @@ import 'package:kanca/core/core.dart';
 import 'package:kanca/features/chat/chat.dart';
 import 'package:kanca/features/progress/progress.dart';
 import 'package:kanca/gen/assets.gen.dart';
+import 'package:kanca/l10n/l10n.dart';
 import 'package:kanca/utils/utils.dart';
 
 class ProgressPage extends StatefulWidget {
@@ -107,24 +108,26 @@ class _ProgressPageState extends State<ProgressPage>
   }
 
   String _getDateTextPlayingMinutes() {
+    final l10n = context.l10n;
     switch (_selectedTimePeriodPlayingMinutes) {
       case TimePeriod.day:
-        return 'Hari ini, 19 Juli';
+        return l10n.progressDateToday;
       case TimePeriod.week:
-        return 'Minggu ini, 15-21 Juli';
+        return l10n.progressDateThisWeek;
       case TimePeriod.month:
-        return 'Bulan ini, Juli 2024';
+        return l10n.progressDateThisMonth;
     }
   }
 
   String _getDateTextSuccessRate() {
+    final l10n = context.l10n;
     switch (_selectedTimePeriodSuccessRate) {
       case TimePeriod.day:
-        return 'Hari ini, 19 Juli';
+        return l10n.progressDateToday;
       case TimePeriod.week:
-        return 'Minggu ini, 15-21 Juli';
+        return l10n.progressDateThisWeek;
       case TimePeriod.month:
-        return 'Bulan ini, Juli 2024';
+        return l10n.progressDateThisMonth;
     }
   }
 
@@ -154,6 +157,7 @@ class _ProgressPageState extends State<ProgressPage>
   Widget build(BuildContext context) {
     final colors = context.colors;
     final textTheme = context.textTheme;
+    final l10n = context.l10n;
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -179,7 +183,7 @@ class _ProgressPageState extends State<ProgressPage>
                       height: 40,
                     ),
                     value: '30m',
-                    label: 'Playing\nDuration',
+                    label: l10n.progressPlayingDuration,
                   ),
                 ),
                 12.horizontal,
@@ -190,7 +194,7 @@ class _ProgressPageState extends State<ProgressPage>
                       height: 40,
                     ),
                     value: '12',
-                    label: 'Completed\nStory',
+                    label: l10n.progressCompletedStory,
                   ),
                 ),
                 12.horizontal,
@@ -201,14 +205,14 @@ class _ProgressPageState extends State<ProgressPage>
                       height: 40,
                     ),
                     value: '90%',
-                    label: 'Success\nRate',
+                    label: l10n.progressSuccessRate,
                   ),
                 ),
               ],
             ),
             16.vertical,
             Text(
-              'Playing Minutes',
+              l10n.progressPlayingMinutes,
               style: textTheme.h5.copyWith(
                 color: colors.grey[700],
               ),
@@ -238,7 +242,7 @@ class _ProgressPageState extends State<ProgressPage>
             ),
             16.vertical,
             Text(
-              'Success Rate',
+              l10n.progressSuccessRate,
               style: textTheme.h5.copyWith(
                 color: colors.grey[700],
               ),
@@ -268,7 +272,7 @@ class _ProgressPageState extends State<ProgressPage>
             ),
             16.vertical,
             Text(
-              'Moral Values',
+              l10n.progressMoralValues,
               style: textTheme.h5.copyWith(
                 color: colors.grey[700],
               ),

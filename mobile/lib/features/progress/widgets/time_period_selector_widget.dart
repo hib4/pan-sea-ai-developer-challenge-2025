@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kanca/core/core.dart';
+import 'package:kanca/l10n/l10n.dart';
 
 enum TimePeriod { day, week, month }
 
@@ -17,6 +18,7 @@ class TimePeriodSelectorWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
+    final l10n = context.l10n;
 
     return Container(
       decoration: BoxDecoration(
@@ -28,19 +30,19 @@ class TimePeriodSelectorWidget extends StatelessWidget {
           _buildPeriodButton(
             context: context,
             period: TimePeriod.day,
-            label: 'Hari',
+            label: l10n.progressTimePeriodDay,
             isSelected: selectedPeriod == TimePeriod.day,
           ),
           _buildPeriodButton(
             context: context,
             period: TimePeriod.week,
-            label: 'Minggu',
+            label: l10n.progressTimePeriodWeek,
             isSelected: selectedPeriod == TimePeriod.week,
           ),
           _buildPeriodButton(
             context: context,
             period: TimePeriod.month,
-            label: 'Bulan',
+            label: l10n.progressTimePeriodMonth,
             isSelected: selectedPeriod == TimePeriod.month,
           ),
         ],

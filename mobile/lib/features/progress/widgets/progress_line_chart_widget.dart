@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kanca/core/core.dart';
 import 'package:kanca/features/progress/progress.dart';
+import 'package:kanca/l10n/l10n.dart';
 
 class ProgressLineChartWidget extends StatefulWidget {
   const ProgressLineChartWidget({
@@ -20,69 +21,25 @@ class ProgressLineChartWidget extends StatefulWidget {
 }
 
 class _ProgressLineChartWidgetState extends State<ProgressLineChartWidget> {
-  bool showAvg = false;
-
   @override
   Widget build(BuildContext context) {
-    final colors = context.colors;
-
-    return Stack(
-      children: [
-        AspectRatio(
-          aspectRatio: 1.4,
-          child: Padding(
-            padding: const EdgeInsets.only(top: 24),
-            child: LineChart(
-              _mainData(),
-            ),
-          ),
+    return AspectRatio(
+      aspectRatio: 1.4,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 24),
+        child: LineChart(
+          _mainData(),
         ),
-        // Positioned(
-        //   top: 8,
-        //   right: 8,
-        //   child: Container(
-        //     decoration: BoxDecoration(
-        //       color: colors.primary[50],
-        //       borderRadius: BorderRadius.circular(8),
-        //       border: Border.all(
-        //         color: colors.primary[200]!,
-        //         width: 1,
-        //       ),
-        //     ),
-        //     child: TextButton(
-        //       onPressed: () {
-        //         setState(() {
-        //           showAvg = !showAvg;
-        //         });
-        //       },
-        //       style: TextButton.styleFrom(
-        //         padding: const EdgeInsets.symmetric(
-        //           horizontal: 12,
-        //           vertical: 4,
-        //         ),
-        //         minimumSize: const Size(0, 0),
-        //       ),
-        //       child: Text(
-        //         showAvg ? 'Data' : 'Avg',
-        //         style: GoogleFonts.lexend(
-        //           fontSize: 12,
-        //           fontWeight: FontWeight.w500,
-        //           color: showAvg ? colors.primary[800] : colors.primary[600],
-        //         ),
-        //       ),
-        //     ),
-        //   ),
-        // ),
-      ],
+      ),
     );
   }
 
   Widget _bottomTitleWidgets(double value, TitleMeta meta) {
     final colors = context.colors;
     final style = GoogleFonts.lexend(
-      fontWeight: FontWeight.w500,
+      color: colors.grey[300],
       fontSize: 12,
-      color: colors.grey[600],
+      fontWeight: FontWeight.w500,
     );
 
     Widget text = const SizedBox.shrink();
@@ -107,9 +64,9 @@ class _ProgressLineChartWidgetState extends State<ProgressLineChartWidget> {
   Widget _leftTitleWidgets(double value, TitleMeta meta) {
     final colors = context.colors;
     final style = GoogleFonts.lexend(
-      fontWeight: FontWeight.w500,
+      color: colors.grey[300],
       fontSize: 12,
-      color: colors.grey[600],
+      fontWeight: FontWeight.w500,
     );
 
     String text = '';
@@ -279,93 +236,6 @@ class _ProgressLineChartWidgetState extends State<ProgressLineChartWidget> {
     );
   }
 
-  LineChartData _avgData() {
-    final colors = context.colors;
-    final avgValue = _calculateAverage();
-    final gradientColors = [
-      colors.secondary[300]!,
-      colors.secondary[500]!,
-    ];
-
-    return LineChartData(
-      lineTouchData: const LineTouchData(enabled: false),
-      gridData: FlGridData(
-        show: true,
-        drawHorizontalLine: true,
-        verticalInterval: 1,
-        horizontalInterval: _getMaxYValue() / 5,
-        getDrawingVerticalLine: (value) {
-          return FlLine(
-            color: colors.grey[200],
-            strokeWidth: 0.5,
-          );
-        },
-        getDrawingHorizontalLine: (value) {
-          return FlLine(
-            color: colors.grey[200],
-            strokeWidth: 1,
-          );
-        },
-      ),
-      titlesData: FlTitlesData(
-        show: true,
-        bottomTitles: AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: true,
-            reservedSize: 30,
-            getTitlesWidget: _bottomTitleWidgets,
-            interval: 1,
-          ),
-        ),
-        leftTitles: AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: true,
-            getTitlesWidget: _leftTitleWidgets,
-            reservedSize: 42,
-            interval: _getMaxYValue() / 5,
-          ),
-        ),
-        topTitles: const AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-        rightTitles: const AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-      ),
-      borderData: FlBorderData(
-        show: true,
-        border: Border.all(
-          color: colors.grey[300]!,
-          width: 1,
-        ),
-      ),
-      minX: 0,
-      maxX: _getMaxXValue(),
-      minY: 0,
-      maxY: _getMaxYValue(),
-      lineBarsData: [
-        LineChartBarData(
-          spots: _getAverageSpots(avgValue),
-          isCurved: true,
-          gradient: LinearGradient(
-            colors: gradientColors,
-          ),
-          barWidth: 2,
-          isStrokeCapRound: true,
-          dotData: const FlDotData(show: false),
-          belowBarData: BarAreaData(
-            show: true,
-            gradient: LinearGradient(
-              colors: gradientColors
-                  .map((color) => color.withOpacity(0.1))
-                  .toList(),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
   List<FlSpot> _getDataSpots() {
     switch (widget.selectedPeriod) {
       case TimePeriod.day:
@@ -379,117 +249,85 @@ class _ProgressLineChartWidgetState extends State<ProgressLineChartWidget> {
 
   List<FlSpot> _getDayData() {
     if (widget.chartType == ProgressChartType.playingMinutes) {
-      // Daily playing minutes data (in minutes, converted to chart scale)
+      // Daily playing minutes data aggregated by day of week
       return const [
-        FlSpot.zero,
-        FlSpot(2, 15), // 15 minutes
-        FlSpot(4, 28), // 28 minutes
-        FlSpot(6, 35), // 35 minutes
-        FlSpot(8, 32), // 32 minutes
-        FlSpot(10, 42), // 42 minutes
-        FlSpot(12, 38), // 38 minutes
-        FlSpot(14, 45), // 45 minutes
-        FlSpot(16, 30), // 30 minutes (current)
-        FlSpot(18, 0),
-        FlSpot(20, 0),
-        FlSpot(22, 0),
-        FlSpot(24, 0),
+        FlSpot(0, 35), // Monday - 35 minutes
+        FlSpot(1, 42), // Tuesday - 42 minutes
+        FlSpot(2, 28), // Wednesday - 28 minutes
+        FlSpot(3, 45), // Thursday - 45 minutes
+        FlSpot(4, 30), // Friday - 30 minutes (current)
+        FlSpot(5, 38), // Saturday - 38 minutes
+        FlSpot(6, 25), // Sunday - 25 minutes
       ];
     } else {
-      // Daily success rate data (in percentage)
+      // Daily success rate data by day of week
       return const [
-        FlSpot.zero,
-        FlSpot(2, 85),
-        FlSpot(4, 88),
-        FlSpot(6, 92),
-        FlSpot(8, 87),
-        FlSpot(10, 95),
-        FlSpot(12, 90),
-        FlSpot(14, 93),
-        FlSpot(16, 90), // Current
-        FlSpot(18, 0),
-        FlSpot(20, 0),
-        FlSpot(22, 0),
-        FlSpot(24, 0),
+        FlSpot(0, 92), // Monday - 92%
+        FlSpot(1, 88), // Tuesday - 88%
+        FlSpot(2, 95), // Wednesday - 95%
+        FlSpot(3, 87), // Thursday - 87%
+        FlSpot(4, 90), // Friday - 90% (current)
+        FlSpot(5, 85), // Saturday - 85%
+        FlSpot(6, 93), // Sunday - 93%
       ];
     }
   }
 
   List<FlSpot> _getWeekData() {
     if (widget.chartType == ProgressChartType.playingMinutes) {
-      // Weekly playing minutes data (converted to hours on chart scale)
+      // Weekly playing minutes data (converted to minutes for consistency)
       return const [
-        FlSpot(0, 45), // 45 minutes (Monday)
-        FlSpot(1, 65), // 1h 5m (Tuesday)
-        FlSpot(2, 90), // 1h 30m (Wednesday)
-        FlSpot(3, 120), // 2h (Thursday)
-        FlSpot(4, 105), // 1h 45m (Friday)
-        FlSpot(5, 135), // 2h 15m (Saturday)
-        FlSpot(6, 180), // 3h (Sunday - current week total: 3h 45m)
+        FlSpot(0, 45), // Monday - 45 minutes
+        FlSpot(1, 65), // Tuesday - 1h 5m = 65 minutes
+        FlSpot(2, 90), // Wednesday - 1h 30m = 90 minutes
+        FlSpot(3, 120), // Thursday - 2h = 120 minutes
+        FlSpot(4, 105), // Friday - 1h 45m = 105 minutes
+        FlSpot(5, 135), // Saturday - 2h 15m = 135 minutes
+        FlSpot(6, 180), // Sunday - 3h = 180 minutes
       ];
     } else {
       // Weekly success rate data
       return const [
-        FlSpot(0, 88), // Monday
-        FlSpot(1, 92), // Tuesday
-        FlSpot(2, 87), // Wednesday
-        FlSpot(3, 90), // Thursday
-        FlSpot(4, 85), // Friday
-        FlSpot(5, 89), // Saturday
-        FlSpot(6, 85), // Sunday (current: 85%)
+        FlSpot(0, 88), // Monday - 88%
+        FlSpot(1, 92), // Tuesday - 92%
+        FlSpot(2, 87), // Wednesday - 87%
+        FlSpot(3, 90), // Thursday - 90%
+        FlSpot(4, 85), // Friday - 85%
+        FlSpot(5, 89), // Saturday - 89%
+        FlSpot(6, 85), // Sunday - 85% (current)
       ];
     }
   }
 
   List<FlSpot> _getMonthData() {
     if (widget.chartType == ProgressChartType.playingMinutes) {
-      // Monthly playing minutes data (in hours, scaled)
+      // Monthly playing minutes data (average per day of week over the month)
       return const [
-        FlSpot(0, 180), // Week 1: 3h
-        FlSpot(7, 240), // Week 2: 4h
-        FlSpot(14, 320), // Week 3: 5h 20m
-        FlSpot(21, 280), // Week 4: 4h 40m
-        FlSpot(28, 300), // Week 5: 5h (current total: ~15h 20m)
+        FlSpot(0, 180), // Monday average - 3h = 180 minutes
+        FlSpot(1, 240), // Tuesday average - 4h = 240 minutes
+        FlSpot(2, 320), // Wednesday average - 5h 20m = 320 minutes
+        FlSpot(3, 280), // Thursday average - 4h 40m = 280 minutes
+        FlSpot(4, 300), // Friday average - 5h = 300 minutes
+        FlSpot(5, 220), // Saturday average - 3h 40m = 220 minutes
+        FlSpot(6, 260), // Sunday average - 4h 20m = 260 minutes
       ];
     } else {
-      // Monthly success rate data
+      // Monthly success rate data (average per day of week)
       return const [
-        FlSpot(0, 85), // Week 1
-        FlSpot(7, 88), // Week 2
-        FlSpot(14, 82), // Week 3
-        FlSpot(21, 87), // Week 4
-        FlSpot(28, 80), // Week 5 (current: 80%)
+        FlSpot(0, 85), // Monday average - 85%
+        FlSpot(1, 88), // Tuesday average - 88%
+        FlSpot(2, 82), // Wednesday average - 82%
+        FlSpot(3, 87), // Thursday average - 87%
+        FlSpot(4, 80), // Friday average - 80% (current)
+        FlSpot(5, 83), // Saturday average - 83%
+        FlSpot(6, 86), // Sunday average - 86%
       ];
     }
-  }
-
-  List<FlSpot> _getAverageSpots(double avgValue) {
-    final maxX = _getMaxXValue();
-    return List.generate(
-      (maxX ~/ 2) + 1,
-      (index) => FlSpot(index * 2.0, avgValue),
-    );
-  }
-
-  double _calculateAverage() {
-    final spots = _getDataSpots();
-    final values = spots
-        .where((spot) => spot.y > 0)
-        .map((spot) => spot.y)
-        .toList();
-    if (values.isEmpty) return 0;
-    return values.reduce((a, b) => a + b) / values.length;
   }
 
   double _getMaxXValue() {
-    switch (widget.selectedPeriod) {
-      case TimePeriod.day:
-        return 24; // 24 hours
-      case TimePeriod.week:
-        return 6; // 7 days (0-6)
-      case TimePeriod.month:
-        return 28; // ~4 weeks
-    }
+    // Always return 6 to show 7 days (0-6) regardless of time period
+    return 6;
   }
 
   double _getMaxYValue() {
@@ -508,39 +346,22 @@ class _ProgressLineChartWidgetState extends State<ProgressLineChartWidget> {
   }
 
   List<String> _getBottomLabels() {
-    switch (widget.selectedPeriod) {
-      case TimePeriod.day:
-        return [
-          '00',
-          '02',
-          '04',
-          '06',
-          '08',
-          '10',
-          '12',
-          '14',
-          '16',
-          '18',
-          '20',
-          '22',
-          '24',
-        ];
-      case TimePeriod.week:
-        return ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'];
-      case TimePeriod.month:
-        return List.generate(29, (index) => '${index + 1}');
-    }
+    // Always return day names regardless of time period
+    final l10n = context.l10n;
+    return [
+      l10n.progressDayMonday,
+      l10n.progressDayTuesday,
+      l10n.progressDayWednesday,
+      l10n.progressDayThursday,
+      l10n.progressDayFriday,
+      l10n.progressDaySaturday,
+      l10n.progressDaySunday,
+    ];
   }
 
   List<int> _getBottomLabelIntervals() {
-    switch (widget.selectedPeriod) {
-      case TimePeriod.day:
-        return [0, 4, 8, 12, 16, 20, 24]; // Every 4 hours
-      case TimePeriod.week:
-        return [0, 1, 2, 3, 4, 5, 6]; // Every day
-      case TimePeriod.month:
-        return [0, 7, 14, 21, 28]; // Every week
-    }
+    // Always return all 7 days (0-6) regardless of time period
+    return [0, 1, 2, 3, 4, 5, 6];
   }
 
   String _formatMinutesTooltip(double value) {
